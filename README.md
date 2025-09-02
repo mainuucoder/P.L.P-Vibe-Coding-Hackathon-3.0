@@ -1,6 +1,5 @@
 "# P.L.P-Vibe-Coding-Hackathon-3.0"
 # Hackathon Project 🎉
-# Hackathon Project 🎉
 
 This project was created during the **P.L.P Vibe Coding Hackathon 3.0**.
 We worked together as a team to brainstorm, design, and build this solution within the hackathon timeframe.
@@ -27,11 +26,7 @@ You can try the deployed project here:
 ## 📊 Pitch Deck
 
 Here’s our in-depth pitch deck for a fuller vision insight:
-👉 [Mediguide App – Gamma Pitch Deck](https://gamma.app/docs/Mediguide-App-Revolutionizing-Access-to-Hospitals-and-Online-Cons-lwnjxfl4xpchxz2)
-
-📱 **Scan the QR Code to view the pitch deck:**
-
-<img src="798121ed-a598-455e-8a60-f2c0a4fb55e4.jpg" alt="Pitch Deck QR Code" width="200" />
+👉 [Mediguide App – Gamma Pitch Deck](https://gamma.app/docs/Mediguide-App-Revolutionizing-Access-to-Hospitals-and-Online-Cons-lwnjxfl4xpchxz2
 
 ## 🛠️ Tech Stack
 
