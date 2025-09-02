@@ -1,0 +1,92 @@
+<canvas class="col-sm-12" id="question_graph"></canvas>
+<script>
+   $(document).ready(function(){
+    var graphtype='{{graphtype}}'
+var question=''
+var question_graph = document.getElementById('question_graph').getContext('2d');
+
+var mylista = '{{responcechoices|safe}}';
+var mylistdata=[]
+mylist= mylista.toLowerCase().replace(/[ *_#]/g, '')
+//alert(mylista+"  = "+mylist)
+for(i = 0; i < mylist.length; i++){
+if(mylist[i]=='['||mylist[i]==']'||mylist[i]==','){
+
+}else{
+mylistdata.push(mylist[i])
+}
+//    //$('#countholder'+b).html(mylist[i])
+//    //console.log(mylist[i])
+//alert(mylist[i])
+};
+
+
+
+//alert(mylistdata)
+choicelabels=[]
+var choicelabel='{{choicelabels}}'
+//alert(choicelabel)
+var choicelabeled=choicelabel.replace(/<\/?[^>]+(>|$)/g, "").split("&#x27;,");
+//alert(choicelabeled.length)
+for(i = 0; i < choicelabeled.length; i++){
+result = choicelabeled[i].slice(5)
+var data='';
+for(j=0;j<result.length;j++){
+    if(result[j]=='#'||result[j]=='['||result[j]==']'||result[j]==','||result[j]=='&'||result[j]=='x'||result[j]=='2'||result[j]=='7'||result[j]==';'){
+
+}else{
+data=data+result[j]
+}
+
+}
+result=data
+    choicelabels.push(result)
+
+//alert(choicelabels)
+//    //$('#countholder'+b).html(mylist[i])
+//    //console.log(mylist[i])
+//alert(mylist[i])
+};
+
+var question_graph = new Chart(question_graph, {
+    // The type of chart we want to create
+    type: graphtype,
+
+    // The data for our dataset
+    data: {
+        
+        labels: choicelabels,
+        datasets: [{
+            label: question,
+            backgroundColor: ['rgb(255, 99, 132, 0.8)',
+                               'rgb(54, 162, 235, 0.8)',
+                               'rgb(255, 206, 86, 0.8)',
+                               'rgb(72, 192, 192, 0.8)',
+                               'rgb(235, 199, 132, 0.8)',
+                               'rgb(54, 122, 235, 0.8)',
+                               'rgb(205, 26, 86, 0.8)',
+                               'rgb(238, 227, 255, 0.01)'
+                             ],
+            borderColor: 'rgb(255, 0, 0)',
+            
+            data:mylistdata //[allmember_invited, responcescount, Not_responded]
+        }]
+    },
+
+
+    // Configuration options go here
+    options: {
+scales: {
+    yAxes: [{
+        ticks: {
+            beginAtZero: true
+        }
+    }]
+}
+}
+
+});
+   })
+   
+
+</script>

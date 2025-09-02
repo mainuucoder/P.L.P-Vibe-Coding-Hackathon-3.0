@@ -1,0 +1,304 @@
+{% load static %}
+{% load bootstrap5 %}
+{% load humanize %}
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+    <div class="row">
+<div class="col-lg-12">
+  <div class="card">
+    <div class="card-body ">
+      <div class="row">
+        <div class="col-12" style="text-align: right;margin-top:5px">
+      <apan class="btn btn-primary"  id="AddQuestion"><i class="fa fa-plus"></i> Add New Question</apan>
+    </div>
+    </div>
+      <div class="position-relative mb-3">
+         
+        
+         
+
+        
+        {% for i in Questions %}
+        <div class="commented-section mt-2" style="min-height: 100px;">
+            <div class="d-flex flex-row align-items-center commented-user">
+                
+            </div>
+            <div class="comment-text-sm"><span>{{forloop.counter}} . {{i.name|safe}}</span><span style="float:right;margin-bottom: 5px;"> <span class="btn btn-warning removeQuestions" role="{{i.id}}" ><i class="fa fa-trash"> </i> Remove </span> </span> <span style="float:right;margin-bottom: 5px;"> <span class="btn btn-primary updateQuestions" role="{{i.id}}" style=""> <i class="fa fa-edit"></i> Edit Question</span> </span> </div>
+            <p>
+              
+             
+                {% if i.question_type_id == 1 %}
+                <div class="col-sm-12 col-xs-12">
+                    
+                    <input type="radio" id="{{i.id}}" name="input{{i.id}}" role="{{i.QuestionType}}" value='yes'>
+                    :YES
+                    </p>
+                    <p>
+                    
+                    <input type="radio" id="{{i.id}}" name="input{{i.id}}" role="{{i.QuestionType}}" value='No'>
+                    :NO
+                    </p>
+                    </div>
+                  {% elif i.question_type_id == 2 %}
+                
+<div class="col-sm-12 col-sm-12 col-xs-12">
+    <div class="col-sm-2 col-xs-2">{{i.id}}</div>
+    <div class="col-sm-8 col-xs-8">
+     
+        <div class="col-sm-1 col-xs-1 no_padding">
+
+ <label style="font-weight: initial !important" class="submit_radiosd">
+ <input type="checkbox"  id="" value="" name="Answer"  class="examcheckrange " role="">
+                                                  <span class="checkmarkd"></span>
+                                                     {{i.id}}
+                                                   </label>
+                                               </div>
+                                           
+
+        
+</div>
+       
+    <div class="col-sm-2 col-xs-2">{{i.id}}</div>
+                   
+                  {% elif i.question_type_id == 3 %}
+      
+                  <span style="float: right;margin-right: 20px;" role="{{i.id}}" class="btn btn-info changeLayout"><i class="fa fa-edit"></i> Amend structure</span></p>
+                 <table class="col-sm-12">
+                    {% for p in i.ratingquestiontopic_set.all %}
+                    <tr><td>{{p.name|safe}}</td><td><!--<span class="btn btn-primary add_subtopic" role="{{p.id}}"> <i class="fa fa-plus"></i> Add Sub Topic</span>--></td></tr>
+                   {% for ratingsubtopics in p.ratingquestionsubtopic_set.all %}
+                        <tr>
+                        <th style="font-weight: normal;">{{ratingsubtopics.name|safe}}</th><td><!--<span class="btn btn-secondary add_choices" id="{{ratingsubtopics.id}}" role="{{p.id}}">Add Choices</span>--></td>
+                         <tr>
+                        {% for ratingrange in ratingsubtopics.ratingquestionrange_set.all %}
+                        <tr>
+                         <td>{{ratingrange.name|safe}}</td>
+                         <td id="inputsholderrating{{ratingrange.id}}">
+                           <script>
+                            $(document).ready(function(){
+                            var rangeid='{{ratingrange.id}}';
+                            var finalvalue='{{ratingrange.range_to}}';
+                            var content="";
+                            for(a=1;a<=finalvalue;a++){
+    
+                               content=content+'<input type="radio" class="scalerate" name="radios{{ratingrange.id}}" class="vh" id="r{{ratingrange.id}}" role="{{ratingrange.id}}" aria-labelledby="l_r17 excellent">'
+                                
+                            }
+                            $("#inputsholderrating"+rangeid).html(content)
+                           //alert(content)
+                        })
+                            </script>
+    
+    
+                         </td>
+                         <td><!--<span class="update_choices btn btn-info" id="{{ratingsubtopics.id}}" role="{{p.id}}" name="{{ratingrange.id}}"><i class='fa fa-edit'></i></span>--></td>
+                        </tr>
+                        {% endfor %}
+                    </tr>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+                        <tr><!--<span class="btn btn-success addtopics"><i class='fa fa-plus'></i> Add Topic</span>--></tr>
+                        
+                    </table>
+      
+                  {% elif i.question_type_id == 4 %}
+                  <span style="float: right;margin-right: 20px;" role="{{i.id}}" class="btn btn-info addSelectOptions"><i class="fa fa-plus"></i> Add Choices</span></p>
+ 
+                  <select class="col-lg-12" id="questions{{i.id}}" name="{{i.id}}">
+                  
+                  </select>
+                 
+                  {% elif i.question_type_id == 5 %}
+                  <textarea class="col-lg-12" id="{{i.id}}" name="input{{i.id}}" style="min-height:200px;resize: none;" maxlength="1200" role="{{i.QuestionType}}"></textarea>
+            
+               
+                  {% elif i.question_type_id == 6 %}
+                
+                  {% elif i.question_type_id == 7 %}
+                  <p><span style="float: centre;">{{i.QuestionType}}</span>
+                    <span style="float: right;margin-right: 20px;" role="{{i.id}}" class="btn btn-info addoptions"><i class="fa fa-plus"></i> Add Choices</span></p>
+                 
+                    
+            <div class="col-sm-12 col-xs-12" id="questions{{i.id}}">
+              <table class="table">
+
+              {% for choice in i.choice_set.all %}
+              <tr>
+               
+                {% if choice.status == 'active' %}
+                <td>
+                  <label style="font-weight: initial !important" class="submit_radiosd">
+
+            <input type="checkbox"  id="{{p.id}}"  value="{{p.name}}" name="{{p.name}}"  class="innovations_radio" role="{{choice.id}}">
+              <span class="checkmarkd"></span>
+               {{choice.name}}
+               </label>
+              </td>
+              <td>
+               
+               <span class="remove_choice " name="RemoveChoice/" role="{{choice.id}}"><i class="fa fa-trash"></i></span>
+               <span  class="remove_choice" name="UpdateMutipleChoice/" role="{{choice.id}}"><i class="fa fa-edit"></i></span>
+            
+            </td>
+            {% else %}
+            {% endif %}
+          </tr>
+              {% endfor %}
+        </table>
+
+
+
+            </div>
+         
+        
+
+                  {% elif i.question_type_id == 8 %} 
+                  <p><span style="float: centre;">{{i.QuestionType}}</span>
+                    <span style="float: right;margin-right: 20px;" role="{{i.id}}" class="btn btn-info addoptions"><i class="fa fa-plus"></i> Add Choices</span></p>
+                 
+                    <div class="col-sm-12 col-xs-12" id="questions{{i.id}}">
+                      {% for choice in i.choice_set.all %}
+              {% if choice.status == 'active' %}
+              <div class="col-sm-12 col-xs-12" style="margin-bottom:5px ;">
+
+                <label style="font-weight: initial !important" class="submit_radiosd">
+
+            <input type="checkbox"  id="{{p.id}}"  value="{{p.name}}" name="{{p.name}}"  class="innovations_radio" role="{{choice.id}}">
+              <span class="checkmarkd"></span>
+               {{choice.name}}
+               </label>
+               <span style="text-align: center;">
+               <span class="remove_choice " name="RemoveChoice/" role="{{choice.id}}"><i class="fa fa-minus"></i></span>
+               <span  class=" remove_choice" name="UpdateMutipleChoice/" role="{{choice.id}}"><i class="fa fa-edit"></i></span>
+            </span>
+            </div>
+            {% else %}
+            {% endif %}
+             {% endfor %}
+        
+        
+        
+                    </div>
+                   
+             {% else %}
+      
+                    {% endif %}
+                
+              </p>
+        </div>
+        <hr>
+
+         {% endfor %}
+
+
+</div>
+<div class="modal fade" id="modal-staff">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      </div>
+  </div>
+</div>
+                        <script>
+                            $(document).ready(function(){
+                             
+
+                     
+$("#AddQuestion").click(function(){
+  //alert()
+    $.get('questions/create_question/',function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+                        })
+})
+$(".updateQuestions").click(function(){
+    var QuestionId=$(this).attr('role')
+    $.get('questions/UpdateQuestion/'+QuestionId,{},function(data){
+        $("#modal-staff").modal("show");                         
+        $(".modal-content").html(data)                      
+      //$('.content-wrapper').html(data)
+                         })
+})
+
+$('.addSelectOptions').click(function(){
+  var QuestionId=$(this).attr('role')
+var csrfmiddlewaretoken= '{{csrf_token}}';
+$.post('questions/addMutipleChoice/'+QuestionId,{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+    $("#modal-staff").modal("show");                             
+    $(".modal-content").html(data)                          
+  //$('.content-wrapper').html(data)
+                         })
+
+
+
+})
+
+
+$(".addoptions").click(function(){
+var QuestionId=$(this).attr('role')
+var csrfmiddlewaretoken= '{{csrf_token}}';
+$.post('questions/addMutipleChoice/'+QuestionId,{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+    $("#modal-staff").modal("show");                             
+    $(".modal-content").html(data)                          
+  //$('.content-wrapper').html(data)
+                         })
+
+})
+$(".remove_choice").click(function(){
+
+            var optionid=$(this).attr('role');
+            var actionpage=$(this).attr('name')
+            var csrfmiddlewaretoken= '{{csrf_token}}';
+           $.post('/dashboard/questions/'+actionpage+optionid,{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+            if(actionpage=='RemoveChoice/'){
+              $("#modal-staff").modal("hide"); 
+                            
+            $('.content-wrapper').html(data)
+            }else{
+              $("#modal-staff").modal("show");  
+            $(".modal-content").html(data)  
+            }
+            
+           
+                         })
+
+              })
+
+$(".removeQuestions").click(function(){
+  var QuestionId=$(this).attr('role')
+  var csrfmiddlewaretoken= '{{csrf_token}}';
+  //alert(QuestionId)
+    $.post('questions/removeQuestions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,QuestionId:QuestionId},function(data){
+    })
+})
+
+
+
+                  
+      $(".changeLayout").click(function(){
+        var QuestionId=$(this).attr('role')
+          var csrfmiddlewaretoken= '{{csrf_token}}';
+         $.post('/dashboard/questions/amendRatingQuestion/',{QuestionId:QuestionId,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+          $("#modal-staff").modal("show");        
+          $("#modal-staff").html(data)
+
+
+          //$('.content-wrapper').html(data)
+                       })
+
+            })
+  })
+</script>

@@ -1,0 +1,127 @@
+{% extends 'dashboard/base3.html' %}
+{% load static %}
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+<script>
+  notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+    .action-btns {
+        cursor: pointer;
+    }
+    .btn-primary{
+    background:#111c43 !important
+
+}
+
+</style>
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<div class="row">
+    <div class="col-sm-12">
+        
+        <div class="card">
+            <div class="card-body">
+                <div class="col-sm-12">
+                    <span class="btn btn-success create-btn" style="float: right;"><i class="fa fa-plus"></i> Add</span>
+                </div>
+           
+        <table class="table">
+            <thead>
+                <th>#</th>
+                <th>NAME</th>
+                {% if page == 'document-template' %}
+                <th>TEMPLATE TYPE</th>
+                <th>FILE</th>
+                {% endif %}
+                <th>DESCRIPTION</th>
+                <th>ACTION</th>
+
+            </thead>
+            <tbody>
+                {% for instance in list %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{instance.name}}</td>
+                    {% if page == 'document-template' %}
+                    <td>{{instance.template_type}}</td>
+                    <td>{{instance.file}}</td>
+                    {% endif %}
+                    <td>{{instance.description}}</td>
+                    <td><i role="{{instance.id}}" name="edit" class="action-btns fa fa-edit"></i>
+                        <i role="{{instance.id}}" name="delete" class="action-btns fa fa-trash"></i>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+    </div>
+</div>
+<div class="modal fade" id="modal-staff">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        var level='{{level}}'
+        // alert(level)
+        var level_name='Get'
+        var csrfmiddlewaretoken= '{{csrf_token}}';
+        $.post('/templates/create-template/',{level_name:level_name,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+            $(".modal-content").html(data)
+  
+        })
+        $(".create-btn").click(function(){
+            $("#modal-staff").modal("show"); 
+            // alert()
+        })
+        $(".action-btns").click(function(){
+           var instance=$(this).attr('role')
+           var action=$(this).attr('name')
+           var level_name='Get'
+           if (action=="delete"){
+            var r = confirm("Are you sure you wish to delete?, click OK or CANCEL end this process?");
+  if (r == true) {
+
+    $.post('/templates/update-delete-template/',{level_name:level_name,action:action,instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+          if ($.trim(data)=='redirect'){
+
+            window.location='/templates/manage-template/'+level
+          }else{
+            $(".modal-content").html(data)
+            $("#modal-staff").modal("show");
+          }
+        })
+
+  }else{
+
+  }
+           }else{
+
+        
+           $.post('/templates/update-delete-template/',{level_name:level_name,action:action,instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+          if ($.trim(data)=='redirect'){
+
+            window.location='/templates/manage-template/'+level
+          }else{
+            $(".modal-content").html(data)
+            $("#modal-staff").modal("show");
+          }
+      
+        })
+    }
+        })
+    })
+</script>
+
+{% endblock %}

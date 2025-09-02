@@ -1,0 +1,789 @@
+{% extends 'dashboard/base3.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+ .ff-el-form-control{
+  background-clip: padding-box;
+  background-image: none;
+  border: 1px solid #dadbdd;
+  border-radius: 7px;
+  color: #606266;
+  display: block;
+  font-family: -apple-system,"system-ui",Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+  line-height: 1;
+  margin-bottom: 0;
+  max-width: 100%;
+  padding: 11px 15px;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  width: 100%;
+    }
+    .ff-el-progress{
+        background-color: #e9ecef;
+border-radius: .25rem;
+font-size: .75rem;
+height: 1.3rem;
+line-height: 1.2rem;
+overflow: hidden;
+    }
+    .ff-el-progress-status {
+  color: var( --e-global-color-e62c288 );
+  font-family: "Source Sans Pro", Sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+.ff-step-header {
+  margin-bottom: 20px;
+}
+.ff-el-progress-bar {
+    width: 33.3333%;
+  background-color: #009640;
+  text-align: right;
+  color: #fff;
+}
+.not_shown{
+    display: none ;
+}
+.content_container{
+    border:1px solid #ccc;
+    border-radius: 10px;
+    padding:10px;
+    min-height: 300px;
+}
+.btn-success{
+    color: #fff !important;
+    background-color: #009640 !important;
+}
+.form-holders{
+    margin-top: 10px;
+}
+</style>
+<!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script> -->
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+<div class="row register_pages" id="page_one">
+
+
+ <div class="col-sm-12">
+<div class="card" style="margin-top:10px;padding-left:10px">
+ <div class="card-body">
+<div class="row">
+<div class="col-sm-12">
+    <div class="ff-step-header"><div class="ff-el-progress-status">Step 1 of 3 - Bio Data</div>
+            <div class="ff-el-progress">
+                <div class="ff-el-progress-bar" style="width: 33.3333%;"><span>33%</span></div>
+            </div>
+            <ul style="display: none" class="ff-el-progress-title">
+                <li style="display: inline;">Bio Data</li><li style="display: none;">Training Details</li><li style="display: none;">Payment Details</li>
+            </ul></div>
+            </div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_names_fisrt_name_" aria-label="First Name">
+Full Name:
+
+</label>
+
+<input type="name" disabled name="name" value="{{user.first_name}} {{user.middle_name}} {{user.last_name}}" readonly class=" col-sm-12 ff-el-form-control">
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_names_gender_" aria-label="Gender">
+Gender:
+
+</label>
+<input type="gender" disabled name="gender" value="{{user.gender}}" readonly class=" col-sm-12 ff-el-form-control">
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_email_" aria-label="Email">
+Email:
+
+</label>
+<input type="email" disabled name="email" value="{{user.email}}" readonly class=" col-sm-12 ff-el-form-control">
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_identification_type_" aria-label="identification_type">
+National Id Number:
+
+</label>
+<input type="text" disabled readonly  maxlength="8"  value="{{user.national_id}}" name="identification" placeholder="Provide your ID number" id="national_id" class=" col-sm-12 ff-el-form-control identities identity1 ">
+
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_phone_" aria-label="Phone">
+Phone:
+
+</label>
+<input type="phone" disabled readonly  name="phone" id="phone"  placeholder="e.g 0712345678 or 254712345678"  maxlength="12" value="{{user.phone_number}}"  class=" col-sm-12 ff-el-form-control">
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_age_" aria-label="Age">
+Date of Birth:
+
+</label>
+<input type="age"  name="age" id="age" placeholder="Input your age. e.g 20 years" value="{{user.birth_date}}"  class=" col-sm-12 ff-el-form-control">
+</div>
+
+<div class="col-sm-4 form-holders">
+<label for="ff_51_county_" aria-label="county">
+County:
+
+</label>
+<input type="text" disabled readonly name="county" value="{{user.county}}" id="county" class=" col-sm-12 ff-el-form-control">
+
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_constituency_" aria-label="Constituency">
+Sub-county:
+
+</label>
+<input type="text" disabled readonly value="{{user.constituency}}" name="constituency" id="constituency" class=" col-sm-12 ff-el-form-control">
+    
+
+</div>
+
+<div class="col-sm-4 form-holders">
+<label for="ff_51_ward_" aria-label="ward">
+Ward:
+
+</label>
+<input type="text" disabled readonly value="{{user.ward}}" name="ward" id="ward" class=" col-sm-12 ff-el-form-control">
+
+</div>
+
+
+
+
+
+<div class="col-sm-12" style="margin-top:10px">
+    <span class="btn btn-success next_page" style="float:right">Next</span>
+</div>
+<div class="col-sm-12 error_page" style="margin-top:10px;text-align:center;color:red;" id="error_page" ></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+<div class="row not_shown register_pages" id="page_two">
+
+
+ <div class="col-sm-12">
+<div class="card" style="margin-top:10px;padding-left:10px">
+ <div class="card-body">
+<div class="row">
+<div class="col-sm-12">
+<div class="ff-step-header"><div class="ff-el-progress-status">Step 2 of 3 - Training Details</div>
+            <div class="ff-el-progress">
+                <div class="ff-el-progress-bar" style="width: 66.6667%;"><span>66%</span></div>
+            </div>
+           
+        </div>
+            </div>
+<div class="row" style="width: 100% !important;">
+<div class="col-sm-6">
+<div class="col-sm-12 content_container" style="margin: 3px;" >
+    <div class="row">
+<div class="col-sm-12" style="padding-top: 10px;">
+<label for="ff_51_names_training_type" aria-label="Training Type">
+Training Category:
+
+</label>
+
+<select id="training_type" name="training_type"  {% if selected or category_selected %} disabled aria-readonly {% endif %} class=" col-sm-12 ff-el-form-control">
+    {% if category_selected %}
+    <option value="{{category_selected.id}}" role="{{category_selected.description}}">{{category_selected}}</option>
+    {% else %}
+    {% if selected %}
+    <option value="{{selected.training_category.id}}" role="{{selected.training_category.description}}">{{selected.training_category}}</option>
+    {% else %}
+    <option value="">-----------</option>
+    
+    {% for item in training_category %}
+      <option value="{{item.id}}" role="{{item.description}}">{{item}}</option>
+    {% endfor %}
+    {% endif %}
+    {% endif %}
+</select>
+</div>
+{% if category_selected %}
+
+{% else %}
+<div class="col-sm-12 trainings_holder">
+<label for="ff_51_trainings_" aria-label="Trainings">
+Training:
+
+</label>
+<select type="trainings" name="trainings" id="trainings" {% if selected %} disabled aria-readonly {% endif %} class=" col-sm-12 ff-el-form-control">
+    {% if selected %}
+    <option value="{{selected.id}}" role="{{selected.description}}">{{selected}}</option>
+    {% else %}
+    <option value="">-----------</option>
+    {% for item in trainings %}
+  
+     <option class=" not_shown training_types training_type{{item.training_category.id}}" value="{{item.id}}">{{item}}</option>
+
+      {% endfor %}
+      {% endif %}
+
+</select>
+</div>
+
+{% endif %}
+<div class="col-sm-12" style="padding-top: 10px;">
+<label for="ff_51_training_county_" aria-label="training_county">
+County of Training:
+
+</label>
+<select type="training_county" name="training_county" id="training_county" class=" col-sm-12 ff-el-form-control">
+    <option value="">-----------</option>
+
+ {% for item in counties %}
+     <option value="{{item.id}}">{{item}}</option>
+{% endfor %}
+</select>
+</div>
+<div class="col-sm-12" style="padding-top: 10px;">
+<label for="ff_51_institutions_" aria-label="Institutions">
+Training Institution:
+
+</label>
+<select type="institutions" name="institutions" id="institutions" class=" col-sm-12 ff-el-form-control">
+    <option value="">-----------</option>
+
+  {% for item in institution_cunties %}
+     <option class="not_shown countiesb countyb{{item.county.id}}" value="{{item.id}}" >{{item.institution}}</option>
+      
+{% endfor %}
+</select>
+</div>
+
+<div class="col-sm-12" style="padding-top: 10px;">
+<label for="ff_51_training_mode_" aria-label="training_mode">
+Mode of Training:
+
+</label>
+<select type="training_mode" name="training_mode" id="training_mode" class=" col-sm-12 ff-el-form-control">
+    <option value="">-----------</option>
+{% for item in training_modes %}
+     <option value="{{item.id}}">{{item}}</option>
+
+      
+{% endfor %}
+</select>
+</div>
+<div class="col-sm-12" style="padding-top: 10px;">
+<label for="ff_51_training_session_" aria-label="training_session">
+Training Session:
+
+</label>
+<select type="training_session" name="training_session" id="training_session" class=" col-sm-12 ff-el-form-control">
+    <option value="">-----------</option>
+
+   {% for item in institution_sessions %}
+     <option class="not_shown sessions session{{item.institution.id}}_{{item.mode.id}}" role="{{item.session.duration}}"  value="{{item.id}}">{{item}} for {{item.session.duration}} days, {{item.session.start_time}} - {{item.session.end_time}}</option>
+
+      
+{% endfor %}
+</select>
+</div>
+<div class="row" style="padding-right: 0px;padding-top: 10px;">
+<div class="col-sm-6" style="">
+<label for="ff_51_date_" aria-label="date">
+Select Start Date:
+
+</label>
+<input type="text" name="date" id="date" class="datepicker col-sm-12 ff-el-form-control" >
+
+</div>
+
+<div class="col-sm-6">
+    <label for="ff_51_date_" aria-label="date">
+    End Date:
+    
+    </label>
+    <input type="text" name="enddate" readonly  id="end_datepicker" class=" col-sm-12 ff-el-form-control">
+    
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-sm-6" >
+    <div class="col-sm-12 content_container main_description not_shown" style="margin: 3px;" id="">
+    <div class="col-sm-12" style=" background-color: #01a653 !important;color: #fff !important;">DESCRIPTION</div>
+    <div class="col-sm-12 description_holder" style="text-align: justify;"></div>
+    <div class="col-sm-12 description_basic" style="text-align: justify;">
+    <div class="col-sm-12">
+        {{basic_digital.description}}<br>
+        <hr>TOTAL COST :(Ksh). {{basic_digital.price}}
+    
+    </div>
+    <div class="col-sm-12">
+     <p></p>
+    <p>Basic Digital Skills Trainings</p>
+        <table class="table loadtable">
+            <tr style="background-color:#01a653;color:#fff">
+            <th>CODE</th><th>TRAINING TITLE</th>
+            </tr>
+           {% for item in basic_trainings %}
+
+     
+             <tr>
+            <td>{{item.code}}</td><td>{{item}} </td>
+            </tr>
+    
+{% endfor %}         
+        </table>
+    </div>
+
+</div>
+
+<div class="col-sm-12 foundational_basic" style="text-align: justify;">
+    <div class="col-sm-12">
+        {{basic_digital.description}}<br>
+        <hr>Free
+    
+    </div>
+    <div class="col-sm-12">
+     <p></p>
+    <p>Foundational Digital Skills Trainings</p>
+        <table class="table loadtable">
+            <tr style="background-color:#01a653;color:#fff">
+            <th>CODE</th><th>TRAINING TITLE</th>
+            </tr>
+           {% for item in foundational %}
+
+     
+             <tr>
+            <td>{{item.code}}</td><td>{{item}} 
+            
+            </td>
+            </tr>
+      
+{% endfor %}         
+        </table>
+    </div>
+
+</div>
+
+
+    </div>
+
+</div>
+</div>
+<div class="col-sm-12" style="margin-top:10px">
+<span class="btn btn-success back_page_institution" style="">Previous</span>
+    <span class="btn btn-success next_page_institution" style="float:right">Next</span>
+</div>
+<div class="col-sm-12 error_page" style="margin-top:10px;text-align:center;color:red"></div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="row not_shown register_pages" id="page_three">
+
+
+ <div class="col-sm-12">
+<div class="card" style="margin-top:10px;padding-left:10px">
+ <div class="card-body">
+<div class="row">
+<div class="col-sm-12">
+<div class="ff-step-header"><div class="ff-el-progress-status">Step 3 of 3 - Payment Details</div>
+            <div class="ff-el-progress">
+                <div class="ff-el-progress-bar" style="width: 100%;"><span>100%</span></div>
+            </div>
+           
+        </div>
+            </div>
+<div class="col-sm-12 registrarion_details" id="registrarion_details">
+   
+</div>
+<div class="col-sm-12" style="margin-top:10px">
+<span class="btn btn-success back_page_final" style="">Previous</span>
+
+    <!-- <span class="btn btn-success not_shown complete-process-btn complete-process" style="float:right">Complete</span> -->
+    <span class="btn btn-success not_shown complete_institution" style="float:right">Complete</span>
+</div>
+<div class="col-sm-12 error_page" style="margin-top:10px;text-align:center;color:red"></div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/hmac-sha256.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script> 
+
+  $.noConflict();
+  jQuery(function($) {
+    // Your code using $ here.
+    $(".datepicker").datepicker({
+      beforeShowDay: function(date) {
+        var day = date.getDay();
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (date < today) {
+          return [false, ''];
+        }
+
+        return [day === 1, ''];
+      }
+    });
+    
+  });
+
+
+  $(document).ready(function() {
+    // $("#date").datepicker();
+    var loader=$("#loader").html()
+// Add click event to a button (assuming you have a button with an ID of "calculate")
+$("#date").focusout(function(){
+    var selectedDate = $(this).val();
+    var selectedOption = $('#training_session').find("option:selected");
+    var num_days = selectedOption.attr("role");
+    if (selectedDate && num_days) {
+        var dateParts = selectedDate.split('/'); // Assumes the date is in MM/DD/YYYY format
+                  // Extract day, month, and year
+            var day = parseInt(dateParts[1], 10); // Convert day to a number
+            var month = dateParts[0];
+            var year = dateParts[2];
+            day +=  parseInt(num_days);
+            // alert(num_days)
+            var updatedDate = new Date(year, month - 1, day);
+            var updatedDay = updatedDate.getDate();
+            var updatedMonth = updatedDate.getMonth() + 1; 
+            var updatedYear = updatedDate.getFullYear();
+            
+        $("#end_datepicker").val( updatedMonth + "/" + updatedDay + "/" + updatedYear)
+
+    }
+
+});
+$("#end_datepicker").focusin(function(){
+    var selectedDate = $('#date').val();
+    var selectedOption = $('#training_session').find("option:selected");
+    var num_days = selectedOption.attr("role");
+    // alert(num_days)
+    if (selectedDate && num_days) {
+        var dateParts = selectedDate.split('/'); // Assumes the date is in MM/DD/YYYY format
+                  // Extract day, month, and year
+            var day = parseInt(dateParts[1], 10); // Convert day to a number
+            var month = dateParts[0];
+            var year = dateParts[2];
+            day +=  parseInt(num_days);
+
+            var updatedDate = new Date(year, month - 1, day);
+            var updatedDay = updatedDate.getDate();
+            var updatedMonth = updatedDate.getMonth() + 1; 
+            var updatedYear = updatedDate.getFullYear();
+
+            $("#end_datepicker").val( updatedMonth + "/" + updatedDay + "/" + updatedYear)
+    }
+
+});
+
+
+
+
+$(".complete-process").click(function(){
+
+})
+
+
+
+
+
+
+
+
+
+    var training_type=$("#training_type").val()
+
+        // var training_type=$(this).val()
+        var train='{{selected}}'
+            // alert(training_type)
+            // if(training_type){
+
+                if(training_type==2){
+                $(".trainings_holder").hide()
+                $(".main_description").show()
+                $("#trainings").val('').attr('disabled',true).attr('readonly',true)
+                $(".description_holder").html('').hide()
+                $(".description_basic").show()
+                $(".foundational_basic").hide()
+                
+                }else if(training_type==1){
+                $(".trainings_holder").hide()
+                $(".main_description").show()
+                $("#trainings").val('').attr('disabled',true).attr('readonly',true)
+                $(".description_holder").html('').hide()
+                $(".description_basic").hide()
+                $(".foundational_basic").show()
+            }else{
+            var description=$('option:selected', this).attr('role')
+            // alert(description)
+            $(".main_description").show()
+            $(".description_holder").html(description).show()
+            
+            $(".description_basic").hide()
+            $(".foundational_basic").hide()
+            
+            // alert(training_type)
+            $(".trainings_holder").show()
+            if (train){
+          
+                // $('#trainings').val('').attr('disabled',false).attr('readonly',false)
+            }else{
+                $(".training_types").hide()
+                $(".training_type"+training_type).show()
+                $('#trainings').val('').attr('disabled',false).attr('readonly',false)
+            }
+            }
+        // }else{
+
+        // }
+        $("#county").change(function(){
+            var county=$(this).val()
+            $(".counties").hide()
+            $(".county"+county).show()
+            $('#ward').val('')
+            $('#constituency').val('')
+        })
+       
+        
+        // $("#identification_type").change(function(){
+        //     var identity=$(this).val()
+        //     $(".identities").hide()
+        //     $("#national_id").val('')
+        //     $("#nemis").val('')
+        //     $("#birth_certificate").val('')
+        //     $(".identity"+identity).show()
+        //     $("#identity_holder").show()
+        //     if(identity==1){
+        //         $("#for_identification_lbl").html('ID Number')
+        //     }else if(identity==2){
+        //         $("#for_identification_lbl").html('NEMIS Details')
+        //     }else{
+        //         $("#for_identification_lbl").html('Birth Certificate Number')
+        //     }
+        // })
+        
+        $("#constituency").change(function(){
+            var constituency=$(this).val()
+            $(".constituencies").hide()
+            $(".constituency"+constituency).show()
+            $('#ward').val('')
+        })
+        $(".next_page").click(function(){
+       
+                $(".register_pages").hide()
+                $("#page_two").show()
+                $(".error_page").html('')
+       
+
+
+        })
+        $("#training_county").change(function(){
+            var county=$(this).val()
+            $(".countiesb").hide()
+            $(".countyb"+county).show()
+            $('#institutions').val('')
+        })
+   
+        $("#training_type").change(function(){
+            var training_type=$(this).val()
+            // alert(training_type)
+            if(training_type==2){
+                $(".trainings_holder").hide()
+                $(".main_description").show()
+                $("#trainings").val('').attr('disabled',true).attr('readonly',true)
+                $(".description_holder").html('').hide()
+                $(".description_basic").show()
+                $(".foundational_basic").hide()
+            }else if(training_type==1){
+                $(".trainings_holder").hide()
+                $(".main_description").show()
+                $("#trainings").val('').attr('disabled',true).attr('readonly',true)
+                $(".description_holder").html('').hide()
+                $(".description_basic").hide()
+                $(".foundational_basic").show()
+
+            }else{
+            var description=$('option:selected', this).attr('role')
+            // alert(description)
+            $(".main_description").show()
+            $(".description_holder").html(description).show()
+            $(".training_types").hide()
+            $(".description_basic").hide()
+            $(".foundational_basic").hide()
+            $(".trainings_holder").show()
+            // alert(training_type)
+            $(".training_type"+training_type).show()
+            $('#trainings').val('').attr('disabled',false).attr('readonly',false)
+            }
+        })
+
+            
+
+        $("#training_mode").change(function(){
+            var training_mode=$(this).val()
+            var institutions=$('#institutions').val()
+            $(".sessions").hide()
+            $(".session"+institutions+'_'+training_mode).show()
+            $('#training_session').val('')
+        })
+        $("#institutions").change(function(){
+            var institutions=$(this).val()
+            var training_mode=$('#training_mode').val()
+            $(".sessions").hide()
+            $(".session"+institutions+'_'+training_mode).show()
+            $('#training_session').val('')
+        })
+       
+
+        $("#training_session").change(function(){
+            $("#date").focusout()
+  })
+
+        // $("#training_county").change(function(){
+        //     var training_mode=$('#training_mode').val()
+        //     var county=$(this).val()
+        //     $(".countiesb").hide()
+        //     $(".countyb"+county+'_'+train_{{mode}}ing_mode).show()
+        //     $('#institutions').val('')
+        // })
+   
+        // $("#training_type").change(function(){
+        //     var training_type=$(this).val()
+        //     $(".training_types").hide()
+        //     // alert(training_type)
+        //     $(".training_type"+training_type).show()
+        //     $('#trainings').val('')
+        // })
+
+        $(".next_page_institution").click(function(){
+           var my_id=$("#user_email").val();
+           var selectedDate = $('#date').val();
+    var selectedOption = $('#training_session').find("option:selected");
+    var num_days = selectedOption.attr("role");
+    if (selectedDate && num_days) {
+        var dateParts = selectedDate.split('/'); // Assumes the date is in MM/DD/YYYY format
+                  // Extract day, month, and year
+            var day = parseInt(dateParts[1], 10); // Convert day to a number
+            var month = dateParts[0];
+            var year = dateParts[2];
+            day +=  parseInt(num_days);
+            // alert(num_days)
+            var updatedDate = new Date(year, month - 1, day);
+            var updatedDay = updatedDate.getDate();
+            var updatedMonth = updatedDate.getMonth() + 1; 
+            var updatedYear = updatedDate.getFullYear();
+            
+        $("#end_datepicker").val( updatedMonth + "/" + updatedDay + "/" + updatedYear)
+        var end_date=btoa( updatedMonth + "/" + updatedDay + "/" + updatedYear)
+    }
+           var training_type=btoa($("#training_type").val())
+           var trainings=btoa($("#trainings").val())
+           var institutions=btoa($("#institutions").val())
+           var training_county=btoa($("#training_county").val())
+           var training_mode=btoa($("#training_mode").val())
+           var training_session=btoa($("#training_session").val())
+           var date=btoa($("#date").val())
+        //    var end_date=btoa( updatedMonth + "/" + updatedDay + "/" + updatedYear)
+           var training_check=$("#training_type").val()
+        //    alert(training_check)
+            if(training_check==2){
+             var trainings=btoa('basic');
+            }else if(training_check==1){
+             var trainings=btoa('foundation');
+           }else{
+
+           }
+           var csrfmiddlewaretoken= '{{csrf_token}}';
+           if(training_session  && trainings && date && training_mode && training_type && institutions && training_county){
+            var loader=$("#loader").html()
+            // $(".error_page").html('submitting...kindly..wait..')
+            $(".error_page").html(loader)
+            $.post('/save-institution-details/',{csrfmiddlewaretoken:csrfmiddlewaretoken,end_date:end_date,date:date,training_mode:training_mode,training_county:training_county,training_session:training_session,training_type:training_type,institutions:institutions,trainings:trainings,my_id:my_id}, function (data) {
+            // if($.trim(data)=="success"){
+                // $.get('/payment-details/', function (data) {
+                $(".register_pages").hide()
+                $(".registrarion_details").html(data)
+                $("#page_three").show()
+                $(".error_page").html('')
+                // })
+            //  }else{
+            // $(".error_page").html('sorry..an error occured, kindly try again..')
+            // }
+            })
+
+
+           }else{
+            $(".error_page").html('All fields required! ')
+           }
+    
+
+        })
+
+
+        $(".back_page_institution").click(function(){
+            // var my_id=$("#user_email").val();
+            //  alert(my_id)
+            $(".register_pages").hide()
+            $("#page_one").show()
+            $(".error_page").html('')
+ 
+
+        })
+        $(".back_page_final").click(function(){
+            // var my_id=$("#user_email").val();
+            //  alert(my_id)
+            $(".register_pages").hide()
+            $("#page_two").show()
+            $(".error_page").html('')
+ 
+
+        })
+        $(".complete_institution").click(function(){
+            var csrfmiddlewaretoken= '{{csrf_token}}';
+            // var my_id=$("#user_email").val();
+            
+            $(".error_page").html(loader)
+            // $(".error_page").html('proccessing registration..')
+            $.get('/complete-training-registration/', function(data) {
+            if($.trim(data)=="success"){
+                window.location='/dashboard/'
+                
+            }else{
+                $(".error_page").html('sorry..we could not complete the process..kindly try again')
+            }
+        })
+        })
+        
+    })
+</script>
+
+{% endblock %}

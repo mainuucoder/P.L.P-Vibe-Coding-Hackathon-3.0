@@ -1,0 +1,125 @@
+{% extends 'dashboard/base3.html' %}
+{% load static %}
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+    notify('{{message.level_tag}}', "{{message}}");
+    </script>
+    
+    {% endfor %}
+    
+    {% endif %}
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<!-- <script src="https://unpkg.com/screenshare"></script> -->
+<style>
+    .camera-video-player{
+ border:1px solid #fff;
+ min-height: 134px;
+ max-height: 134px;
+ background-size: cover;
+ border-radius: 2%;
+
+
+    }
+    #video-container{
+        min-height: 90%;
+        background: #201f1f;
+    }
+</style>
+<div id="video-container" class="row">
+    <div class="col-sm-12" style="min-height: 20px;"></div>
+    <div class="col-sm-10" style="min-height: 560px;max-height: 690px; ">
+    <!-- <video id="remoteVideos" class="col-sm-12" style="border:1px solid #ccc;height: 98%;" class="col-sm-12" autoplay></video> -->
+    <video id="screensharingvideoplayer" autoplay playsinline class="col-sm-12" style="border:1px solid #ccc;height: 98%;padding:0px" class="col-sm-12" ></video>
+
+    </div>
+    <div class="col-sm-2" style="min-height: 560px;max-height: 690px;">
+        <div class="row" style="margin-bottom:3px">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-4 btn btn-success vid_chats" role="remoteVideos">Users <i class="fa fa-users"></i></div>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-4 btn btn-success vid_chats" role="comments_place">Chats <i class="fa fa-comments"></i></i></div> 
+        </div>
+        <div class="col-sm-12 video_coments " id="comments_place" style="display:none;max-height: 100%;overflow: auto;">
+            <div class="col-sm-12" style="max-height:450px;overflow:auto;background:#fff;">
+            {% for video in videos %}
+            <div class="row">
+            <div class="col-sm-2" style="min-height:30px;margin-top:4px;font-weight: 700px;">User{{forloop.counter}}:</div>
+          <div class="col-sm-10" style="min-height:30px;margin-top:4px;border-bottom:1px solid #ccc">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+          </div>
+        </div>
+            {% endfor %}
+            </div>
+            <div class="col-sm-12">
+                <textarea class="col-sm-12" style="resize:none;margin-top:5px;"></textarea>
+            </div>
+        </div>
+        <div class="col-sm-12 video_coments " id="remoteVideos" style="max-height: 100%;overflow: auto;">
+        <!-- <video class="col-sm-12 camera-video-player" id="camera-video-player" autoplay></video> -->
+        <video class="col-sm-12 camera-video-player" id="localVideo" autoplay playsinline></video>
+       
+        <!-- {% for video in videos %}
+        <video class="col-sm-12 camera-video-player" id="camera-video-player{{forloop.counter}}" autoplay></video>
+        {% endfor %} -->
+        </div>
+    </div>
+    <div class="col-sm-12" style="text-align: center;">
+        <!-- <button id="mute-video-btn"><i class='fa fa-microphone'></i></button>
+    <button id="mute-video-btn"><i class='fa fa-video-camera'></i></button>
+    <button id="share-screen-btn">Share screen</button>
+    <button id="stop-screen-sharing-btn"><i class="fa fa-television"></i></button> -->
+
+
+
+     <!-- <h1>Video Meeting: {{ room_name }}</h1> -->
+    <!-- <video id="localVideo" autoplay></video> -->
+    <!-- <div id="remoteVideos"></div> -->
+    <!-- <button id="startButton">Start</button>
+    <button id="callButton">Call</button>
+    <button id="hangupButton">Hang Up</button>
+    <button id="screenShareButton">Share Screen</button>
+    <button id="recordButton">Record</button>
+    <button id="stopRecordButton">Stop Recording</button>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script>
+        const roomName = "{{ room_name }}";
+    </script>
+    <script src="{% static 'meetings/js/meeting.js' %}"></script> -->
+    <!-- <video id="localVideo" autoplay playsinline></video>
+    <div id="remoteVideos"></div>
+    <video id="screensharingvideoplayer" autoplay playsinline></video> -->
+    <button id="startButton">Start</button>
+    <button id="callButton">Call</button>
+    <button id="hangupButton">Hang Up</button>
+    <button id="screenShareButton">Share Screen</button>
+    <button id="recordButton">Record</button>
+    <button id="stopRecordButton">Stop Recording</button>
+    <button id="muteMicButton">Mute Mic</button>
+    <button id="muteVideoButton">Mute Video</button>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script>
+        const roomName = "{{ room_name }}";
+    </script>
+    <script src="{% static 'meetings/js/meeting.js' %}"></script> 
+</div>
+</div>
+
+<script>
+     $(document).ready(function(){
+    $('.vid_chats').click(function(){
+        var role=$(this).attr('role')
+        $(".video_coments").hide()
+        $("#"+role).show()
+
+
+    })
+   
+        $('#startButton').click()
+    })
+   </script>
+    {% endblock %}
+  
+    

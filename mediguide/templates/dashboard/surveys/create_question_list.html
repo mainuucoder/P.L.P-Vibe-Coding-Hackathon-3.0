@@ -1,0 +1,222 @@
+{% load static %}
+{% load bootstrap5 %}
+{% load humanize %}
+<style>
+    .formContainers{
+        border:1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        min-height: 500px;
+    }
+</style>
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<div class="row">
+    <div class="col-12" style="margin-bottom: 3px">
+        <span class="btn btn-danger btnback"><i class="fa fa-arrow-left"></i> Back</span>
+       
+          
+      </div>
+    <div class="headers">Add questions  
+      <!-- <span class="btn btn-primary menu_btn" id="addSurvey" style="float:right;margin-top: -10px;" role="addForum">+ Add New</span> -->
+    </div>
+    <hr>
+</div>
+<div class="inner" style="min-height: 700px;">
+    <div class="row">
+        <div class="col-lg-12">
+            <span class="min-headers"> {{survey.name|safe}}</span>
+          
+        </div>
+    </div>
+      <hr />
+     <!--BLOCK SECTION -->
+     <div class="row">
+       <div class="col-sm-6 col-xs-12 " id="form_holder">
+
+        
+        <div class="col-sm-12 col-xs-12 formContainers">
+            <div class="card">
+                <div class="card-body ">
+        <div class="col-sm-12 col-xs-12">
+           <label class="form_label">SELECT QUESTION CATEGORY:</label> 
+            <select class="col-sm-12 col-xs-12" id="Question_category">
+                <option value="">---</option>
+                {% for i in questioncategory %}
+                {% if survey.survey_type == i.survey_type %}
+                  <option value="{{i.id}}">
+                    {{i.name|safe}}
+                  </option>
+                  {% else %}
+                  {% endif %}
+                 {% endfor %}
+            </select>
+
+        </div>
+        <hr>
+        <div class="col-sm-12 col-xs-12" id="category_damp" style="display: none;background:#fff;max-height: 400px;overflow-y: scroll;overflow-x: hidden;">
+        <label class="form_label">SELECT QUESTIONS TO BE ADDED:</label> 
+        <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+
+
+                {% for p in questions %}
+                {% if p.status == 'exists' %}
+                {% else %}
+
+                {% if user.is_ict_admin or user.is_admin %}
+              
+                {% else %}
+                {% if p.user_defined == 0 %}
+               
+                {% else %}
+                 {% if p.reusable == 1 %} 
+              
+                 {% else %}
+                 
+                 {% if p.institution == institution %}
+                
+                  {% else %}
+                  <script>
+                    $(document).ready(function(){
+
+                      var questionno='{{p.id}}'
+                      
+                      $('.question_wrapper'+questionno).html('').hide()
+                    })
+                    </script>
+                 {% endif %}
+    
+                 {% endif %}
+              {% endif %}
+              {% endif %}
+
+
+
+
+                <tr class="accordion-toggle categories collapsed category{{p.question_category_id}} question_wrapper{{p.id}}" id="accordion{{p.id}}" data-mdb-toggle="collapse" data-mdb-parent="#accordion{{p.id}}" href="#collapse{{p.id}}" aria-controls="collapse{{p.id}}">
+                  <td class="expand-button"></td>
+                  <td> <input type="checkbox"  id="{{p.id}}"  class="questions_select" role=""></td>
+                  <td>{{p.name|safe}}</td>
+                  <td>+</td>
+          
+                </tr>
+                <tr class="hide-table-padding">
+                  <td></td>
+                  <td colspan="3">
+                    <div id="collapse{{p.id}}" class="collapse in p-3">
+                        <p style="font-weight: bold;">Choices:</p>
+                        {% for choice in p.choice_set.all %}
+                        {% if choice.status == 'active' %}
+                        <p>&#x2022;{{choice.name}}</p>
+                        {% else %}
+                        {% endif %}
+                        
+                        {% endfor %}
+                    </div></td>
+                </tr>
+            {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+
+        </div>
+</div>
+</div>
+</div>
+       </div>
+       </div>
+       <div class="col-sm-6 col-xs-12 " ">
+        <div class="col-sm-12 col-xs-12 formContainers">
+            <label class="form_label">SELECTED QUESTIONS:</label> 
+            <div class="col-sm-12 col-xs-12 " id="list_holder">
+                
+            </div>
+        </div>
+       </div>
+
+    </div>
+
+</div>
+<script>
+    $(document).ready(function(){
+      
+ var surveyId='{{survey.id}}'
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+ $.post('/dashboard/surveys/loadQuestions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+$('#list_holder').html(data)
+   })
+   $(".btnback").click(function(){
+
+
+     window.location='/viewSurveys/'
+//     $.post('/dashboard/surveys/viewSurveys/',{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+
+//  $('.content-wrapper').html(data)
+//     })
+  })
+
+
+$("#Question_category").change(function(){
+    var category=$(this).val()
+    if(category){
+   
+    $('.categories').hide()
+    $('.categories').filter('.category'+category).show()
+    $('#category_damp').show()
+    }else{
+        $('#category_damp').hide()
+    }
+    
+
+})
+
+
+
+        $("#addSurvey").click(function(){
+     
+     $.get('/dashboard/surveys/create_survey/',function(data){
+         
+        $('.content-wrapper').html(data)
+ })
+ 
+ }) 
+ 
+
+
+
+$(".questions_select").change(function(){
+    var questionId=$(this).attr('id');
+    if($(this).prop('checked')){
+        action='addquestion'
+    }else{
+        action='removequestion'
+    }
+
+        $.post('/dashboard/surveys/add_question/',{action:action,questionId:questionId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            $.post('/dashboard/surveys/loadQuestions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+         $('#list_holder').html(data)
+            })
+           })
+   
+})
+    })
+</script>

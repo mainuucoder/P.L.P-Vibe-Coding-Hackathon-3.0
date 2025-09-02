@@ -1,0 +1,241 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+{% load humanize %}
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<style>
+  .surveyspanels{
+    min-height: 80px;
+    background: #fff;
+    margin-top: 5px;
+  }
+</style>
+
+<div class="row card" style="padding-top: 10px;">
+<div style="text-align: center;">
+<h3 style="color: #00A652;">Ongoing Forums</h3>
+    </div>
+</div>
+<div class="rs-faq inner   md-pb-80" style="margin-top: 10px;">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-12 pr-55 md-pr-15 md-mb-30">
+ {% if forums %}
+
+<div id="accordion" class="accordion">
+{% for forum in forums %}
+
+  <div class="card">
+      <div class="card-header" >
+          <a class="collapsed card-link" data-bs-toggle="collapse" data-bs-target=".collapseOne{{forum.id}}" href="#" aria-expanded="false" style="padding-bottom:0px">{{forum.Title|safe}}</a>
+         
+        </div>
+      <div id="collapseOne{{forum.id}}" class="collapseOne{{forum.id}} collapse" data-bs-parent="#accordion">
+          <div class="card-body">
+            {{forum.Brief_Description|safe}}
+            
+            <a href="{% url 'account_check_forums' forum.id %}" style="float: right;" data-toggle="collapse" data-target=".forum-content{{forum.id}}" class="text-body read_more" role="{{forum.id}}" style="color: #000 !important;font-weight:bold;">
+              <span class="btn btn-success" >Participate</span><b></b></a>
+
+   
+          </div>
+      </div>
+     
+       <span class="" style="margin-left:10px ;color:#000">
+              <span style="color:#00A652">
+              
+             
+              {% if forum.institution.logo %}
+              <img src="{{MEDIA}}{{forum.institution.logo.url}}" height="40px" width="40px" style="height:30px;width:30px;border-radius: 10%;">
+              {% endif %}
+             
+
+                <i style="font-size:13px !important">
+          {{forum.institution.name}}
+          </i>
+            </span>
+            <span style="float: right;margin-right: 10px;font-size:13px !important;margin-top: 2px;margin-bottom: 10px;"  class=" text-secondary font-weight-bold"> Deadline: <i style="color: #00A652;">{{forum.End_Date|date}}</i></span>
+        
+          </span> 
+         
+ 
+</span>
+  
+ 
+  </div>
+
+{% endfor %}
+</div>
+{% else %} 
+<div class="alert alert-danger tex-center" role="alert" style="text-align: center;margin:100px">
+  There are currently  no ongoing forums!!!!!   {% if not user.is_authenticated %} <a href="">Login here to check personalized forum invites.</a> {% endif %}
+</div>
+{% endif %}
+
+
+
+
+
+</div>
+</div>
+</div>
+</div>
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<script>
+    $(document).ready(function(){
+      
+        var questioncategory=parseInt('{{questioncategory.id}}')
+        
+        var csrfmiddlewaretoken= '{{csrf_token}}';
+         $(".btnviewresponces").click(function(){
+        
+          var loader= $('#loader').html()
+          
+          $('#loadingadge').html(loader)
+         var surveyId=$(this).attr('role');
+         
+         $.post('/dashboard/quizes/view_user_submissions/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+          $(".surveyspanels").hide()
+            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+surveyId).show()
+        
+          
+        $('.surveybackBtn').show()           
+         })
+        })
+     
+        $(".read_more").click(function(){
+         
+           var loader= $('#loader').html()
+          
+           $('#loadingadge').html(loader)
+          var survey=$(this).attr('role');
+          //alert(survey)
+          var surveyId=survey
+          
+         $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory+1;
+                        checkexistingcategories(questioncategory,surveyId)
+
+
+
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/Load_final_list_answers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                          $(".surveyspanels").hide()
+                          $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                        })
+
+                      
+                       }
+                      })
+
+
+
+
+                    })
+
+
+
+
+
+
+
+  
+      });
+
+
+      function checkexistingcategories(questioncategory,surveyId){
+   var questioncategory=questioncategory;
+    
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId=surveyId;
+       //alert(surveyId)
+       $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory+1;
+                        checkexistingcategories(questioncategory,surveyId)
+
+
+
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/Load_final_list_answers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                          $(".surveyspanels").hide()
+                          $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                        })
+
+                         //$.post('/dashboard/quizes/PublishAnswers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                         
+                         
+                          //$(".main-content").html(data)
+
+
+
+                     //})
+                      
+                       }
+                      })
+   
+}
+      </script>
+{% endblock %}

@@ -1,0 +1,858 @@
+{% load static %}
+
+{% load humanize %}
+<style>
+      table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.btn_reacts{
+            color:#000;
+        }
+    
+
+.bdge {
+  height: 21px;
+  background-color: orange;
+  
+  font-size: 11px;
+  padding: 8px;
+  border-radius: 4px;
+  line-height: 3px;
+}
+
+.comments {
+  text-decoration: underline;
+  text-underline-position: under;
+  cursor: pointer;
+}
+
+.dot {
+  height: 7px;
+  width: 7px;
+  margin-top: 3px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.hit-voting:hover {
+  color: blue;
+}
+
+.hit-voting {
+  cursor: pointer;
+}
+.commented-section{
+    text-align: justify;
+}
+.commented-section{
+    box-shadow: 0 0 3px #ccc;
+    border-radius: 2px;
+    padding: 1.5rem !important;
+}
+.starlabel:before {
+    content: '☆';
+    
+    font-size: 2em;
+  }
+  .starlabel.on:before {
+    content: '★';
+    
+    /* uncomment for iOS */
+  /*   font-size: 2.4em;
+    top: -0.1em;
+    left: -0.1em; */
+  }
+  .starrate:checked + .starlabel:before {
+    content: '★'; 
+    /* uncomment for iOS */
+  /*   font-size: 2.4em;
+    top: -0.1em;
+    left: -0.1em; */
+  }
+  .starlabel {  
+    display: inline-block;  
+    cursor: pointer;  
+    position: relative;  
+    padding-left: 25px;  
+    margin-right: 15px;  
+    font-size: 20px; 
+  }
+  .starlabel:before {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    position: absolute;
+    left: 0;
+    border-radius: 10px;
+  }
+  .starrate {
+    display: none;
+    -webkit-appearance: none;
+  }
+ 
+  /* Non-essential */
+
+  .question {
+    margin-bottom: 8em;
+  }
+  #q1 {
+    margin-top: 6em;
+  }
+  p {
+    font-family: Bitter, sans-serif;
+    font-size: 1em;
+  }
+  #submit {
+    font-size: 24px;
+    font-family: Bitter, sans-serif;
+    color: #448AC1;
+    width: 80px;
+    height: 80px;
+    border: none;
+    border-radius: 40px;
+  }
+  
+  .btn-scale {
+  min-width: 44px;
+  width: 6%;
+  text-align: center;
+  font-weight: bold;
+  color: black;
+  font-family: 'Lato', sans-serif;
+}
+
+.btn-scale-asc-1, .btn-scale-desc-10 {
+  background-color: #33FF00;
+}
+
+.btn-scale-asc-1:hover,
+.btn-scale-desc-10:hover {
+  background-color: #2CDE00;
+}
+
+.btn-scale-asc-2,
+.btn-scale-desc-9{
+  background-color: #66FF00;
+}
+
+.btn-scale-asc-2:hover,
+.btn-scale-desc-9:hover{
+  background-color: #59DE00;
+}
+
+.btn-scale-asc-3,
+.btn-scale-desc-8 {
+  background-color: #99FF00;
+}
+
+.btn-scale-asc-3:hover,
+.btn-scale-desc-8:hover {
+  background-color: #85DE00;
+}
+
+.btn-scale-asc-4,
+.btn-scale-desc-7 {
+  background-color: #CCFF00;
+}
+
+.btn-scale-asc-4:hover,
+.btn-scale-desc-7:hover {
+  background-color: #B1DE00;
+}
+
+.btn-scale-asc-5,
+.btn-scale-desc-6 {
+  background-color: #FFFF00;
+}
+
+.btn-scale-asc-5:hover,
+.btn-scale-desc-6:hover {
+  background-color: #DEDE00;
+}
+
+.btn-scale-asc-6,
+.btn-scale-desc-5 {
+  background-color: #FFCC00;
+}
+
+.btn-scale-asc-6:hover,
+.btn-scale-desc-5:hover {
+  background-color: #DEB100;
+}
+
+.btn-scale-asc-7,
+.btn-scale-desc-4 {
+  background-color: #FF9900;
+}
+
+.btn-scale-asc-7:hover,
+.btn-scale-desc-4:hover {
+  background-color: #DE8500;
+}
+
+.btn-scale-asc-8,
+.btn-scale-desc-3 {
+  background-color: #FF6600;
+}
+
+.btn-scale-asc-8:hover,
+.btn-scale-desc-3:hover {
+  background-color: #DE5900;
+}
+
+.btn-scale-asc-9,
+.btn-scale-desc-2 {
+  background-color: #FF3300;
+}
+
+.btn-scale-asc-9:hover,
+.btn-scale-desc-2:hover {
+  background-color: #DE2C00;
+}
+
+.btn-scale-asc-10,
+.btn-scale-desc-1 {
+  background-color: #FF0000;
+}
+
+.btn-scale-asc-10:hover,
+.btn-scale-desc-1:hover {
+  background-color: #DE0000;
+}
+
+
+.inputscheckboxes{
+  height: 30px;
+  width: 30px;
+}
+.multichoice7{
+  height: 21px;
+  width: 21px;
+}
+.multichoice8{
+  height: 21px;
+  width: 21px;
+}
+.rating_leaders{
+  font-size: 15px;
+  margin: 11px;
+  font-weight: bold;
+}
+input[type="text"][disabled] {
+   color: red;
+}
+.qustion_wrapper{
+  padding: 0px !important;
+}
+  </style>
+ {% if messages %}
+ {% for message in messages %}
+ {% if messages %}
+ {% for message in messages %}
+ <script>
+ notify('{{message.level_tag}}', "{{message}}");
+ </script>
+ 
+ {% endfor %}
+ 
+ {% endif %}
+ 
+ {% endfor %}
+ 
+ {% endif %}
+ <div class="rs-faq inner md-pb-80" style="margin-top: 10px">
+  <div class="container" style="padding: 0px !important;">
+    <div class="row" style="padding: 0px !important;">
+      <div class="col-lg-12 pr-55 md-pr-15 md-mb-30">
+        <div id="accordion" class="accordion">
+          
+        <div class="card">
+          <div class="card-body " style="padding: 10px !important;" >
+            <div class="col-sm-12" style="text-align:center">
+              Kindly review your survey and submit
+            </div>
+            <!-- <div class="row">
+              <div class="col-sm-2">
+            
+              <span class="col-sm-12 btn btn-danger surveybackBtn" id="surveybackBtn" ><i class="fa fa-arrow-left"></i> Back</span>
+            </div>
+            <div class="col-sm-8"></div>
+              <div class="col-sm-2">
+              <span class="col-sm-12 col-xs-12 btn btn-success forward_submit_suvery " id="" role="" name="">Submit<b></b></span>
+            </div>
+             </div> -->
+             <div class="row" style="padding: 0px;">
+              <div class="col-6 ">
+              <span class="btn  btn-danger surveybackBtn" id="surveybackBtn" >
+                <i class="fa fa-arrow-left"></i> Back</span>
+            </div>
+              <div class="col-6">
+              <span class="btn btn-success forward_submit_suvery" id="" style="float: right;" ><i class="fa fa-arrow-right"></i> SUBMIT</span>
+            </div>
+          </div>
+             <div class="col-sm-12 col-xs-12 errorpage" style="color: red;text-align:center"></div>
+
+{% for p in questionscategories %}
+<div class="col-12" style="background:#ccc;min-height: 30px;padding:10px;margin:10px;display: none;" id="category{{p.id}}">
+  <h4><strong>{{p.name|safe}}</strong></h4>
+</div>
+{% for i in p.surveyquestion_set.all %}
+
+{% if i.survey == survey %}
+<script>
+  $(document).ready(function(){
+// var categoryid='{{p.id}}'
+// $("#category"+categoryid).show()
+  })
+</script>
+
+<div class="col-sm-12  qustion_wrapper qustion_wrapper{{i.question.id}}" style="font-size: 14px !important;color:#000 !important; min-height: 80px;margin-top: 5px; box-shadow: 0 0 3px #ccc;border-radius: 2px;padding: 1.5rem !important;">
+
+        <div class="col-sm-12" style="padding: 0px !important;">
+         
+         <div class="col-sm-12" style="padding: 0px !important;"><span><strong>{{i.question.name|safe}}</strong>
+          </span>
+          </div>
+        </div>
+        <div class="row">
+<div class="col-sm-12" style="padding-left: 4% !important;">
+ 
+  {% if i.question.question_type_id == 1 %}
+
+        {% elif i.question.question_type_id == 2 %}
+
+       
+          
+            <div class="question" id="q1">
+              <input class="starrate" type="radio" name="needs" id="a1" value="1">
+              <label class="starlabel" for="a1"></label>
+              <input class="starrate" type="radio" name="needs" id="a2" value="2">
+              <label class="starlabel" for="a2"></label>
+              <input class="starrate" type="radio" name="needs" id="a3" value="3">
+              <label class="starlabel" for="a3"></label>
+              <input class="starrate" type="radio" name="needs" id="a4" value="4">
+              <label class="starlabel" for="a4"></label>
+              <input class="starrate" type="radio" name="needs" id="a5" value="5">
+              <label class="starlabel" for="a5"></label>
+            </div>
+          
+          
+
+        {% elif i.question.question_type_id == 3 %}
+        <table class="col-sm-12">
+          {% for p in i.question.ratingquestiontopic_set.all %}
+          {% if p.status == 'active' %} 
+          <tr style="background-color:#a4a4a4"><td class="col-sm-10">{{p.name|safe}}</td><td class="col-sm-2 headingholders{{i.id}}">
+    
+          
+          </td>
+          <script>
+            $(document).ready(function(){
+             
+              var questionID='{{i.id}}'
+              var headings=''
+              var question_leaders='{{question_leaders}}'
+             
+              for(h=1;h<=question_leaders;h++){
+                var newhead='<span class="rating_leaders">'+h+'</span>'
+                headings=headings+newhead
+              }
+              $(".headingholders"+questionID).html(headings)
+            })
+             </script>
+        </tr>
+         {% for ratingsubtopics in p.ratingquestionsubtopic_set.all %}
+         {% if ratingsubtopics.status == 'active' %} 
+         <tr style="background-color: #ccc;">
+              <th style="font-weight: normal;">{{ratingsubtopics.name|safe}}</th><td>  </td>
+               <tr>
+              {% for ratingrange in ratingsubtopics.ratingquestionrange_set.all %}
+              {% if ratingrange.status == 'active' %}
+              {% for rateresponce in userresponceratings %}
+             
+              {% if ratingrange.id == rateresponce.RatingQuestionRange_id %}
+              
+               <span id="valueholder{{ratingrange.id}}" role="{{rateresponce.name}}"></span> 
+              {% else %}
+              {% endif %}
+              {% endfor %}
+              <tr>
+               <td>{{ratingrange.name|safe}}</td>
+               <td id="inputsholderrating{{ratingrange.id}}">
+                 <script>
+                  $(document).ready(function(){
+                    var rateresponce='{{ratingrange.id}}'
+                 
+                  var rangeid='{{ratingrange.id}}';
+
+                  var selectedvalue=$("#valueholder"+rateresponce).attr('role');
+                  
+                  var finalvalue='{{ratingrange.range_to}}';
+                  var content="";
+                  var checkboxvalues=''
+                  
+                  for(a=1;a<=finalvalue;a++){
+                    if(a==selectedvalue){
+                      checkboxvalues='checked';
+                    }else{
+                      checkboxvalues=''
+                    }
+                    content=content+' <input type="checkbox" disabled '+checkboxvalues+'  value='+a+' class="inputscheckboxes ratingcheckboxes{{ratingrange.id}}" name="{{ratingsubtopics.id}}" id="{{p.id}}"  role="{{ratingrange.id}}" >'
+                       
+                  }
+                  $("#inputsholderrating"+rangeid).html(content)
+               
+              })
+                  </script>
+
+
+               </td>
+              </tr>
+              {% else %}
+              {% endif %}
+              {% endfor %}
+          </tr>
+              </tr>
+              {% else %}
+              {% endif %}
+              {% endfor %}
+              {% else %}
+              {% endif %}
+              {% endfor %}
+              
+              
+          </table>
+{% elif i.question.question_type_id == 4 %}
+<select class="col-lg-12 SelectQuestionsOptions" id="questions{{i.id}}" name="{{i.id}}">
+  <option></option>  
+  {% for choice in i.question.choice_set.all %}
+  {% if choice.status == 'active' %}
+<option>{{ choice.name }}</option>  
+{% else %}
+{% endif %}
+        {% endfor %}
+
+</select>
+
+{% elif i.question.question_type_id == 5 %}
+{% for r in userresponcetext %}
+
+{% if r.question == i.question %}
+<script>
+  $(document).ready(function(){
+    var question_answer='{{r.Answers}}'
+    var quetionpid='{{i.id}}'
+    $('#textareaQuestions'+quetionpid).text(question_answer)
+  })
+  </script>
+
+{% else %}
+
+{% endif %}
+{% endfor %}
+<textarea class="col-lg-12 textareaQuestions{{i.id}}" id="textareaQuestions{{i.id}}" disabled role="{{i.id}}" name="{{i.id}}"
+style="min-height:200px;resize: none;" maxlength="1200" role="{{i.question_type}}">
+
+</textarea>
+
+
+{% elif i.question.question_type_id == 6 %}
+
+
+
+{% elif i.question.question_type_id == 7 %}
+
+  {% for related_question in i.question.relatedquestion_set.all %}
+  {% if related_question.main_question.id == i.question.id %}
+  <script>
+    $(document).ready(function(){
+    var relatedq='{{related_question.linked_question.id}}'
+    var mainq='{{related_question.main_question.id}}'
+    var choice_linked='{{related_question.choice.id}}'
+ 
+      $(".qustion_wrapper"+relatedq).hide()
+   
+  
+    $(".qustion_wrapper"+relatedq).addClass('linked_question'+mainq)
+   $(".qustion_wrapper"+relatedq).addClass('linked_choice'+choice_linked)
+    })
+  </script>
+  {% else %}
+
+  {% endif %}
+{% endfor %}
+<div class="col-sm-12 col-xs-12  parentselect" id="questions{{i.question.id}}" role="{{i.question.id}}">
+  {% for choice in i.question.choice_set.all %}
+  {% if choice.status == 'active' %}
+  
+  <div class="col-sm-12 col-xs-12" style="margin-bottom:5px ;">
+
+
+  {% for b in userresponce %}
+  
+  {% if b.question == i.question %}
+    {% if b.Choices == choice %}
+    {% if choice.name == 'Other' %}
+    {% if b.status == 'Specify' %}
+     <script>
+      $(document).ready(function(){
+      var questionId='{{i.question.id}}'
+      var specifiedValue='{{b.Answers}}'
+      $("#specify_field"+questionId).html(specifiedValue)
+      $("#specify"+questionId).show()
+      })
+      </script>
+    {% elif b.status == 'active' %}
+    <script>
+      $(document).ready(function(){
+      var questionId='{{i.question.id}}'
+      var specifiedValue='{{b.Answers}}'
+      $("#specify_field"+questionId).html(specifiedValue)
+      $("#specify"+questionId).show()
+      // alert()
+      })
+      </script>
+    {% else %}
+    {% endif %}
+    {% else %}
+   
+    {% endif %}
+    <label style="font-weight: initial !important" class="submit_radiosd">
+
+      <input type="checkbox" disabled checked id="{{choice.id}}" role="{{i.question.id}}"  value="{{choice.name}}" name="{{questionId}}"  class=" multichoice7  multichoiced{{i.question.id}}" >
+        <span class="checkmarkd"></span>
+        <script>
+          $(document).ready(function(){
+  
+            var choice_linked='{{choice.id}}'
+                 $('.linked_choice'+choice_linked).show()
+          })
+          </script>
+         
+        {{ choice.name }}
+
+      
+         </label>
+
+    {% else %}
+    <label style="font-weight: initial !important" class="submit_radiosd">
+
+      <input type="checkbox" disabled  id="{{choice.id}}" role="{{i.question.id}}"  value="{{choice.name}}" name="{{questionId}}"  class=" multichoice7 multichoiced{{i.question.id}}" >
+        <span class="checkmarkd"></span>
+        {{ choice.name }}
+         </label>
+    {% endif %}    
+
+  {% else %}
+
+{% endif %}
+{% endfor %}
+
+
+
+
+
+</div>
+
+  {% else %}
+  {% endif %}
+{% endfor %}
+
+<div class="col-12" style="display:none" id="specify{{i.question.id}}">
+  Kindly specify:
+<textarea disabled class="col-sm-12 specify_fields " id="specify_field{{i.question.id}}" style="resize:none;" role="{{i.question.id}}" placeholder="Specify here.."></textarea>
+</div>
+</div>
+
+
+{% elif i.question.question_type_id == 8 %}
+
+  {% for related_question in i.question.relatedquestion_set.all %}
+  {% if related_question.main_question.id == i.question.id %}
+  <script>
+    $(document).ready(function(){
+    var relatedq='{{related_question.linked_question.id}}'
+    var mainq='{{related_question.main_question.id}}'
+    var choice_linked='{{related_question.choice.id}}'
+  
+      $(".qustion_wrapper"+relatedq).hide()
+  
+  
+    $(".qustion_wrapper"+relatedq).addClass('linked_question'+mainq)
+   $(".qustion_wrapper"+relatedq).addClass('linked_choice'+choice_linked)
+    })
+   
+  </script>
+  {% else %}
+
+  {% endif %}
+{% endfor %}
+  <div class="col-sm-12 col-xs-12  parentselect" id="questions{{i.question.id}}" role="{{i.question.id}}">
+    {% for choice in i.question.choice_set.all %}
+    {% if choice.status == 'active' %}
+    <div class="col-sm-12 col-xs-12" style="margin-bottom:5px ;">
+  
+      <label style="font-weight: initial !important" class="submit_radiosd">
+  
+        <input type="checkbox" disabled  id="{{choice.id}}" role="{{i.question.id}}"  value="{{choice.name}}" name="{{questionId}}"  class=" multichoice8 multichoiced{{i.question.id}}" >
+          <span class="checkmarkd"></span>
+      
+          {{ choice.name }}
+           </label>
+  
+   
+
+
+    {% for b in userresponce %}
+    
+    {% if b.question == i.question %}
+      {% if b.Choices == choice %}
+     
+      {% if choice.name == 'Other' %}
+      {% if b.status == 'Specify' %}
+       <script>
+        $(document).ready(function(){
+        var questionId='{{i.question.id}}'
+        var specifiedValue='{{b.Answers}}'
+        $("#specify_field"+questionId).html(specifiedValue)
+        $("#specify"+questionId).show()
+        })
+        </script>
+      {% elif b.status == 'active' %}
+      <script>
+        $(document).ready(function(){
+        var questionId='{{i.question.id}}'
+        var specifiedValue='{{b.Answers}}'
+        $("#specify_field"+questionId).html(specifiedValue)
+        $("#specify"+questionId).show()
+        })
+        </script>
+      {% else %}
+      {% endif %}
+      {% else %}
+     
+      {% endif %}
+    
+          <script>
+            $(document).ready(function(){
+    
+              var choice_linked='{{choice.id}}'
+              $('.linked_choice'+choice_linked).show()
+              $('#'+choice_linked).attr("checked", "checked");
+            })
+            </script>
+         
+  
+      {% else %}
+     
+      {% endif %}    
+  
+    {% else %}
+  
+  {% endif %}
+  {% endfor %}
+
+
+
+  </div>
+  
+    {% else %}
+    {% endif %}
+  {% endfor %}
+  
+  <div class="col-12" style="display:none" id="specify{{i.question.id}}">
+    Kindly specify:
+  <textarea class="col-sm-12 specify_fields " disabled id="specify_field{{i.question.id}}" style="resize:none;" role="{{i.question.id}}" placeholder="Specify here.."></textarea>
+ </div>
+</div>
+
+
+{% elif i.question.question_type_id == 9 %}
+
+
+
+
+
+
+      {% else %}
+
+      {% endif %}
+    
+</div>
+</div>
+</div>
+{% else %}
+{% endif %}
+ {% endfor %}
+{% endfor %}
+<div class="card-body" style="padding: 10px !important;">
+  <div class="row" style="padding: 0px;">
+    <div class="col-6 ">
+    <span class="btn  btn-danger surveybackBtn" id="surveybackBtn" >
+      <i class="fa fa-arrow-left"></i> Back</span>
+  </div>
+    <div class="col-6">
+    <span class="btn btn-success forward_submit_suvery" id="" style="float: right;" ><i class="fa fa-arrow-right"></i> SUBMIT</span>
+  </div>
+</div>
+ <!-- <div class="row">
+  <div class="col-sm-2">
+
+  <span class="col-sm-12 btn btn-danger surveybackBtn" id="surveybackBtn" ><i class="fa fa-arrow-left"></i> Back</span>
+</div>
+<div class="col-sm-8"></div>
+  <div class="col-sm-2">
+  <span class="col-sm-12 col-xs-12 btn btn-success forward_submit_suvery " id="" role="" name="">Submit<b></b></span>
+</div>
+ </div> -->
+<div class="col-sm-12 col-xs-12 errorpage" style="color: red;text-align:center"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+  $(document).ready(function(){
+  var questioncategory='{{questioncategory}}'
+
+    var surveyId='{{survey.id}}'
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+ $(".surveybackBtn").click(function(){
+    if(questioncategory==1){
+      $("#surveysquestionsarea").hide();
+    $(".surveyspanels").show();
+    }else{
+      questioncategory=questioncategory-1
+
+      
+      $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory-1;
+                         if(questioncategory<1){
+                          $("#surveysquestionsarea").hide();
+                        $(".surveyspanels").show();
+                        }else{
+                        checkexistingcategoriesback(questioncategory,surveyId)
+
+
+                        }
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+
+                    
+                      
+                       }
+                      })
+                      
+    }
+   
+      
+        })
+
+
+
+    $(".forward_submit_suvery").click(function(){
+  
+    var loader=$('#loader').html()
+    $(".errorpage").html('..Submitting Task...kindly wait.. '+loader)
+     $.post('/dashboard/quizes/PublishAnswers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+      
+      if($.trim(data)=='success'){
+        var quizb='{{survey.is_quiz}}'
+        if (quizb){
+          location.replace('/quiz-list/')
+        }else{
+          location.replace('/quiz-list-feedback/')
+        }
+        
+      }else{
+        $(".errorpage").html('An error occured.. kindly try again')
+      }
+ 
+
+
+                   })
+  })
+  })
+
+function checkexistingcategoriesback(questioncategory,surveyId){
+   var questioncategory=questioncategory;
+   
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId=surveyId;
+      
+       $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory-1;
+                        if(questioncategory<1){
+                          $("#surveysquestionsarea").hide();
+                        $(".surveyspanels").show();
+                        }else{
+                          checkexistingcategoriesback(questioncategory,surveyId)
+                        }
+
+
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+
+                    
+                      
+                       }
+                      })
+   
+}
+</script>

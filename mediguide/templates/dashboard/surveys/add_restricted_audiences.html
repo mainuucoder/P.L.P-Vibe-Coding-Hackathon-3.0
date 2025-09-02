@@ -1,0 +1,284 @@
+{% load static %}
+{% load bootstrap5 %}
+{% load humanize %}
+<style>
+    table {
+        font-size: 13px !important;
+        text-align: center;
+        width: 95%;
+        margin: auto;
+        text-align: center;
+    }
+
+    /*Make alternating colors for the table rows*/
+    .table tr:nth-child(odd) {
+        /* background: #B8CAE4 */
+    }
+
+    .table tr:nth-child(even) {
+        /* background: #dae5f4 */
+    }
+
+    thead {
+        background-color: #96bcee;
+        color: #000;
+    }
+
+    th {
+        background-color: #106EEA;
+        color: #000;
+    }
+
+    .display_table {
+        border-bottom-right-radius: 20px;
+        /*border-bottom-left-radius: 20px;*/
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-bottom: 20px;
+        /* box-shadow: 12px 12px 20px 6px #2e6da4; */
+    }
+
+    td {
+        padding: 6px;
+        line-height: 1.428571429;
+        vertical-align: top;
+        border-top: 1px solid #dddddd;
+        text-align: justify;
+        font-size: 16px;
+    }
+
+    .page_links {
+        cursor: pointer;
+
+    }
+
+    .pagination {
+    float:right;
+  }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+    }
+
+    .pagination a.active {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    .actionbtns {
+        cursor: pointer;
+
+    }
+
+
+
+
+
+    .dropbtn {
+        color: #000;
+        padding: 1px;
+        font-size: 1px;
+        border: none;
+        cursor: pointer;
+    }
+
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 200px;
+        left: -144px;
+        height: 300px !important;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 9;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        color: black;
+        /* padding: 12px 16px; */
+        text-decoration: none;
+        display: block;
+    }
+
+    .btn-app-dropdown:hover {
+        background-color: #ccc;
+    }
+
+    .btn-app-dropdown {
+        Border-bottom: 1px solid #ccc
+    }
+
+    /* Change color of dropdown links on hover */
+    /* .dropdown-content a:hover {background-color: #f1f1f1} */
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    /* Change the background color of the dropdown button when the dropdown content is shown */
+    .dropdown:hover .dropbtn {}
+
+
+
+
+
+
+
+
+    th {
+        text-transform: uppercase;
+    }
+
+
+
+    .btn-app-dropdown {
+        text-align: left;
+    }
+
+    .graphs {
+        min-height: 200px;
+    }
+
+    .card-titles-header {
+        text-transform: uppercase;
+        font-weight: 600px;
+        text-align: center;
+    }
+
+    .targettypes {
+        width: 20px;
+        height: 20px;
+    }
+
+    .page_header_default {
+        font-weight: bold;
+        font-size: 12px;
+        border-bottom: 1px solid #ccc;
+        text-transform: uppercase;
+    }
+</style>
+{% if messages %}
+{% for message in messages %}
+<script>
+    notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+<div class="card">
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12" style="margin-bottom: 10px;">
+                <span class="btn btn-danger btnback"><i class="fa fa-arrow-left"></i> Back</span>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="col-sm-12 card-titles-header">Current Target Audience</div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="col-sm-12"
+                                        style="border: 1px solid #ccc;padding:10px;min-height: 250px;">
+                                        <div class="col-sm-12 page_header_default" style="font-weight: bold;">(STEP 1)
+                                            SELECT TARGET
+                                        </div>
+                                        {% for item in targetypes %}
+                                        <div class="col-sm-12">
+                                            <lable>
+
+                                                <input type="checkbox" {% if item.status %} checked {% endif %}
+                                                    role="{{item.id}}" class="targettypes">
+                                                {{item.name}}
+                                            </lable>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="col-sm-12"
+                                        style="border: 1px solid #ccc;padding:10px;min-height: 250px;">
+                                        <div class="col-sm-12 page_header_default" style="font-weight: bold;">(STEP 2)
+                                            TARGET OPTIONS
+                                        </div>
+                                        <div class="col-sm-12" style="display:none" id="target_options">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6" id="selected_audience_target">
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            var csrfmiddlewaretoken = '{{csrf_token}}';
+            var survey = '{{survey.id}}'
+
+            $.get('/dashboard/surveys/list_filtered_targets/' + survey, function (data) {
+
+                $('#selected_audience_target').html(data)
+            })
+
+            $(".btnback").click(function () {
+                window.location='/viewSurveys/'
+                // $.post('/dashboard/surveys/viewSurveys/', { csrfmiddlewaretoken: csrfmiddlewaretoken }, function (data) {
+
+                //     $('.content-wrapper').html(data)
+                // })
+            })
+            $(".targettypes").change(function () {
+                var role = $(this).attr('role')
+                var targetvalue = $(this).val()
+                if ($(this).prop('checked')) {
+                    var action = 'add'
+                } else {
+                    var action = 'remove'
+                }
+                $.post('/dashboard/surveys/update-targets/', { survey: survey, action: action, role: role, csrfmiddlewaretoken: csrfmiddlewaretoken }, function (data) {
+
+                    $('#target_options').html(data).show()
+                })
+                $.get('/dashboard/surveys/list_filtered_targets/' + survey, function (data) {
+
+                    $('#selected_audience_target').html(data)
+                })
+            })
+        })
+    </script>

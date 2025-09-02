@@ -1,0 +1,61 @@
+<div class="col-sm-12" style="margin-bottom:5px;border-bottom: 1px solid #ccc;">
+    <lable>
+
+        <input type="checkbox" role="all" class="targetaudeinceoptionsall">
+        Check all
+    </lable>
+</div>
+{% for item in selectedtargets %}
+<div class="col-sm-12">
+    <lable>
+
+        <input type="checkbox" role="{{item.id}}" {% if item.status %} checked {% endif %}
+            class="targetaudeinceoptions">
+        {{item.name}}
+    </lable>
+</div>
+{% endfor %}
+
+<script>
+    $(document).ready(function () {
+        var csrfmiddlewaretoken = '{{csrf_token}}';
+        var survey = '{{survey.id}}'
+        var targettype = '{{targettype.id}}'
+        $(".targetaudeinceoptionsall").change(function () {
+            var role = 'all'
+            if ($(this).prop('checked')) {
+                var action = 'add'
+
+
+                $(".targetaudeinceoptions").prop('checked', true)
+
+            } else {
+                var action = 'remove'
+                $(".targetaudeinceoptions").prop('checked', false)
+
+            }
+            $.post('/dashboard/surveys/update-targets-audience-list/', { survey: survey, action: action, role: role, targettype: targettype, csrfmiddlewaretoken: csrfmiddlewaretoken }, function (data) {
+
+                $('#selected_audience_target').html(data)
+            })
+        })
+
+
+
+        $(".targetaudeinceoptions").change(function () {
+            var role = $(this).attr('role')
+            if ($(this).prop('checked')) {
+                var action = 'add'
+
+
+            } else {
+                var action = 'remove'
+
+            }
+            $.post('/dashboard/surveys/update-targets-audience-list/', { survey: survey, action: action, role: role, targettype: targettype, csrfmiddlewaretoken: csrfmiddlewaretoken }, function (data) {
+
+                $('#selected_audience_target').html(data)
+            })
+        })
+    })
+</script>

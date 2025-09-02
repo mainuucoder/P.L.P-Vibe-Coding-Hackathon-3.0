@@ -1,0 +1,97 @@
+
+{% load static %}
+
+{% load humanize %}
+
+<!-- {% if messages %}
+  {% for message in messages %}
+    <script>
+      notify('{{ message.level_tag }}', "{{ message|escapejs }}");
+    </script>
+  {% endfor %}
+{% endif %} -->
+
+<a class="mini-cart-icon" href="{% url 'selected-items' %}">
+                                        <img alt="Nest" src="{% static 'rental/assets/imgs/theme/icons/icon-cart.svg' %}" />
+                                        <span class="pro-count blue">{{count}}</span>
+                                    </a>
+                                    <a href="{% url 'selected-items' %}"><span class="lable">Cart</span></a>
+                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                        <ul>
+                                            {% for item in list %}
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a class="details-btn" role="{{item.building.id}}"><img style="border-radius: 5%;" src="{{ MEDIA }}{{ item.building.image.url }}" height="60px" width="60px" alt="#" /></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a class="details-btn" role="{{item.building.id}}">{{item.building.name}}</a></h4>
+                                                    <h4><span>1 × </span>KES:{{item.building.price|floatformat|intcomma}}</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a class="remove-cart" role="{{item.id}}"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                            <hr>
+                                            {% endfor %}
+                                            <!-- <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="shop-product-right.html"><img alt="Nest" src="{% static 'rental/assets/imgs/shop/thumbnail-2.jpg' %}" /></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
+                                                    <h4><span>1 × </span>$3200.00</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li> -->
+                                        </ul>
+                                       {% if count > 0 %}
+                                        <div class="shopping-cart-footer">
+                                            <div class="shopping-cart-total">
+                                                <h4>Total <span>KES:{{total|floatformat|intcomma}}</span></h4>
+                                            </div>
+                                            <div class="shopping-cart-button">
+                                                <a href="{% url 'selected-items' %}" class="outline">View</a>
+                                                <a href="{% url 'selected-items' %}">Checkout</a>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <script>
+
+          $(document).ready(function(){
+         var csrfmiddlewaretoken= '{{csrf_token}}';
+    //    alert()
+         $(".details-btn").click(function(){
+      var instance=$(this).attr('role')
+
+         $.post('/details/',{instance:instance,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+        //    window.location="/products" 
+        $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+                    
+        })
+
+
+
+    })
+$(".remove-cart").click(function(){
+      var instance=$(this).attr('role')
+
+         $.post('/remove-cart/',{instance:instance,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+        
+         $.post('/selected-list/',{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+       $(".cart-holder").html(data)
+      })                    
+    //   $(".modal-content").html(data)
+                    
+        })
+
+
+
+    })
+    
+})
+                                    </script>

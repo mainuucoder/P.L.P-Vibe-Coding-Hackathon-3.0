@@ -1,0 +1,74 @@
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<div class="card">
+    <div class="card-body">
+    <div class="col-12">
+        SELECT GRADUATION YEAR:
+    </div>
+    {% for p in surveyaudience %}
+    <div class="col-12" style="background-color: #ccc;">{{p.institution.name}}</div>
+    {% for i in graduation %}
+                    
+    <div class="col-sm-12 col-xs-12 " >
+        <p class="">
+            
+        <input type="checkbox"  id="{{i.id}}" name="{{p.id}}"  class="select_graduation_year" role="{{i.name}}">
+          <span class="checkmarkd"></span>
+           {{i.name}}
+           </label>
+            </p>
+            
+    </div>
+     {% endfor %}
+     {% endfor %}
+    </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            //alert()
+            var csrfmiddlewaretoken= '{{csrf_token}}';
+
+            var institution='{{institution_retrieved.id}}';
+        var survey='{{survey_retrieved.id}}'
+        var audience='{{audience}}'
+       
+        $.post('/dashboard/surveys/load_institution_graduation_year_users/',{audience:audience,institution:institution,csrfmiddlewaretoken:csrfmiddlewaretoken,survey:survey},function(data){
+
+$('#list_holder').html(data)
+   })
+    $(".select_graduation_year").change(function(){
+       
+        var audience=$(this).attr('name')
+        var graduation_year=$(this).attr('id')
+       
+            if($(this).prop('checked')){
+            action='add_gradution_year'
+            $.post('/dashboard/surveys/add_institutions_selected_graduation_year/',{audience:audience,action:action,graduation_year:graduation_year,institution:institution,csrfmiddlewaretoken:csrfmiddlewaretoken,survey:survey},function(data){
+                $.post('/dashboard/surveys/load_graduation_year/',{audience:audience,graduation_year:graduation_year,institution:institution,csrfmiddlewaretoken:csrfmiddlewaretoken,survey:survey},function(data){
+    
+             $('#audienceLobby').html(data)
+                })
+               })
+            }else{
+            action='remove_graduation_year'
+            $.post('/dashboard/surveys/add_institutions_selected_graduation_year/',{audience:audience,action:action,graduation_year:graduation_year,institution:institution,csrfmiddlewaretoken:csrfmiddlewaretoken,survey:survey},function(data){
+                $.post('/dashboard/surveys/load_graduation_year/',{audience:audience,graduation_year:graduation_year,institution:institution,csrfmiddlewaretoken:csrfmiddlewaretoken,survey:survey},function(data){
+    
+             $('#audienceLobby').html(data)
+                })
+               })
+        }
+       
+    
+           
+    })
+        })
+        
+    </script>

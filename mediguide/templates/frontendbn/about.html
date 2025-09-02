@@ -1,0 +1,176 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+{% load humanize %}
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<style>
+  .surveyspanels{
+    min-height: 80px;
+    background: #fff;
+    margin-top: 5px;
+  }
+</style>
+
+
+<div class="rs-breadcrumbs bg-1">
+    <div class="container">
+        <div class="content-part text-center">
+            <h1 class="breadcrumbs-title white-color mb-0"><h3 style="color: #00A651;">About Shiriki Platform</h3></h1>
+        </div>
+    </div>
+</div>
+<div class="row y-middle mb-64 lg-mb-30 md-mb-0" style="padding: 10px;" >
+  <div class="col-lg-6 md-mb-95">
+      <div class="image-part">
+          <img src="{% static 'image.png' %}" alt="">
+          
+      </div>
+      <div class="btn-part" style="margin-top: 10px;">
+        <a class="readon" href="#">We believe that working together, we can create a better community for everyone. Join us on our platform today and make your voice heard!
+        </a>
+    </div>
+  </div>
+  <div class="col-lg-6 pl-50 md-pl-15 pr-50 lg-pr-15" style="margin-top: 20px;">
+      <div class="sec-title mb-25">
+          <div class="sub-title primary">Our Focus</div>
+          <h2 class="title mb-18">Your voice matters: Have your say through our public participation portal.</h2>
+          <div class="desc" style="text-align: justify;">
+            Welcome to our  Public Participation Platform! We are dedicated to promoting transparency, accountability, and citizen participation in  decision-making. 
+            We understand that public participation is essential for good governance, and that's why we have created this platform to enable you to engage with with government agencies as well as other private organizations and other citizens, provide your input, and stay up-to-date with what's happening in our government and also around our communities.
+
+</div>
+      </div>
+      <ul class="listing-style2 mb-33">
+          <li> <strong>Our Mission</strong> <br>
+          <p>Our mission is to create a more inclusive and participatory democracy by empowering citizens to voice their opinions, share their ideas, and participate in the decision-making process that affects their lives.
+          </p></li>
+          <li> <strong>Our Vision</strong> <br>
+          <p>We envision a society where citizens are active participants in shaping their communities, and where governments are responsive and accountable to their constituents. We believe that by promoting public participation and engagement, we can create a more just, equitable, and sustainable future for all
+          </p></li>
+        
+      </ul>
+      
+  </div>
+  
+</div>
+<div class="rs-services style7  pb-90 lg-pb-85 md-pb-71 sm-pt-0" style="margin-top: -20px;">
+  <div class="container">
+      <div class="sec-title style2 mb-10 md-mb-42 text-center"style="text-align:center">
+          
+            
+              <h2 class="title mb-0">Benefits of Shiriki  to various stakeholders.</h2>
+          
+          <!-- <div class="last-half">
+              <p class="desc mb-0 pr-10">Shiri can be used by various stakeholders  for various purposes as discussed here;
+               </p>
+          </div> -->
+      </div>
+</div>
+</div>
+<div class="rs-faq inner   md-pb-80" style="margin-top: -70px;">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-12 pr-55 md-pr-15 md-mb-30">
+            
+              <div id="accordion" class="accordion">
+                  <div class="card">
+                      <div class="card-header">
+                          <a class="collapsed card-link" data-bs-toggle="collapse" data-bs-target="#collapseOne" href="#" aria-expanded="false">Benefits to the government and other institutions</a>
+                      </div>
+                      <div id="collapseOne" class="collapse" data-bs-parent="#accordion">
+                          <div class="card-body">
+                           
+                            <ol>
+                              <li>
+                                <strong>Improved decision-making:</strong>  A public participation platform provides the government and other intstituons with valuable insights and feedback from citizens, which can help to inform decision-making. This can lead to more effective policies and initiatives that better meet the needs of the community.
+
+                              </li>
+                              <li>
+                                <strong>Increased transparency and accountability: </strong> A public participation platform increases transparency and accountability by allowing citizens to see how the government is responding to their feedback and input. This can help to build trust between the government and the community.
+                              </li>
+                              <li>
+                                <strong> Enhanced community engagement: </strong>A public participation platform provides institutions with a direct line of communication to the community, which can lead to increased engagement and participation in government initiatives and programs.
+
+                              </li>
+                            </ol>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card">
+                      <div class="card-header">
+                          <a class="collapsed card-link" data-bs-toggle="collapse" data-bs-target="#collapseTwo" href="#" aria-expanded="false"> Benefits to citizens</a>
+                      </div>
+                      <div id="collapseTwo" class="collapse" data-bs-parent="#accordion">
+                          <div class="card-body">
+                            <ol>
+                              <li>
+                                <strong>Increased access to information: </strong>Shiriki  provides citizens with access to information about government initiatives, policies, and projects. This can help citizens to stay informed and make more informed decisions about issues that affect their lives.
+
+                              </li>
+                              <li>
+                                <strong>Opportunities to provide feedback:</strong>  Shiriki provides citizens with a direct line of communication to the government, which allows them to provide feedback and input on policies and initiatives that affect them.
+                              </li>
+                              <li>
+                                <strong>Access to bursaries and scholarships:</strong>  Provides opportunities for students to apply for bursaries and scholarships can help to increase access to education for deserving students who may not have the financial means to pursue higher education.
+                                Shiriki has  a bursaries management information system module that automates the entire bursaries management and application processes.
+                              </li>
+                              
+                         
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card">
+                      <div class="card-header">
+                          <a class="collapsed card-link" data-bs-toggle="collapse" data-bs-target="#collapseThree" href="#" aria-expanded="false">Benefits to civil society organizations                          </a>
+                      </div>
+                      <div id="collapseThree" class="collapse" data-bs-parent="#accordion">
+                          <div class="card-body">
+                            <ol>
+                              <li>
+                                <strong
+                                  >Increased collaboration: </strong
+                                >
+                                This platform facilitates collaboration between civil society organizations, citizens and the government, which can lead to more effective initiatives and policies.
+                              </li>
+                              <li>
+                                <strong>Access to government information:</strong>  Provides civil society organizations with access to government information, which can help them to better understand government policies and initiatives.
+
+                              </li>
+                              <li>
+                                <strong
+                                  >Opportunities to provide input: </strong
+                                >
+                               Provides civil society organizations with opportunities to provide input and feedback on government initiatives and policies, which can help to ensure that these initiatives and policies are responsive to the needs of the community.
+
+                              </li>
+                             
+                            </ol>  
+                          </div>
+                      </div>
+                  </div>
+                 
+                
+              </div>
+          </div>
+          
+      </div>
+  </div>
+</div>
+{% endblock %}

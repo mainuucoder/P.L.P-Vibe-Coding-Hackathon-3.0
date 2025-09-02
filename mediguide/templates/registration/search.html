@@ -1,0 +1,181 @@
+
+{% load static %}
+{% load bootstrap5 %}
+<!-- <script src="{% static 'assets/js/jquery.min.js' %}"></script> -->
+<style>
+    .ff-el-form-control{
+  background-clip: padding-box;
+  background-image: none;
+  border: 1px solid #dadbdd;
+  border-radius: 7px;
+  color: #606266;
+  display: block;
+  font-family: -apple-system,"system-ui",Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+  line-height: 1;
+  margin-bottom: 0;
+  max-width: 100%;
+  padding: 11px 15px;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  width: 100%;
+    }
+</style>
+<div class="inner" style="min-height: 300px;">
+   
+    <div class="row">
+        <div class="col-lg-12  center-align">
+            <h6 style="text-align: center;" class="form_header"> {{Title}} </h6>
+
+        <span style="float:right" id="close-group-b" class="btn btn-danger">X</span>
+        </div>
+    </div>
+      <hr />
+     <!--BLOCK SECTION -->
+     <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+            <div class="card-body ">
+     
+            <!-- <form action="" method="POST" role="{{PageAction}}" name="{{success_url}}" title="{{not_success_url}}" class="col-md-12" id="DefaultForm"> -->
+				
+                <div class="row" style="overflow: auto;">
+                    {% csrf_token %}
+				
+                    {{form.media}}
+                    <div class="form-group col-sm-7">
+                     <input class="col-sm-12 ff-el-form-control" name="search_user" placeholder="e.g abc@gmail.com" id="search_user">
+                    </div>
+                <!-- <div class="col-sm-1">
+                    <span class="btn btn-success" id="submit_details">Search</span>
+                </div> -->
+                <div class="col-sm-12 table-holder" style="margin-top: 10px;max-height: 300px; overflow: auto;">
+                  
+
+                    <table id="datatable-basic" class="search_table table table-hover col-sm-12" style="display: none;">
+                     
+
+            <thead style="font-size: 11px;background: #07aa91;color:#fff">
+                            <tr>
+                                <th>FIRST NAME</th>
+                                <th>LAST NAME</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in list %}
+                            <tr>
+                                <td>{{item.first_name}} </td>
+                                <td>{{item.last_name}}</td>
+                                <td><input type="checkbox" style="height: 28px;width: 28px;" role="{{item.id}}" class="searched_users"></td>
+                            </tr>
+                            {% endfor %}
+                            <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
+                </div>
+                   
+                   </div> 
+				<div class="row">
+                <div class="col-sm-3"></div>
+                <input type="text" hidden value="{{level}}" name="level" id="level">
+                <input type="text" hidden value="POST" name="level_name" id="level_name">
+				<input type="text" hidden value="{{instance.id}}" name="instance" id="instance">
+                <input type="text" hidden value="{{institution.id}}" name="institution" id="institution">
+
+                <input type="text" hidden value="{{registration.id}}" name="registration" id="registration">
+
+
+                
+                <div class="col-sm-12">
+                <button class="btn-success btn" style="float:right;display:none" id="submits-data" role="{{PageAction}}"><b id="selected" class=""></b> Submit</button>
+			</div>
+            </div>
+            <!-- </form> -->
+        </div>
+        </div>
+        </div>
+
+    </div>
+  
+
+</div>
+<script>
+    $(document).ready(function(){
+
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+    var level='{{level}}'
+    var level_name='GET'
+    var instance='{{instance.id}}'
+ $(".searched_users").change(function(){
+    if($(this).prop('checked')){
+        var action='add'
+        selected=parseInt($('#selected').html())
+        if (selected ){
+            selected=selected+1
+        }else{
+            selected=1
+        }
+        $("#submits-data").show()
+    }else{
+        if (selected>0 ){
+            selected=selected-1
+            $("#submits-data").show()
+        }else{
+            selected=''
+            $("#submits-data").hide()
+        }
+        var action='remove'
+    }
+    $('#selected').html(selected)
+    var uuid=$(this).attr('role')
+    $.post('/add-selected-to-group/',{uuid:uuid,action:action,csrfmiddlewaretoken:csrfmiddlewaretoken,instance:instance},function(data){
+
+    })
+ })
+$("#submits-data").click(function(){
+    var loader=$('#loader').html()
+    $(".error_page").html(loader)
+    $.post('/confirm-selected-group/',{csrfmiddlewaretoken:csrfmiddlewaretoken,instance:instance},function(data){
+     $(".home").html(data)
+     $(".error_page").html('')
+})
+})
+    
+
+$('#close-group-b').click(function(){
+    $.post('/get-group-members/',{csrfmiddlewaretoken:csrfmiddlewaretoken,instance:instance},function(data){
+        $(".home").html(data)
+    }) 
+
+
+   })
+
+            $('#search_user').on('input', function () {
+                var searchTerm = $(this).val().toLowerCase();
+             
+            if(searchTerm){
+                $('.search_table').show()
+            $('#datatable-basic tbody tr').each(function () {
+                var rowText = $(this).text().toLowerCase();
+                if (rowText.includes(searchTerm)) {
+                    $(this).show();
+                    
+                } else {
+                    $(this).hide();
+
+                }
+            
+            });
+        }else{
+                $('.search_table').hide()
+            }
+            });
+
+        $("#back-to-view").click(function(){
+   
+        $("#modal-staff").modal("hide");
+                                   
+ 
+
+})
+    })
+</script>

@@ -1,0 +1,214 @@
+
+
+{% load static %}
+<style>
+
+/*  Course Section  */
+
+.courses {
+  background-color: #292929;
+  height: 150vh;
+  display: flex;
+}
+
+.container {
+  width: 960px;
+  margin: auto;
+}
+.container > h2,
+.container > p {
+  text-align: center;
+}
+
+.img-mastercover {
+  width: 400px;
+  height: 222.34px;
+  margin: 0;
+  padding: 0;
+  border: 2px solid #313131;
+  border-radius: 10px 10px 0 0;
+  position: relative;
+  transition: 0.3s;
+}
+.img-mastercover:hover {
+  opacity: 0.5;
+}
+
+.img-mastercover {
+  background-image: url(https://www.logistec.com/wp-content/uploads/2017/12/placeholder.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  cursor: pointer;
+}
+.img-mastercover:hover .play-button {
+  display: flex;
+  z-index: 2;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  cursor: pointer;
+}
+
+/*  Masterclass */
+
+.masterclass {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+
+.card-masterclass {
+  flex: 1 1 400px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/*  Card Text  */
+.card-text-area {
+  width: 400px;
+  background-color: #1e1e1e;
+  padding: 15px;
+  border: 2px solid #313131;
+  margin-bottom: 75px;
+  border-radius: 0 0 10px 10px;
+}
+
+.card-text-area:hover .img-mastercover {
+  opacity: 0.5;
+}
+
+.card-info-top {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 30px;
+}
+.card-info-bottom {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 40px;
+}
+
+.students,
+.length,
+.instructeur {
+  font-size: 12px;
+}
+
+/* Button  */
+
+.btn-secondary {
+  padding: 20px 40px;
+  border-radius: 30px;
+  border: 2px solid #313131;
+  background-color: #1e1e1e;
+  font-size: 18px;
+  display: block;
+  margin: auto;
+  transition: 0.2s;
+}
+
+.btn-secondary a {
+  color: white;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+  border: 2px solid #1e1e1e;
+}
+</style>
+
+
+
+
+
+<section class="courses">
+    <div class="container">
+      <h2>Masterclass</h2>
+      <p>Enrol in a masterclass and master the bording fundamentals<br>that will make you a better musician.</p>
+      <div class="masterclass">
+        <article class="card-masterclass">
+          <div class="img-mastercover">
+            <img src="https://archive.org/download/mx-player-icon/mx-player-icon.png" width="54px" alt="Play button" class="play-button">
+          </div>
+          <div class="card-text-area">
+            <div class="card-info-top">
+              <p class="students">240 students</p>
+              <p class="length">1h10m</p>
+            </div>
+            <div class="card-info-mid">
+              <h3>Ableton Live 10 : everything you need to know and more</h3>
+            </div>
+            <div class="card-info-bottom">
+              <p class="instructeur">Arsène Rurangiza</p>
+              <p class="pricing">150€</p>
+            </div>
+          </div>
+        </article>
+        <article class="card-masterclass">
+          <div class="img-mastercover">
+            <img src="https://archive.org/download/mx-player-icon/mx-player-icon.png" width="54px" alt="Play button" class="play-button">
+          </div>
+          <div class="card-text-area">
+            <div class="card-info-top">
+              <p class="students">652 students</p>
+              <p class="length">2h45m</p>
+            </div>
+            <div class="card-info-mid">
+              <h3>Create Ableton Live plugins using Max4Live</h3>
+            </div>
+            <div class="card-info-bottom">
+              <p class="instructeur">Arsène Rurangiza</p>
+              <p class="pricing">150€</p>
+            </div>
+          </div>
+        </article>
+        <article class="card-masterclass">
+          <div class="img-mastercover">
+            <img src="https://archive.org/download/mx-player-icon/mx-player-icon.png" width="54px" alt="Play button" class="play-button">
+          </div>
+          <div class="card-text-area">
+            <div class="card-info-top">
+              <p class="students">632 students</p>
+              <p class="length">57m</p>
+            </div>
+            <div class="card-info-mid">
+              <h3>Harmony & Melody : Learn to convey emotion with notes</h3>
+            </div>
+            <div class="card-info-bottom">
+              <p class="instructeur">Arsène Rurangiza</p>
+              <p class="pricing">150€</p>
+            </div>
+          </div>
+        </article>
+        <article class="card-masterclass">
+          <div class="img-mastercover">
+            <img src="https://archive.org/download/mx-player-icon/mx-player-icon.png" width="54px" alt="Play button" class="play-button">
+          </div>
+          <div class="card-text-area">
+            <div class="card-info-top">
+              <p class="students">963 students</p>
+              <p class="length">1h23m</p>
+            </div>
+            <div class="card-info-mid">
+              <h3>Sound design : Master the Art of Shaping Sounds</h3>
+            </div>
+            <div class="card-info-bottom">
+              <p class="instructeur">Arsène Rurangiza</p>
+              <p class="pricing">150€</p>
+            </div>
+          </div>
+        </article>
+      </div>
+      <button class="btn-secondary"><a href="#">All the Masterclass</a></button>
+    </div>
+  </section>

@@ -1,0 +1,102 @@
+
+{% load static %}
+{% load bootstrap5 %}
+
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<style>
+    .form-group{
+        margin-top:10px !important;
+    }
+    .independent{display: none;
+    }
+    td{
+        text-align: justify;
+    }
+    /* .not_shown{
+        display: none;
+    } */
+    .user_groups{
+        margin-bottom: 2px;
+    }
+    .selection_options{
+        text-transform: uppercase !important;
+    }
+</style>
+<div class="inner" style="min-height: 300px;">
+    
+    <div class="row">
+        <div class="col-lg-12 common-headers center-align">
+            <span class="btn btn-danger" style="margin-top:5px;margin-left:5px;" id="back-to-view"><i class="fa fa-arrow-left"></i> Back</span>
+   <!-- <a href="{% url 'download-report' instance.id %}"><Span style="float:right" class="btn btn-success"><i class="fa fa-download"> Export</i></Span></a> -->
+        </div>
+    </div>
+
+<div class="card">
+    <!-- <div class="card-header"></div> -->
+    <div class="card-body">
+        <!-- {{instance.subject}}
+        {{instance.message}} -->
+        <table id="file-export" class="table export-table table-striped  text-nowrap w-100">
+            <thead style="font-size: 11px;background: #07aa91;color:#fff">
+             
+                <!-- <tr><th>#</th></tr> -->
+                <tr><th>SUBJECT</th></tr>
+                <tr><td>{{instance.subject |safe}}</td></tr>
+                 <tr><th>EXECUTIVE SUMMARY </th></tr>
+                 <tr> <td>{{instance.executive_summary |safe}}</td></tr>
+                <tr><th>OBJECTIVES AND GOALS</th></tr>
+                <tr><td>{{instance.ojectives_and_goals|safe}}</td></tr>
+                <tr><th>KEY ACCOMPLISHMENTS</th></tr>
+                <tr> <td>{{instance.key_accomplishments|safe}}</td></tr>
+                <tr><th>RESULTS AND ACHIEVEMNTS</th></tr>
+                <tr> <td>{{instance.results_and_achievements|safe}}</td></tr>
+                <tr><th>CHALLENGES AND RESOLUTIONS</th></tr>
+                <tr><td>{{instance.challenges_and_solutions|safe}}</td></tr>
+                <tr><th>RECOMMENDATIONS</th></tr>
+                <tr><td>{{instance.recommendations|safe}}</td></tr>
+                <tr><th>NEXT STEPS</th></tr>
+                <tr><td>{{instance.next_steps|safe}} </td></tr>
+                <tr><th>LESSONS LEARNED</th></tr>
+                <tr><td>{{instance.lessons_learned|safe}} </td></tr>
+                <tr><th>TRAINER</th></tr>
+                <tr><td>{{instance.teacher.first_name}} {{instance.teacher.last_name}}</td></tr>
+                <tr><th>DATE</th></tr>
+                <tr><td>{{instance.date_created}}</td></tr>
+                
+              
+            </thead>
+            
+          </table>
+    </div>
+</div>
+</div>
+<script>
+    $(document).ready(function(){
+
+        $("#back-to-view").click(function(){
+   
+        $("#modal-staff").modal("hide");
+       })
+
+    $("#id_category").change(function(){
+     var category = $(this).val()
+     $(".categories").hide()
+     $(".category"+category).show()
+    })
+    })
+</script>

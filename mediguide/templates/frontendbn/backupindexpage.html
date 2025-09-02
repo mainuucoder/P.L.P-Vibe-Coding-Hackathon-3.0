@@ -1,0 +1,56 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% block content %}
+            <div class="rs-banner style4">
+               <div class="container">
+                   <div class="row">
+                       <div class="col-lg-8">
+                           <div class="banner-content" style="margin-top: -30px;" >
+                               <h2 class="title">Shiriki <span style="color: black;"> Usikike!</span></h2>
+                               <div class="description" style="text-align: justify;">
+                                    <p>
+                                      A  platform aimed at enhancing good governance and decision-making by encouraging  participation by Kenyans on issues like policies and other related topics of interest. 
+                                      Shiriki platform improves   interaction between the public and  governments and or other organizations.
+                                    </p>
+                                </div>
+                                <div class="btn-part">
+                                    <a class="readon2 get-new" href="{% url 'account_check' %}">Transforming governance with your input: Shiriki Usikike sasa</a>
+                                </div>
+                           </div>
+                       </div>
+                       <div class="col-lg-4"></div>
+                   </div>
+               </div>
+                <div class="animate-part">
+                    <div class="spiner dot-style">
+                        <img class="rotated-style" src="{% static 'assets/images/banner/style2/banner-shape.png' %}" alt="images">
+                    </div>
+                    <!-- <div class="spiner horizontal">
+                        <img class="horizontal" src="{% static 'assets/images/banner/style2/line-shape.png' %}" alt="images">
+                    </div> -->
+                    <!-- <div class="spiner horizontal2">
+                        <img class="horizontal" src="{% static 'assets/images/banner/style2/line-shape.png' %}" alt="images">
+                    </div>
+                    -->
+                </div>
+            </div>
+<!--            
+        <script src="{% static 'assets/js/jquery.min.js' %}"></script> -->
+
+<!-- <div class="col-12" id="home" style="min-height: 200px;box-shadow:2px 2px 2px #ccc;margin-top:60px"></div> -->
+<!-- <script src="{% static 'assets/js/jquery.min.js' %}"></script> -->
+{% if user.is_authenticated %} 
+<script>
+  $(document).ready(function(){ 
+    window.location.href="/account/";
+
+  
+})
+
+
+  </script>
+{% else %}
+{% endif %}
+
+{% endblock %}
+

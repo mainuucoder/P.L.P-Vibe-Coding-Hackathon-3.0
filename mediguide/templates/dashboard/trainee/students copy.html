@@ -1,0 +1,198 @@
+<div class="row">
+    <div class="col-sm-12"><span class="btn btn-primary close_class_data">Back</span>
+    
+        <!-- <span class="btn btn-success add_class_student_data" style="float:right"><i class="fa fa-plus"></i> add trainee</span>  -->
+    
+    </div>
+    <div class="col-sm-12" style="text-transform: uppercase;">
+  {{Title}}
+    </div>
+ </div>
+              <table class='table file-export table-responsive col-sm-12'  id="file-export">
+                <thead style="font-size: 11px;">
+                    <tr>
+                      <th>#</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <!-- <th>Training Mode</th>
+                        <th>Training Session</th> -->
+                        <th>county</th>
+                        <th>Sub-county</th>
+                        <th>Ward</th>
+                        {% if user.is_superuser %}
+                        <th>ACTIONS </th>
+                        {% endif %}
+                      </tr>
+                </thead>
+                <tbody>
+                {% for instance in list %}
+                <tr class="col-sm-12 "  id="userdataupaddated{{instance.student.id}}">
+                  <td>{{forloop.counter}}</td>
+                    <td>{{instance.student.first_name|safe}} {{instance.student.last_name|safe}}</td>
+                    <td>{{instance.student.phone_number}}</td>
+                   
+                    <td>{{instance.student.email|safe}}</td>
+                  
+                    <td>{{instance.student.county|safe}}</td>
+                    <td>{{instance.student.constituency|safe}}</td>
+                    <td>{{instance.student.new_ward|safe}}</td>
+                   {{user.is_institution}}
+               {% if user.is_superuser or user.is_institution %}
+                   <td>
+                   <span class="btn remove-trainee" title="Remove trainee" name="{{instance.institution_branch_class.id}}" role="{{instance.student.id}}"><i class="fa fa-trash"></i></span>
+                  
+                     <div class="dropdown" style="">
+                    <div class="dropbtn" style="color:#000;background:#fff;font-size:12px;"><i class="fa fa-list"></i></div>
+                    <div class="dropdown-content row" style="margin-top:-90px;min-height: 90px;max-height: 90px;overflow: auto;">
+                   
+                      <!-- <label style="font-weight: initial !important" class="">
+                      <span class="btn col-sm-12 btn-app-dropdown actionbtns " name="manage-classes" role='{{record.id}}'>
+                      CLASSES
+                      </span>
+                    </label>
+                    <br> -->
+                      <label style="font-weight: initial !important" class="">
+                      <span class="btn col-sm-12 " name="manage-students" role='{{record.id}}'>
+                      
+                      <input type="checkbox" title="attendance"   {% if instance.registration.is_attendance_marked %} checked {% endif %} class="btn mark-attendance-student" name="{{instance.institution_branch_class.id}}" role="{{instance.student.id}}">
+                      Mark Attendance
+                      </span>
+                     </label>
+                     <br>
+                     <label style="font-weight: initial !important" class="">
+                      <span class="btn col-sm-12 " name="trainee-attendance" role='{{record.id}}'>
+                     
+                      <input type="checkbox" title="trained"  {% if instance.registration.is_trained %} checked {% endif %} class="btn mark-trained-student" name="{{instance.institution_branch_class.id}}" role="{{instance.student.id}}">
+                      Mark as Trained
+                      </span>
+                     </label>
+                     <br>
+                     <label style="font-weight: initial !important" class="">
+                      <span class="btn col-sm-12 " name="trainee-attendance" role='{{record.id}}'>
+                      
+                      <input type="checkbox" title="certified"   {% if instance.registration.is_certified %} checked {% endif %} class="btn mark-certified-student" name="{{instance.institution_branch_class.id}}" role="{{instance.student.id}}">
+                      Mark as Certified
+                      </span>
+                     </label>
+                   
+                     <!-- <br>
+                      <label style="font-weight: initial !important" class="">
+                      <span class="btn col-sm-12 btn-app-dropdown actionbtns view_requirements" name="manage-trainers" role='{{record.id}}'>
+                      TRAINERS
+                      </span>
+                     </label> -->
+                   
+                   
+                    </div>
+                  </div>
+
+
+                  </td>
+                   {% endif %}
+                  </tr>
+              {% endfor %}
+            </tbody>
+            </table>
+            <script>
+                $(document).ready(function(){
+     
+                    var instance='{{class.id}}'
+                    var csrfmiddlewaretoken= '{{csrf_token}}';
+                    $(".close_class_data").click(function(){
+                        $(".data-views").hide();                       
+                     $(".table-display").show()
+                     $(".main_tables").hide()
+                  $(".major_table").show()
+                })
+                // $(".add_class_student_data").click(function(){
+                //  $.post('/add-student-data/',{instance:instance,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                //     $(".data-views").hide();                       
+                //      $(".data-display").html(data).show()
+                //  })
+                // })
+
+                $(".remove-trainee").click(function(){
+                  var instance=$(this).attr('name')
+                  var uuid=$(this).attr('role')
+                var r = confirm("Do you wish to remove this trainee?");
+  if (r == true) {
+     $.post('/remove-student/',{instance:instance,uuid:uuid,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+      $(".main_tables").hide()
+      $(".minor_table").html(data).show()
+       
+ })
+}else{
+
+}
+                })
+                $(".mark-trained-student").change(function(){
+                  var instance=$(this).attr('name')
+                  var uuid=$(this).attr('role')
+                   if($(this).prop('checked')){
+                var r = confirm("Do you wish to mark this trainee as trained?");
+                var action='add'
+                   }else{
+                    var action='remove'
+                    var r = confirm("Do you wish to mark this trainee as not trained?");
+                   }
+  if (r == true) {
+     $.post('/mark-trained-student/',{action:action,instance:instance,uuid:uuid,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+      $(".main_tables").hide()
+      $(".minor_table").html(data).show()
+       
+ })
+}else{
+
+}
+                })
+
+                $(".mark-certified-student").change(function(){
+                  var instance=$(this).attr('name')
+                  var uuid=$(this).attr('role')
+                   if($(this).prop('checked')){
+                var r = confirm("Do you wish to mark this trainee as certified?");
+                var action='add'
+                   }else{
+                    var action='remove'
+                    var r = confirm("Do you wish to mark this trainee as not certified?");
+                   }
+  if (r == true) {
+     $.post('/mark-certified-student/',{action:action,instance:instance,uuid:uuid,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+      $(".main_tables").hide()
+      $(".minor_table").html(data).show()
+       
+ })
+}else{
+
+}
+                })
+      
+                $(".mark-attendance-student").change(function(){
+                  var instance=$(this).attr('name')
+                  var uuid=$(this).attr('role')
+                   if($(this).prop('checked')){
+                var r = confirm("Do you wish to mark this trainee attendance");
+                var action='add'
+                   }else{
+                    var action='remove'
+                    var r = confirm("Do you wish to unmark this trainee attendance?");
+                   }
+  if (r == true) {
+     $.post('/mark-attendance-student/',{action:action,instance:instance,uuid:uuid,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+      // $(".main_tables").hide()
+      // $(".minor_table").html(data).show()
+       
+ })
+}else{
+
+}
+                })
+      
+
+
+
+
+                
+                })
+            </script>

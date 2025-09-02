@@ -1,0 +1,6 @@
+<option value="">-----------</option>
+
+  {% for item in institution_cunties %}
+       <option class=" not_icta icta{{item.institution.id}}-{{item.county.id}} countiesb countyb{{item.county.id}}" value="{{item.id}}" >{{item.institution}}</option>
+ 
+{% endfor %}

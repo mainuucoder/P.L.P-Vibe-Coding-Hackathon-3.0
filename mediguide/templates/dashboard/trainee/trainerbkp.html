@@ -1,0 +1,55 @@
+<div class="row">
+    
+    <div class="col-sm-12" style="text-transform: uppercase;">
+  {{Title}}
+    </div>
+ </div>
+              <table class='table file-export table-responsive col-sm-12'  id="file-export">
+                <thead style="font-size: 11px;">
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>county</th>
+                        <th>Constituency</th>
+                        <th>Ward</th>
+                        <!-- <th>ACTIONS </th> -->
+                      </tr>
+                </thead>
+                <tbody>
+                {% for instance.user in users %}
+                <tr class="col-sm-12 "  id="userdataupaddated{{instance.user.id}}">
+                      <td>{{instance.user.first_name|safe}} {{instance.user.last_name|safe}}</td>
+                    <td>{{instance.user.phone_number}}</td>
+                   
+                    <td>{{instance.user.email|safe}}</td>
+                  
+                    <td>{{instance.user.county|safe}}</td>
+                    <td>{{instance.user.constituency|safe}}</td>
+                    <td>{{instance.user.ward|safe}}</td>
+                   
+                 
+                   <!-- <td></td> -->
+                  </tr>
+              {% endfor %}
+            </tbody>
+            </table>
+            <script>
+                $(document).ready(function(){
+     
+                    var instance='{{class.id}}'
+                    var csrfmiddlewaretoken= '{{csrf_token}}';
+                    $(".close_class_data").click(function(){
+                        $(".data-views").hide();                       
+                     $(".table-display").show()
+                     $(".main_tables").hide()
+                  $(".major_table").show()
+                })
+                $(".add_class_student_data").click(function(){
+                 $.post('/add-student-data/',{instance:instance,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                    $(".data-views").hide();                       
+                     $(".data-display").html(data).show()
+                 })
+                })
+                })
+            </script>

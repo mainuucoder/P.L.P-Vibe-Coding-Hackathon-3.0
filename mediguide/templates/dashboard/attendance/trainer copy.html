@@ -1,0 +1,289 @@
+
+{% load static %}
+
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+
+    
+    
+    
+.active_page{
+  background: #f7e9e9 !important;
+}
+.dropbtn {
+      color: #000;
+      padding: 1px;
+      font-size: 1px;
+      border: none;
+      cursor: pointer;
+    }
+    
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 200px;
+      left:-144px;
+      height: 300px !important;
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 9;
+    }
+    
+    /* Links inside the dropdown */
+    .dropdown-content a {
+      color: black;
+      /* padding: 12px 16px; */
+      text-decoration: none;
+      display: block;
+    }
+    .btn-app-dropdown:hover{
+      background-color: #ccc;
+    }
+    .btn-app-dropdown{
+      Border-bottom:1px solid #ccc
+    }
+    /* Change color of dropdown links on hover */
+    /* .dropdown-content a:hover {background-color: #f1f1f1} */
+    
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    
+    /* Change the background color of the dropdown button when the dropdown content is shown */
+    .dropdown:hover .dropbtn {
+      
+    }
+    .actionbtns{
+      text-align: left;
+    }
+
+    .button-register{
+        cursor:pointer;
+    }
+    .dt-button,.btn-success{
+      background-color: #02953e !important;
+    }
+    .basic_tabs{
+      margin-top: 2px;
+    }
+    .btn-icta-primary:hover{
+    background:#E10716 !important
+
+}
+.not_shown{
+  display: none;
+}
+th,td{
+  border: 1px solid #ccc;
+}
+.attendance_boxes{
+  height: 20px;
+  width: 20px;
+}
+</style>
+<div class="row">
+  
+  <div class="col-xl-9">
+      <div class="card custom-card">
+            <div class="card-body table-responsive">
+              <div class="col-sm-12 main_tables home minor_table" style="padding:0px"></div>
+              <div class="col-sm-12 main_tables major_table " style="padding:0px">
+            <!-- {% for item in list %} -->
+                
+               
+            <div class="col-sm-12  {% if forloop.counter == 1 %}  {% else%} not_shown {% endif %}  table_tabs table_tab{{item.class.id}}">
+            <div class="col-sm-12 " style="text-transform: uppercase;"><strong>ATTENDANCE FOR STUDENTS IN {{item.class}}</strong> <span style="float: right;cursor: pointer;margin-left: 5px;" role="{{item.class.id}}" class="btn btn-success submit-new-report"><i class="fa fa-file"></i> Submit Report </span> <span style="float: right;cursor: pointer;margin-left: 5px;" role="{{item.class.id}}" class="btn btn-success feedback_submit"><i class="fa fa-envelope"></i> Submit Feedback </span></div>
+          
+            <table class='table datatable-basic col-sm-12'>
+                <thead style="font-size: 11px;">
+                  <tr>
+                    <td></td>
+                    <td colspan="5" style="text-align: center !important;">WEEK 1</td>
+                    <td>&nbsp;</td>
+                    <td colspan="5" style="text-align: center !important;">Week 2</td>
+                    <!-- <th>ACTIONS </th> -->
+                  </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>&nbsp;</th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                      </tr>
+                </thead>
+                <tbody>
+                {% for instance in list %}
+                <tr class="col-sm-12 "  id="userdataupaddated{{instance.user.id}}">
+                      <td>{{instance.user.first_name|safe}} {{instance.user.last_name|safe}}</td>
+                        <td class=" {% if item.matching_date == 'week_one_day_one' %} active_page    {% endif %}"><input type="checkbox" {% if item.matching_date == 'week_one_day_one' %}  class="attendance_boxes " role="{{instance.id}}"  {% else %} disabled readonly   {% endif %}  {% if instance.week_one_day_one %} checked disabled readonly {% endif %} style="height: 20px;width:20px" value="week_one_day_one" ></td>
+                        <td class=" {% if item.matching_date == 'week_one_day_two' %} active_page    {% endif %}"><input type="checkbox" {% if item.matching_date == 'week_one_day_two' %} class="attendance_boxes " role="{{instance.id}}"  {% else %} disabled readonly   {% endif %} {% if instance.week_one_day_two %} checked disabled readonly {% endif %}  style="height: 20px;width:20px" value="week_one_day_two" ></td>
+                        <td class=" {% if item.matching_date == 'week_one_day_three' %} active_page    {% endif %}"><input type="checkbox" {% if item.matching_date == 'week_one_day_three' %}  class="attendance_boxes " role="{{instance.id}}" {% else %} disabled readonly   {% endif %} {% if instance.week_one_day_three %} checked disabled readonly {% endif %}  style="height: 20px;width:20px" value="week_one_day_three" ></td>
+                        <td class=" {% if item.matching_date == 'week_one_day_four' %} active_page    {% endif %}"><input type="checkbox" {% if item.matching_date == 'week_one_day_four' %}  class="attendance_boxes " role="{{instance.id}}" {% else %} disabled readonly   {% endif %} {% if instance.week_one_day_four %} checked disabled readonly {% endif %}  style="height: 20px;width:20px" value="week_one_day_four" ></td>
+                        <td class=" {% if item.matching_date == 'week_one_day_five' %} active_page    {% endif %}"><input type="checkbox" {% if item.matching_date == 'week_one_day_five' %} class="attendance_boxes " role="{{instance.id}}"  {% else %} disabled readonly   {% endif %} {% if instance.week_one_day_five %} checked disabled readonly {% endif %}  style="height: 20px;width:20px" value="week_one_day_five" ></td>
+                        <td>&nbsp;</td>
+                        <td class=" {% if item.matching_date == 'week_two_day_one' %} active_page    {% endif %}"><input type="checkbox" {% if item.matching_date == 'week_two_day_one' %} class="attendance_boxes " role="{{instance.id}}"  {% else %} disabled readonly   {% endif %} {% if instance.week_two_day_one %} checked disabled readonly {% endif %}  style="height: 20px;width:20px" value="week_two_day_one" ></td>
+                        <td class=" {% if item.matching_date == 'week_tow_day_two' %} active_page    {% endif %}"><input type="checkbox" {% if item.matching_date == 'week_two_day_two' %}  class="attendance_boxes " role="{{instance.id}}" {% else %} disabled readonly   {% endif %} {% if instance.week_two_day_two %} checked disabled readonly {% endif %}  style="height: 20px;width:20px" value="week_two_day_two" ></td>
+                        <td class=" {% if item.matching_date == 'week_tow_day_three' %} active_page    {% endif %}"><input type="checkbox" {% if item.matching_date == 'week_two_day_three' %} class="attendance_boxes " role="{{instance.id}}"   {% else %} disabled readonly   {% endif %} {% if instance.week_two_day_three %} checked disabled readonly {% endif %}  style="height: 20px;width:20px" value="week_two_day_three" ></td>
+                        <td class=" {% if item.matching_date == 'week_tow_day_four' %} active_page    {% endif %}"><input type="checkbox" {% if item.matching_date == 'week_two_day_four' %} class="attendance_boxes " role="{{instance.id}}"  {% else %} disabled readonly   {% endif %} {% if instance.week_two_day_four %} checked disabled readonly {% endif %}  style="height: 20px;width:20px" value="week_two_day_four" ></td>
+                        <td class=" {% if item.matching_date == 'week_tow_day_five' %} active_page    {% endif %}"><input type="checkbox" {% if item.matching_date == 'week_two_day_five' %} class="attendance_boxes " role="{{instance.id}}"  {% else %} disabled readonly   {% endif %} {% if instance.week_two_day_five %} checked disabled readonly {% endif %}  style="height: 20px;width:20px" value="week_two_day_five" ></td>
+                   
+                </tr>
+              {% endfor %}
+            </tbody>
+            </table>
+            
+          </div>
+          {% endfor %}
+          </div>
+      </div>
+  </div>
+</div>
+</div>
+
+<div class="modal fade modal-staff" id="modal-staff">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      </div>
+  </div>
+</div>
+
+
+
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<script>
+  $(document).ready(function(){
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+    var level='{{level}}'
+    // alert(level)
+    var level_name='GET'
+    var urlb='create-constants'
+  $('.attendance_boxes').change(function(){
+    if($(this).prop('checked')){
+    var action='add'
+    }else{
+      var action='remove'
+    }
+    var instance=$(this).attr('role')
+    var levelb=$(this).attr('value')
+    $.post('/mark-attendance/',{instance:instance,action:action,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:levelb},function(data){
+    })
+  })
+$(".actionbtns").click(function(){
+  var instance=$(this).attr('role')
+  var url=$(this).attr('name')
+  $.post('/'+url+'/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+    $(".main_tables").hide()
+                          $(".minor_table").html(data).show()
+                            //$('.content-wrapper').html(data)
+                     })
+})
+$(".basic_tabs").click(function(){
+    var instance=$(this).attr('role')
+    $(".table_tabs").hide()
+    $(".table_tab"+instance).show()
+    $(".basic_tabs").removeClass('btn-success').addClass('btn-dark')
+    $(this).removeClass('btn-dark').addClass('btn-success')
+    $(".main_tables").hide()
+     $(".major_table").show()
+})
+
+//     $.post('/create-constants/',{level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+                          
+//       $(".modal-content").html(data)
+//         //$('.content-wrapper').html(data)
+//  })
+
+
+  
+
+ $("#Addusersingle").click(function(){
+     
+    
+      $("#modal-staff").modal("show");
+     
+
+ 
+ })
+ $(".update-constants").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/update-constants/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       
+ })
+ 
+ })
+ $(".submit-new-report").click(function(){
+  var instance=$(this).attr('role')
+     $.post('/submit-new-report/',{instance:instance,level:level,level_name:level_name,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       
+ })
+ 
+ })
+ $(".feedback_submit").click(function(){
+     var instance=$(this).attr('role')
+    
+     $.post('/feedback-submit-report/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       
+ })
+ 
+ })
+
+ 
+ $(".add-institution-counties-constants").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/add-institution-counties/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       
+ })
+ 
+ })
+ 
+
+ $(".delete-constants").click(function(){
+     var instance=$(this).attr('role')
+     var r = confirm("Do you wish to delete item?");
+  if (r == true) {
+     $.post('/delete-constants/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+     window.location='/constants/'+level
+       
+ })
+}else{
+
+}
+ })
+ 
+})
+ 
+</script>

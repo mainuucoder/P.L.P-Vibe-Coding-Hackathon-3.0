@@ -1,0 +1,43 @@
+
+{% load static %}
+{% load bootstrap5 %}
+{% block title %} Question Categories {% endblock %}
+
+{% block content %}
+<style>
+    tr {
+        line-height: 15px !important;
+        min-height: 15px !important;
+        height: 15px !important;
+    }
+</style>
+<div class="card">
+    <div class="card-body table-responsive">
+        <table id="staff-table" class="table table-striped example3">
+            {% comment %} <a href="#" class="btn btn-primary mb-2 mb-md-0 me-2 btn-sm js-create-staff"
+                data-url="{% url 'question_categories_create' %}">Add
+                Question  Category</a> {% endcomment %}
+            Question types can only be defined by super admin in liason with the developer
+            <thead>
+                <tr>
+                    <th>Question Type</th>
+                    {% comment %} <th>Action</th> {% endcomment %}
+                </tr>
+            </thead>
+            <tbody>
+                {% include 'dashboard/institutions/question_types/partial_list.html' %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="modal-staff">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'extrajs/publications.js' %}" target="_blank"></script>
+{% endblock %}

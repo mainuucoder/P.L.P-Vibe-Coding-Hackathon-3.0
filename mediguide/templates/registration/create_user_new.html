@@ -1,0 +1,108 @@
+{% load static %}
+{% load bootstrap5 %}
+
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+<style>
+    .form-group{
+        margin-top:10px !important;
+    }
+    .independent{display: none;
+    }
+</style>
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<div class="inner" style="min-height: 300px;">
+    <span class="btn btn-danger" style="margin-top:5px;margin-left:5px;" id="back-to-view"><i class="fa fa-arrow-left"></i> Back</span>
+   
+    <div class="row">
+        <div class="col-lg-12 common-headers center-align">
+            <h6 style="text-align: center;"> {{Title}} </h6>
+        </div>
+    </div>
+      <hr />
+     <!--BLOCK SECTION -->
+     <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+            <div class="card-body ">
+     
+            <form action="" method="POST" role="{{PageAction}}" name="{{success_url}}" title="{{not_success_url}}" class="col-md-12" id="NormalForm">
+				
+                <div class="row" style="overflow: auto;">
+                    {% csrf_token %}
+				
+                    {{form.media}}
+                    {% for field in form %}
+                    <div class="form-group col-sm-12">
+                        {% bootstrap_field field %}
+                        <!-- <hr> -->
+                    </div>
+                    {% endfor %}
+                    <div class="form-group col-sm-12">
+                        <div class="mb-3">
+                            <label class="form-label" for="id_insititution">Institution</label>
+                            <select name="institution" class="form-control" id="institution">
+
+                               <option value="">----select---</option>
+                                {% for item in institutions %}
+                               <option value="{{item.id}}">{{item}}</option>
+
+                                {% endfor %}
+
+                            </select>
+
+                    </div>
+                   </div> 
+                   </div> 
+				<div class="row">
+                <div class="col-sm-3"></div>
+                <input type="text" hidden value="{{level}}" name="level" id="level_name">
+                <input type="text" hidden value="{{level_name}}" name="level_name" id="level_name">
+				<input type="text" hidden value="{{instance.id}}" name="instance" id="instance">
+				<input type="text" hidden value="{{success_url}}" name="success_url" id="success_url">
+                <input type="text" hidden value="{{category.id}}" name="category" id="category">
+
+
+
+				
+                
+                
+			</div>
+            <div class="col-sm-12">
+                <button class="btn-success btn "  style="float: right;" id="SubmitQuery" role="{{PageAction}}">SAVE</button>
+               <div id="error_page" class="col-sm-12 error_page" style="text-align:center ;color:red"></div>
+
+            </div>
+            </form>
+        </div>
+        </div>
+        </div>
+
+    </div>
+  
+
+</div>
+<script>
+    $(document).ready(function(){
+
+        $("#back-to-view").click(function(){
+   
+        $("#modal-staff").modal("hide");
+                                   
+ 
+
+})
+    })
+</script>

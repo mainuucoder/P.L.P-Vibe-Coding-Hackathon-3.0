@@ -1,0 +1,118 @@
+{% if maincountlist %}
+<div class="row" style="margin:5px">
+    <div class="col-sm-6"></div>
+    <div class="col-sm-6">
+
+        <span class="btn btn-success AddAudience" style="float: right;">Save and proceed</span>
+    </div>
+</div>
+{% endif %}
+<div class="col-sm-12" style="max-height: 300px;overflow: auto;">
+    <div class="card">
+        <div class="card-body">
+
+            <div class="col-sm-12 page_header_default">(STEP 3) Current Target Audience</div>
+
+            <table class='table ' id="loadtable">
+                <thead style="font-size: 11px;">
+                    <tr>
+                        <th>#</th>
+                        <th>NAME</th>
+                        <th></th>
+                        <th></th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                {% for item in targetslist %}
+                {% if item.status %}
+                <script>
+                    $(document).ready(function () {
+                        var item_id = '{{item.id}}'
+                        $("#row_id" + item_id).show()
+                    })
+                </script>
+                <tr id="row_id{{item.id}}" style="display:none;background: #ccc;">
+                    <td colspan="3"><input type='checkbox' class="selectedtargettypes" checked role="{{item.id}}">
+                        {{item.target_type}}</td>
+                    <td></td>
+                    <td> </td>
+                </tr>
+                {% for instance in selectedtargetlist %}
+                {% if item.target_type == instance.target_type %}
+                <tr>
+                    <td></td>
+                    <td colspan="2"><input type='checkbox' class="selectedcheckboxes selectedcheckboxes{{item.id}}"
+                            checked role="{{instance.id}}">
+                        {{instance.list_id}}</td>
+                    <td>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                {% endif %}
+
+                {% endfor %}
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        var csrfmiddlewaretoken = '{{csrf_token}}';
+        var survey = '{{survey.id}}'
+        var targettype = '{{targettype.id}}'
+        $(".selectedtargettypes").change(function () {
+            var role = 'all'
+            var option = $(this).attr('role')
+            if ($(this).prop('checked')) {
+                var action = 'add'
+
+
+                $(".selectedcheckboxes" + option).prop('checked', true)
+
+            } else {
+                var action = 'remove'
+                $(".selectedcheckboxes" + option).prop('checked', false)
+
+            }
+            $.post('/dashboard/surveys/remove-targets-audience-list/', { option: option, survey: survey, action: action, role: role, targettype: targettype, csrfmiddlewaretoken: csrfmiddlewaretoken }, function (data) {
+
+                $('.content-wrapper').html(data)
+            })
+        })
+
+
+
+        $(".selectedcheckboxes").change(function () {
+            var role = 'single'
+            var option = $(this).attr('role')
+            if ($(this).prop('checked')) {
+                var action = 'add'
+
+
+            } else {
+                var action = 'remove'
+
+            }
+            $.post('/dashboard/surveys/remove-targets-audience-list/', { option: option, survey: survey, action: action, role: role, targettype: targettype, csrfmiddlewaretoken: csrfmiddlewaretoken }, function (data) {
+
+                $('.content-wrapper').html(data)
+            })
+        })
+
+        $(".AddAudience").click(function () {
+            $.post('/dashboard/surveys/selectAudience/', { csrfmiddlewaretoken: csrfmiddlewaretoken, surveyId: survey }, function (data) {
+
+                $('.content-wrapper').html(data)
+            })
+        })
+    })
+</script>

@@ -1,0 +1,217 @@
+
+{% extends "frontend/base.html" %}
+{% load static %}
+
+{% load humanize %}
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<style>
+  .surveyspanels{
+    min-height: 80px;
+    background: #fff;
+    margin-top: 5px;
+  }
+</style>
+
+<div class="row card" style="padding-top: 10px;">
+<div style="text-align: center;">
+<h3 style="color: #00A652;">Open Bursaries</h3>
+    </div>
+ {% if bursaries %}
+{% for bursary in bursaries %}
+<div class="col-sm-12 surveyspanels" id="#surveyspanel{{bursary.id}}">
+<div class="card" style="margin-left: 50px;margin-right: 50px;">
+  <div class="card-body">
+    <h5 id="introduction" class="card-title" style="font-size: 18px !important;">{{bursary.Title|safe}}</h5>
+   
+    <p class="card-text">   {{bursary.Brief_Description|safe}}</p>
+    <a  class="card-link">Application Deadline: 
+      <span class="text-secondary font-weight-bold">{{bursary.End_Date}}</span>&nbsp;</a>
+      {% if bursary.status == 'done' %}
+      &nbsp;<span style="float:right;margin-right: 5px;" role="{{bursary.id}}" class="btnviewresponces btn btn-secondary" ><i class="fa fa-eye"></i> View submission</span> 
+      &nbsp;<a  style="float: right;" data-toggle="collapse" data-target=".forum-content{{bursary.id}}" class="text-body " role="{{bursary.id}}" style="color: #000 !important;font-weight:bold;"><class class="" style="color:green">Responce submited successfully</class><b></b></a> 
+       {% elif bursary.status == 'past' %}
+    <a  style="float: right;" data-toggle="collapse" data-target=".forum-content{{bursary.id}}" class="text-body " role="{{bursary.id}}" style="color: #000 !important;font-weight:bold;"><span class="" style="color:rgb(128, 26, 0)">Application Closed</span><b>&nbsp;</b></a>  
+     
+    {% elif bursary.status == 'past_done' %}
+    &nbsp;<span style="float:right;margin-right: 5px;" role="{{bursary.id}}" class="btnviewresponces btn btn-secondary" ><i class="fa fa-eye"></i> View submission</span> 
+    &nbsp;<a  style="float: right;" data-toggle="collapse" data-target=".forum-content{{bursary.id}}" class="text-body " role="{{bursary.id}}" style="color: #000 !important;font-weight:bold;"><span class="" style="color:rgb(128, 26, 0)">Application Closed</span><b>&nbsp;</b></a> 
+     
+    {% else %}        
+  <a href="{% url 'account_check' %}" style="float: right;" data-toggle="collapse" data-target=".forum-content{{bursary.id}}" class="text-body read_more" role="{{bursary.id}}" style="color: #000 !important;font-weight:bold;"><span class="btn btn-success" >Apply</span><b></b></a>
+{% endif %}
+  </div>
+</div>
+</div>
+
+{% endfor %}
+
+{% else %} 
+<div class="alert alert-danger tex-center" role="alert" style="text-align: center;margin:100px">
+  There are currently  no open bursaries!!!!!   {% if not user.is_authenticated %} <a href="">Login here to check personalized forum invites.</a> {% endif %}
+</div>
+{% endif %}
+
+
+
+
+
+</div>
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<script>
+    $(document).ready(function(){
+      
+        var questioncategory=parseInt('{{questioncategory.id}}')
+        
+        var csrfmiddlewaretoken= '{{csrf_token}}';
+         $(".btnviewresponces").click(function(){
+        
+          var loader= $('#loader').html()
+          
+          $('#loadingadge').html(loader)
+         var surveyId=$(this).attr('role');
+         
+         $.post('/dashboard/quizes/view_user_submissions/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+          $(".surveyspanels").hide()
+            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+surveyId).show()
+        
+          
+        $('.surveybackBtn').show()           
+         })
+        })
+     
+        $(".read_more").click(function(){
+         
+           var loader= $('#loader').html()
+          
+           $('#loadingadge').html(loader)
+          var survey=$(this).attr('role');
+          //alert(survey)
+          var surveyId=survey
+          
+         $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory+1;
+                        checkexistingcategories(questioncategory,surveyId)
+
+
+
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/Load_final_list_answers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                          $(".surveyspanels").hide()
+                          $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                        })
+
+                      
+                       }
+                      })
+
+
+
+
+                    })
+
+
+
+
+
+
+
+  
+      });
+
+
+      function checkexistingcategories(questioncategory,surveyId){
+   var questioncategory=questioncategory;
+    
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId=surveyId;
+       //alert(surveyId)
+       $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory+1;
+                        checkexistingcategories(questioncategory,surveyId)
+
+
+
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/Load_final_list_answers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                          $(".surveyspanels").hide()
+                          $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                        })
+
+                         //$.post('/dashboard/quizes/PublishAnswers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                         
+                         
+                          //$(".main-content").html(data)
+
+
+
+                     //})
+                      
+                       }
+                      })
+   
+}
+      </script>
+{% endblock %}

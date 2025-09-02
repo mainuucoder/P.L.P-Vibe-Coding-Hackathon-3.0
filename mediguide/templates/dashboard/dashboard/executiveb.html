@@ -1,0 +1,733 @@
+{% extends 'dashboard/base3.html' %}
+{% load static %}
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+<script>
+  notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+    /* .active{
+        color:green !important;
+        border-bottom: 2px solid red !important;
+    } */
+    .count{
+    font-size: 21px;
+    font-weight: bold;
+  }
+  .main-cards{
+        margin-bottom: 10px;
+    }
+    .main-card-body{
+        /* height: 12px; */
+        text-align: center;
+        font-size: 12px;
+    }
+    .head-primary-header{
+        background-color: #eb3236 !important;
+        color: #fff !important;
+        /* padding-bottom:9px ;
+        padding-top:9px ; */
+    }
+    .head-primary-body{
+        /* background-color: #eb3236 !important; */
+        background-color: #111c43 !important;
+        
+        color: #fff !important;
+    }
+    .head-secondary-body{
+        /* background-color: #01a653 !important; */
+        background-color: #111c43 !important;
+        color: #fff !important;
+    }
+    .head-third-layer-body{
+        /* background-color: #6c6e71 !important; */
+        background-color: #111c43 !important;
+        color: #fff !important;
+    }
+    .head-secondary-header{
+        /* background-color: #01a653 !important; */
+        background-color: #111c43 !important;
+        color: #fff !important;
+        padding-bottom:9px !important;
+        padding-top:9px !important;
+    }
+    .card-main-footer{
+        /* padding-right: 0px  !important;
+        padding-left: 0px  !important;
+        padding-bottom: 2px  !important; */
+        /* margin-bottom: 3px; */
+    }
+    .icons-dash{
+        font-size: 20px;
+    }
+    .dash-header-content{
+        font-size:12px;
+        text-transform: uppercase;
+    }
+    .center-body{
+        height: 80px;
+        color:#6c6e71;
+        text-align: center;
+        padding-top:10%;
+        background-color: #fff !important;
+        border-radius: 50%;
+    }
+      .active {
+        color: #00A652 !important;
+        /* color:#fff !important;
+        background: #626f72 !important; */
+      }
+      @media all and (max-width:768px){
+.mobile_hidden{
+    display: none !important;
+}
+.mobipdless{
+    padding: 4px  !important;
+ }
+
+}
+@media all and (min-width: 768px){
+.desktop_hidden{
+    display: none !important;
+}
+
+}
+.dataTables_filter{
+    margin-top: 5px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="tab-content">
+            <div class="tab-pane show active p-0 border-0" id="stocks-portfolio" role="tabpanel">
+                <div class="row">
+                 
+
+{% for item in categories %}
+
+             <div class="col-sm-3 main-cards">
+                <div class="card">
+
+             
+                    <div class="card-header head-primary-header" style=" background-color: #111c43 !important">
+                        <div class="row">
+                            <div class="col-sm-10 dash-header-content">
+                            {{item.name}}
+                            </div>
+                            <div class="col-sm-2">
+                                <i class="fa fa-bar-chart  icons-dash" ></i>
+                            </div>
+                        </div>
+                     </div>    
+                 <div class="card-body">
+                        <div class="col-sm-12 main-card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                 Registered
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        {{item.trainees_registered}}
+                        </h6>
+                                </div>
+                                </div>
+
+
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                 Trained
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        {{item.trainees_trained}}
+                        </h6>
+                                </div>
+                                </div>
+                            </div>
+                       
+                        </div>
+              
+                    </div>
+                    <div class="card-footer card-main-footer">
+                        <!-- 5% higher than last month -->
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+      
+                </div>
+              
+                <div class="row">
+                 
+
+                    
+                    
+                                 <div class="col-sm-6 main-cards">
+                                    <div class="card">
+                                       
+                                 
+                                        <div class="card-header head-primary-header" style=" background-color: #111c43 !important">
+                                            <div class="row">
+                                                <div class="col-sm-10 dash-header-content">
+                                                   REVENUE GENERATED
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <i class="fa fa-bar-chart  icons-dash" ></i>
+                                                </div>
+                                            </div>
+                                         </div>    
+                                     <div class="card-body">
+                                            <div class="col-sm-12 main-card-body">
+                                                <div class="row">
+                                                    {% for item in revenue %}
+                                                    
+                                                    <div class="col-sm-3">
+                                                    <div class="col-sm-12">
+                                                        {{item.item.name}}
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        Ksh. 
+                                                    <h6 class="count" style="display:none">
+                                                 {{item.revenue}} 
+                                                  </h6>
+                                                    </div>
+                                                    </div>
+                                                    
+                                                    {% endfor %}
+                    
+                                                   
+                                                </div>
+                                           
+                                            </div>
+                                  
+                                        </div>
+                                       
+                                        <div class="card-footer card-main-footer">
+                                            <!-- 5% higher than last month --> &nbsp;
+                                        </div>
+                                    </div>
+                                </div>
+                    
+                                <div class="col-sm-6 main-cards">
+                                    <div class="card">
+                                       
+                                 
+                                        <div class="card-header head-primary-header" style=" background-color: #111c43 !important">
+                                            <div class="row">
+                                                <div class="col-sm-10 dash-header-content">
+                                                    TOTAL USERS
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <i class="fa fa-bar-chart  icons-dash" ></i>
+                                                </div>
+                                            </div>
+                                         </div>    
+                                     <div class="card-body">
+                                            <div class="col-sm-12 main-card-body">
+                                                <div class="row">
+                                                    
+                                                    <div class="col-sm-3">
+                                                    <div class="col-sm-12">
+                                                        TRAINEES (Registered Trainees + Sign ups + Public Sector)
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                      
+                                                    <h6 class="count" style="display:none">
+                                                 {{trainees}} 
+                                                  </h6>
+                                                    </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="col-sm-12">
+                                                            TRAINERS
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            
+                                                        <h6 class="count" style="display:none">
+                                                         {{trainers}}  
+                                                      </h6>
+                                                        </div>
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <div class="col-sm-12">
+                                                                PUBLIC SECTOR
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                
+                                                            <h6 class="count" style="display:none">
+                                                             {{public_reg}}  
+                                                          </h6>
+                                                            </div>
+                                                            </div>
+                                                        
+                                                        <div class="col-sm-3">
+                                                            <div class="col-sm-12">
+                                                                COORDINATORS
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                          
+                                                            <h6 class="count" style="display:none">
+                                                                {{coordinators}} 
+                                                          </h6>
+                                                            </div>
+                                                            </div>
+                                                   
+                                                </div>
+                                           
+                                            </div>
+                                  
+                                        </div>
+                                       
+                                        <div class="card-footer card-main-footer">
+                                            <!-- 5% higher than last month --> &nbsp;
+                                        </div>
+                                    </div>
+                                </div>
+                          
+                                    </div>
+                                    <div class="row">
+                 
+
+                    
+                    
+                                        <div class="col-sm-6 main-cards">
+                                           <div class="card">
+                                              
+                                        
+                                               <div class="card-header head-primary-header" style=" background-color: #111c43 !important">
+                                                   <div class="row">
+                                                       <div class="col-sm-10 dash-header-content">
+                                                          REGIONS
+                                                       </div>
+                                                       <div class="col-sm-2">
+                                                           <i class="fa fa-bar-chart  icons-dash" ></i>
+                                                       </div>
+                                                   </div>
+                                                </div>    
+                                            <div class="card-body">
+                                                   <div class="col-sm-12 main-card-body">
+                                                    <figure class="highcharts-figure">
+                                                        <div id="container_basic"></div>
+                                                        <p class="highcharts-description">
+                                                           
+                                                        </p>
+                                                    </figure>
+                                                  
+                                                   </div>
+                                         
+                                               </div>
+                                              
+                                               <div class="card-footer card-main-footer">
+                                                   <!-- 5% higher than last month --> &nbsp;
+                                               </div>
+                                           </div>
+                                       </div>
+                           
+                                       <div class="col-sm-6 main-cards">
+                                           <div class="card">
+                                              
+                                        
+                                               <div class="card-header head-primary-header" style=" background-color: #111c43 !important">
+                                                   <div class="row">
+                                                       <div class="col-sm-10 dash-header-content">
+                                                           Top 5 Institutions
+                                                       </div>
+                                                       <div class="col-sm-2">
+                                                           <i class="fa fa-bar-chart  icons-dash" ></i>
+                                                       </div>
+                                                   </div>
+                                                </div>    
+                                                
+                                                <div class="card-body">
+                                                    <div class="col-sm-12 main-card-body">
+                                                     <figure class="highcharts-figure">
+                                                         <div id="container_institution"></div>
+                                                         <p class="highcharts-description">
+                                                            
+                                                         </p>
+                                                     </figure>
+                                                   
+                                                    </div>
+                                          
+                                                </div>
+                                               <div class="card-footer card-main-footer">
+                                                   <!-- 5% higher than last month --> &nbsp;
+                                               </div>
+                                           </div>
+                                       </div>
+                                 
+                                           </div>                 
+            </div>
+            <div class="tab-pane p-0 border-0" id="stocks-market" role="tabpanel">
+            <div class="row">
+                
+             <div class="col-sm-3 main-cards">
+                <div class="card">
+
+             
+             <div class="card-header head-secondary-body" style=" background-color: #111c43 !important">
+                <div class="row">
+                    <div class="col-sm-10 dash-header-content">
+                        ORGANIZATIONS IN CONSORTIUM
+                    </div>
+                    <div class="col-sm-2">
+                        <i class="fa fa-bar-chart  icons-dash" ></i>
+                    </div>
+                </div>
+             </div>   
+                 <div class="card-body">
+                        <div class="col-sm-12 main-card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                 Registered
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        456
+                        </h6>
+                                </div>
+                                </div>
+
+
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                 Trained
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        146
+                        </h6>
+                                </div>
+                                </div>
+                            </div>
+                       
+                        </div>
+              
+                    </div>
+                    <div class="card-footer card-main-footer">
+                        <!-- 5% higher than last month -->
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+                    <div class="col-sm-3 main-cards">
+                <div class="card">
+
+             
+             <div class="card-header head-primary-header" style=" background-color: #111c43 !important">
+                <div class="row">
+                    <div class="col-sm-10 dash-header-content">
+                    PUBLIC SECTOR 
+                    </div>
+                    <div class="col-sm-2">
+                        <i class="fa fa-bar-chart  icons-dash" ></i>
+                    </div>
+                </div>
+             </div>   
+                 <div class="card-body">
+                        <div class="col-sm-12 main-card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                 Registered
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        2361
+                        </h6>
+                                </div>
+                                </div>
+
+
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                 Trained
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        1864
+                        </h6>
+                                </div>
+                                </div>
+                            </div>
+                       
+                        </div>
+              
+                    </div>
+                    <div class="card-footer card-main-footer">
+                        <!-- 5% higher than last month -->
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+                    
+                    
+                    <div class="col-sm-3 main-cards">
+                <div class="card">
+
+             
+             <div class="card-header head-secondary-body" style=" background-color: #111c43 !important">
+                <div class="row">
+                    <div class="col-sm-10 dash-header-content">
+                    PRIVATE SECTOR
+                    </div>
+                    <div class="col-sm-2">
+                        <i class="fa fa-bar-chart  icons-dash" ></i>
+                    </div>
+                </div>
+             </div>   
+                 <div class="card-body">
+                        <div class="col-sm-12 main-card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                Trained
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        6456
+                        </h6>
+                                </div>
+                                </div>
+
+
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                Certified
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        578
+                        </h6>
+                                </div>
+                                </div>
+                            </div>
+                       
+                        </div>
+              
+                    </div>
+                    <div class="card-footer card-main-footer">
+                        <!-- 5% higher than last month -->
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 main-cards">
+                <div class="card">
+
+             
+             <div class="card-header head-primary-header" style=" background-color: #111c43 !important">
+                <div class="row">
+                    <div class="col-sm-10 dash-header-content">
+                    COORDINATORS
+                    </div>
+                    <div class="col-sm-2">
+                        <i class="fa fa-bar-chart  icons-dash" ></i>
+                    </div>
+                </div>
+             </div>   
+                 <div class="card-body">
+                        <div class="col-sm-12 main-card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                 Registered
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        1546
+                        </h6>
+                                </div>
+                                </div>
+
+
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                 Certified
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        634
+                        </h6>
+                                </div>
+                                </div>
+                            </div>
+                       
+                        </div>
+              
+                    </div>
+                    <div class="card-footer card-main-footer">
+                        <!-- 5% higher than last month -->
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+                </div>
+                
+             <div class="col-sm-3 main-cards">
+                <div class="card">
+
+             
+             <div class="card-header head-secondary-body" style=" background-color: #111c43 !important">
+                <div class="row">
+                    <div class="col-sm-10 dash-header-content">
+                        CITIZENS LINKED TO JOBS
+                    </div>
+                    <div class="col-sm-2">
+                        <i class="fa fa-bar-chart  icons-dash" ></i>
+                    </div>
+                </div>
+             </div>   
+                 <div class="card-body">
+                        <div class="col-sm-12 main-card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                 Public Sector
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        2500
+                        </h6>
+                                </div>
+                                </div>
+
+
+                                <div class="col-sm-6">
+                                <div class="col-sm-12">
+                                 Private Sector
+                                </div>
+                                <div class="col-sm-12">
+                                <h6 class="count" style="display:none">
+                        3488
+                        </h6>
+                                </div>
+                                </div>
+                            </div>
+                       
+                        </div>
+              
+                    </div>
+                    <div class="card-footer card-main-footer">
+                        <!-- 5% higher than last month -->
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+                 
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+
+
+<script>
+   $(document).ready(function(){
+    Highcharts.chart('container_basic', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'REGIONS',
+            align: 'left'
+        },
+        // Other Highcharts options...
+
+        xAxis: {
+            categories: [{% for field in listcategories %}'{{ field }}',{% endfor %}],
+            crosshair: true,
+            accessibility: {
+                description: 'List'
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Trainees'
+            }
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [
+            {% for item in list %}
+            {
+                name: '{{ item.item.name }}',
+                data: [{% for field in item.list %}{{ field.value }},{% endfor %}]
+            },
+            {% endfor %}
+        ]
+    });
+
+
+
+
+
+
+
+    Highcharts.chart('container_institution', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'TOP 5 INSTITUTIONS',
+            align: 'left'
+        },
+        // Other Highcharts options...
+
+        xAxis: {
+            categories: [{% for field in listcategories %}'{{ field }}',{% endfor %}],
+            crosshair: true,
+            accessibility: {
+                description: 'List'
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Trainees'
+            }
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [
+            {% for item in main_top_data %}
+            {
+                name: '{{ item.item.name }}',
+                data: [{% for field in item.list %}{{ field.value }},{% endfor %}]
+            },
+            {% endfor %}
+        ]
+    });
+});
+
+    </script>
+
+{% endblock %}

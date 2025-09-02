@@ -1,0 +1,144 @@
+{% load static %}
+{% load bootstrap5 %}
+{% load humanize %}
+<style>
+ tr.hide-table-padding td {
+  padding: 0;
+  }
+
+  .expand-button {
+    position: relative;
+  }
+
+  .accordion-toggle .expand-button:after
+  {
+    position: absolute;
+    left:.75rem;
+    top: 50%;
+    transform: translate(0, -50%);
+    /* content: '-'; */
+  }
+  /* .accordion-toggle.collapsed .expand-button:after
+  {
+    content: '+';
+  } */
+</style>
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<div class="card">
+    <div class="card-body ">
+<div class="col-sm-12 col-xs-12" style="min-height: 200px;max-height:400px;overflow-x: hidden;overflow-y: scroll;">
+
+    <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in selectedquestions %}
+            <tr class="accordion-toggle collapsed" id="accordion{{p.id}}" data-mdb-toggle="collapse" data-mdb-parent="#accordion{{p.id}}" href="#collapse{{p.id}}" aria-controls="collapse{{p.id}}">
+              <td class="expand-button"></td>
+              <td> <input type="checkbox"  id="{{q.id}}" checked="true" class="uncheck_select" role=""></td>
+              <td>{{p.question.name|safe}}</td>
+              <td>+</td>
+      
+            </tr>
+            <tr class="hide-table-padding">
+              <td></td>
+              <td colspan="3">
+                <div id="collapse{{p.id}}" class="collapse in p-3">
+                    <p style="font-weight: bold;">Choices:</p>
+                    {% for choice in p.choice_set.all %}
+                    {% if choice.status == 'active' %}
+                    <p>&#x2022;{{choice.name}}</p>
+                    {% else %}
+                    {% endif %}
+                    
+                    {% endfor %}
+                </div></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+</div>
+
+<div class="row">
+    {% if questioncount > 0 %}
+    <div class="col-sm-4"><div class="col-sm-12 btn actionbuttons btn-warning" role="back">Back</div></div>
+    
+    
+    <div class="col-sm-4"><div class="btn col-sm-12 actionbuttons btn-info" role="cancel">Cancel All</div></div>
+    <div class="col-sm-4"><div class="btn col-sm-12 actionbuttons btn-success" role="save">Save</div></div>
+    {% else %}
+    {% endif %}
+</div>
+</div>
+</div>
+
+<script>
+ $(document).ready(function(){
+ var surveyId='{{survey}}'
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+    $(".uncheck_select").change(function(){
+    var questionId=$(this).attr('id');
+   
+        action='removequestion'
+   
+
+        $.post('/dashboard/surveys/add_question/',{action:action,questionId:questionId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            $.post('/dashboard/surveys/loadQuestions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+         $('#list_holder').html(data)
+            })
+           })
+   
+})
+
+$('.actionbuttons').click(function(){
+    var role=$(this).attr('role');
+    
+    if(role=='back'){
+    
+    }else if(role=='cancel'){
+     var action='clearall'
+     $.post('/dashboard/surveys/manageQuestions/',{action:action,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+        $.get('/dashboard/surveys/ViewQuestions/'+surveyId,function(data){
+
+$('.content-wrapper').html(data)
+$.post('/dashboard/surveys/loadQuestions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+$('#list_holder').html(data)
+   })
+})
+        
+        
+           })
+    }else{
+        var action='save'
+        $.post('/dashboard/surveys/manageQuestions/',{action:action,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            $.post('/dashboard/surveys/selectAudience/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+                $('.content-wrapper').html(data)
+            })
+           })
+    }
+})
+
+
+
+ })
+</script>

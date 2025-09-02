@@ -1,0 +1,205 @@
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<!-- Notification Messages -->
+{% if messages %}
+  {% for message in messages %}
+    <script>
+      notify('{{ message.level_tag }}', "{{ message|escapejs }}");
+    </script>
+  {% endfor %}
+{% endif %}
+
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                <span></span> Items <span></span> {{ Title }}
+            </div>
+
+            <!-- Undo / Reset Buttons -->
+            <div style="margin-top: -7px;">
+                <button onclick="resetTable()" class="btn btn-sm btn-danger mt-3" style="float: right;margin-top: -27px !important;">
+                    Reset <i class="fa fa-refresh" aria-hidden="true"></i>
+                </button>
+                <p style="float: right;margin-top: -27px !important;">&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <button onclick="undoDelete()" class="btn btn-sm btn-warning mt-3" style="float: right;margin-top: -27px !important;">
+                    Undo <i class="fa fa-undo" aria-hidden="true"></i>
+                </button>
+                <p style="float: right;margin-top: -27px !important;">&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+                <button onclick="backtopage()" class="btn btn-sm mt-3" style="background: red;float: right;margin-top: -27px !important;">
+                    close <i class="fa fa-close" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-80 mt-50">
+        <div class="row">
+            <div class="col-xl-10 col-lg-12 m-auto">
+                <h4 class="heading-2 mb-10">Compare</h4>
+                <h6 class="text-body mb-40">There are <span class="text-brand">{{ items }}</span> items to compare</h6>
+                <div class="table-responsive" id="table-holder">
+                    <table id="table-compare" class="table text-center table-compare">
+                        <tbody>
+                            <!-- Preview Row -->
+                            <tr class="pr_image">
+                                <td class="text-muted font-sm fw-600 font-heading mw-200">Preview</td>
+                                {% for item in list %}
+                                    <td class="row_img" style="padding: 3px;">
+                                        <img src="{{ MEDIA }}{{ item.image.url }}" height="200px" width="200px" alt="compare-img" />
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+                            <!-- Name Row -->
+                            <tr class="pr_title">
+                                <td class="text-muted font-sm fw-600 font-heading">Name</td>
+                                {% for item in list %}
+                                    <td class="product_name">
+                                        <h6><a class="text-heading">{{ item }}</a></h6>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+                            <!-- Price Row -->
+                            <tr class="pr_price">
+                                <td class="text-muted font-sm fw-600 font-heading">Rent</td>
+                                {% for item in list %}
+                                    <td class="product_price">
+                                        <h4 class="price text-brand">KES: {{ item.price|floatformat|intcomma }}</h4>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+                            <!-- Description Row (Static) -->
+                            <tr class="description">
+                                <td class="text-muted font-sm fw-600 font-heading">Description</td>
+                                {% for item in list %}
+                                    <td class="row_text font-xs">
+                                        <p class="font-sm text-muted">{{ item.description|default:"No description available." }}</p>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+                            <!-- Rooms -->
+                            <tr class="pr_stock">
+                                <td class="text-muted font-sm fw-600 font-heading">Rooms Available</td>
+                                {% for item in list %}
+                                    <td class="row_stock"><span class="stock-status in-stock mb-0">{{ item.rooms }}</span></td>
+                                {% endfor %}
+                            </tr>
+
+                            <!-- Amenities -->
+                            <tr class="pr_weight">
+                                <td class="text-muted font-sm fw-600 font-heading">Amenities</td>
+                                {% for item in list %}
+                                    <td class="row_weight">{{ item.amenities|default:"N/A" }}</td>
+                                {% endfor %}
+                            </tr>
+
+                            <!-- Actions -->
+                            <tr class="pr_remove text-muted">
+                                <td class="text-muted font-md fw-600"></td>
+                                {% for item in list %}
+                                    <td class="row_remove">
+                                        <button class="btn btn-sm select-building" role="{{item.id}}">Select</button>
+                                        <button class="btn btn-sm" onclick="deleteColumn(this)" style="background-color: red;">
+                                            <a href="javascript:void(0);" >
+                                                <i class="fi-rs-trash mr-5"></i><span>Remove</span>
+                                            </a>
+                                        </button>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Script Section -->
+<script>
+let originalTableHtml = "";
+
+$(document).ready(function () {
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+  originalTableHtml = $('#table-compare')[0].outerHTML;
+    // alert(originalTableHtml)
+
+
+
+$(".select-building").click(function(){
+    var instance=$(this).attr('role')
+    var level='building'
+      $.post('/add-to-list/',{level:level,instance:instance,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                //    window.location="/products" 
+    $("#modal-staff").modal("hide");                         
+    // $(".modal-content").html(data)
+                
+    })
+})
+
+});
+// let originalTableHtml = "";
+// let lastDeleted = { index: null, cells: [] };
+
+// $(document).ready(function () {
+//     originalTableHtml = $('#table-compare').html();
+// });
+
+function deleteColumn(el) {
+    const $td = $(el).closest('td');
+    const colIndex = $td.index();
+    lastDeleted = { index: colIndex, cells: [] };
+
+    $('#table-compare tr').each(function () {
+        const $cells = $(this).children();
+        const $cell = $cells.eq(colIndex);
+        lastDeleted.cells.push($cell.clone());
+        $cell.fadeOut(300, function () {
+            $(this).remove();
+        });
+    });
+}
+function backtopage(){
+   $("#modal-staff").modal("hide");  
+}
+function undoDelete() {
+    if (lastDeleted.index === null || lastDeleted.cells.length === 0) return;
+
+    $('#table-compare tr').each(function (i) {
+        const $row = $(this);
+        const $cells = $row.children();
+        if (i < lastDeleted.cells.length) {
+            const $newCell = lastDeleted.cells[i].hide();
+            if (lastDeleted.index >= $cells.length) {
+                $row.append($newCell);
+            } else {
+                $newCell.insertBefore($cells.eq(lastDeleted.index));
+            }
+            $newCell.fadeIn(300);
+        }
+    });
+
+    lastDeleted = { index: null, cells: [] };
+}
+
+function resetTable() {
+    // alert(originalTableHtml)
+    $('#table-holder').html(originalTableHtml);
+    lastDeleted = { index: null, cells: [] };
+}
+
+
+
+
+
+</script>
+
+{% endblock %}

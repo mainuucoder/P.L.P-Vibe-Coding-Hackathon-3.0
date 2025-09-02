@@ -1,0 +1,159 @@
+
+{% load static %}
+{% load bootstrap5 %}
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<style>
+     .ff-el-form-control{
+  background-clip: padding-box;
+  background-image: none;
+  border: 1px solid #dadbdd;
+  border-radius: 7px;
+  color: #606266;
+  display: block;
+  font-family: -apple-system,"system-ui",Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+  line-height: 1;
+  margin-bottom: 0;
+  max-width: 100%;
+  padding: 11px 15px;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  width: 100%;
+    }
+    .reg_places{
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        min-height: 200px;
+        padding: 10px;
+
+    }
+    .not_shown{
+        display: none;
+    }
+    .ff-el-form-control{
+        /* background-color: #606266; */
+    }
+</style>
+<div class="row">
+<div class="col-sm-6" >
+<div class="col-sm-12 reg_places" >   
+<div class="row">    
+<div class="col-sm-12 home_div home">
+    <div class="col-sm-12 " >
+        <div class="row">
+            <div class="col-sm-8">  Add Group Details</div>
+            <div class="col-sm-4" style="text-align: right;">
+        {% if groups > 0 %}
+        <span  id="existing-group" class="btn btn-success"> Groups</span>
+        {% endif %}
+        <span  id="close-group" class="btn btn-danger">X</span>
+            </div>
+        </div>
+      
+        </div>   
+        
+            <form action="" method="POST" role="{{PageAction}}" name="{{success_url}}" title="{{not_success_url}}" class="col-md-12" id="DefaultForm">
+				
+                <div class="row" style="overflow: auto;">
+                    {% csrf_token %}
+				
+                    {{form.media}}
+                    {% for field in form %}
+                    <div class="form-group col-sm-12">
+                        {% bootstrap_field field %}
+                        <!-- <hr> -->
+                    </div>
+                    {% endfor %}
+                   </div> 
+				<div class="row">
+                <div class="col-sm-3"></div>
+                <input type="text" hidden value="{{level}}" name="level" id="level_name">
+                <input type="text" hidden value="{{level_name}}" name="level_name" id="level_name">
+				<input type="text" hidden value="{{instance.id}}" name="instance" id="instance">
+				<input type="text" hidden value="{{success_url}}" name="success_url" id="success_url">
+				
+                
+                
+			</div>
+            <div class="col-sm-12">
+                <button class="btn-success btn "  style="float: right;" id="SubmitQuery" role="{{PageAction}}">SAVE</button>
+            </div>
+            </form>
+
+        </div>
+        </div>
+        </div>
+        </div>
+        <div class="col-sm-6 " >
+        
+            <div class="col-sm-12 reg_places payment_div"  id="payment_div">
+             {{response|safe}}
+            </div>
+            <!-- <div class="col-sm-12" ></div> -->
+        
+        </div>
+        
+        
+        </div>
+         
+
+<!-- <script src="{% static 'assets/js/jquery.min.js' %}"></script> -->
+
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> -->
+<script>
+    $(document).ready(function(){
+
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+      var  instance='{{instance.id}}'
+    $('#close-group').click(function(){
+       
+        $(".register_pages").hide()
+            $("#page_two").show()
+    })
+    $('#existing-group').click(function(){
+        $.post('/get-existing-group/',{instance:instance,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+        $(".home").html(data)
+    })  
+   })
+
+    
+        $(".complete_institution").hide()
+        $(".final_buttons").hide()
+        $("#page_three").show()
+        $(".last_page_pay").show()
+        $(".registrarion_details").show()
+        $(".complete-process").hide()
+        var loader=$("#loader").html()
+        var csrfmiddlewaretoken= '{{csrf_token}}';
+        var groupb='{{payment.group}}'
+        var total_price='{{payment.price}}'
+     
+      
+       
+        $("#new_phone").focusout(function(){
+         
+            var phone=$(this).val()
+            // alert(phone)
+            var old_phone='{{payment.phone}}'
+            if (phone==old_phone){
+               
+            }else{
+                phone=btoa(phone)
+                // phone=phone
+                $("#payment_div").html('loading.. please wait..')
+                $.post('/change-phone-number/',{csrfmiddlewaretoken:csrfmiddlewaretoken,phone:phone}, function (data) {
+            if($.trim(data)=="success"){
+                $.post('/make-payment-request/',{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                $("#payment_div").html(data).show()
+                
+                })
+            
+            }else{
+
+            }
+            })
+            }
+        })
+
+    })
+</script>
+

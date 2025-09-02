@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Subscription Plans</h2>
+
+    {% if active_sub %}
+    <div class="alert alert-success">
+        <strong>Active Subscription:</strong> {{ active_sub.category.name }}
+        <br>
+        Expires on: {{ active_sub.expiry_date.strftime('%Y-%m-%d') }}
+    </div>
+    {% else %}
+    <div class="alert alert-warning">You don’t have an active subscription.
+    </div>
+    {% endif %}
+
+    <div class="row">
+        {% for cat in categories %}
+        <div class="col-md-4">
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ cat.name }}</h5>
+                    <p class="card-text">{{ cat.description }}</p>
+                    <p><strong>Price:</strong> {{ cat.price }} USD</p>
+                    <p><strong>Duration:</strong> {{ cat.duration_days }} days
+                    </p>
+                    <form
+                        action="{{ url_for('subscription.subscribe', category_id=cat.id) }}"
+                        method="POST">
+                        <button type="submit"
+                            class="btn btn-primary w-100">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

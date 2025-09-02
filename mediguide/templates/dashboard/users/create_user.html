@@ -1,0 +1,136 @@
+
+{% load static %}
+{% load bootstrap5 %}
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+    <!--Date picker-->
+ 
+  <!-- XDSoft DateTimePicker -->
+ 
+        <!-- datepicker full js -->
+        <!-- Datepicker css -->
+        <link rel="stylesheet" href="{% static 'assets/css/jquery.datetimepicker.min.css' %}">
+        <script src="{% static 'assets/js/jquery.datetimepicker.full.min.js' %}"></script>
+  <!-- end of date picker-->
+       <script>  
+       $(document).ready(function(){
+        $(function () {
+      $(".datepicker,.datepicker2,#id_Start_Date,#id_End_Date").datetimepicker({
+        format: 'Y-m-d H:m:s',
+        minDate:new Date()
+      });
+    });
+   
+  
+        })
+       </script> 
+<div class="inner" style="">
+    <span class="btn btn-danger" style="margin-top:5px;margin-left:5px;" id="back-to-view"><i class="fa fa-arrow-left"></i> Back</span>
+          
+<div class="row">
+    <div class="col-lg-12">
+        <h4> {{Title}} </h4>
+    </div>
+</div>
+  <hr />
+
+ <div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body ">
+            <form action="" method="POST" role="{{PageAction}}" class="col-md-12" id="DefaultForm">
+                {% csrf_token %}
+				<!-- {% bootstrap_form form %} -->
+                {{form.media}}
+				<div class="row" style="overflow: auto;">
+                    {% for field in form %}
+                    <div class="col-md-12">
+                        <label for="{{ field.label }}">{{ field.label_tag }}
+    
+                            {% if field.field.required %}<span class="special_class" style="color: red">*</span>
+                            {% endif %}
+                        </label>
+    
+                        {% bootstrap_field field show_label=False %}
+    
+    
+                    </div>
+    
+                    {% endfor %}
+                </div>
+                <input type="text" hidden value="{{level}}" name="level" id="level">
+                <input type="text" hidden value="{{level_name}}" name="level_name" id="level_name">
+				<input type="text" hidden value="{{instance.id}}" name="instance" id="instance">
+                <input type="text" hidden value="{{institution.id}}" name="institution" id="institution">
+				<input type="text" hidden value="{{success_url}}" name="success_url" id="success_url">
+				<button class="btn-success btn col-md-12"  id="SubmitForum" role="{{PageAction}}">SAVE</button>
+			</form>
+            <div id="errorpage" class="col-sm-12 " style="text-align:center ;color:red"></div>
+
+        </div>
+
+    </div>
+      <!--END BLOCK SECTION -->
+  
+     <!--TABLE, PANEL, ACCORDION AND MODAL  -->
+
+</div>
+</div>
+</div>
+
+<script>
+$(document).ready(function(){
+
+
+$("#id_file").change(function(){
+   // var allowedFiles = [".csv"];
+    var allowedFiles = [".csv"];
+        var fileUpload = $("#id_file");
+        var errorpage = $("#errorpage");
+        
+        var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+
+        if (!regex.test(fileUpload.val().toLowerCase())) {
+            errorpage.html("Please upload files having extensions: <b>" + allowedFiles.join(', ') + "</b> only.");
+            return false;
+            errorpage=''
+            $(this).val('')
+        }
+        errorpage.html('');
+        return true;
+    
+
+})
+
+
+    $("#back-to-view").click(function(){
+        //$.get('/dashboard/questions/viewQuestions/',function(data){
+            $("#modal-staff").modal("hide");
+                                       
+            // $('.content-wrapper').html(data)
+             
+    //})
+    
+    
+    });
+    $('.datepicker').datepicker({
+              changeMonth: true,
+              changeYear: true,
+              yearRange: "1970:2022",
+          });
+          $('.datepicker2').datepicker({
+              changeMonth: true,
+              changeYear: true,
+              yearRange: "1970:2022",
+          });
+          $('select').selectpicker();
+    
+        })
+    </script>

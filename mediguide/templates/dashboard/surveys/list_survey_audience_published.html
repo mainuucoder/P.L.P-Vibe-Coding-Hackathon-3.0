@@ -1,0 +1,393 @@
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+  table{
+font-size: 13px !important;
+text-align: center;
+width: 95%;
+margin: auto;
+text-align: center;
+}
+
+/*Make alternating colors for the table rows*/
+.table tr:nth-child(odd){
+  background: #dae5f4
+}
+
+.table tr:nth-child(even){
+background: #dae5f4
+}
+
+th {
+background-color: #337ab7;
+color: white;
+}
+.display_table{
+border-bottom-right-radius: 20px;
+/*border-bottom-left-radius: 20px;*/
+padding-left: 5px;
+padding-right: 5px;
+padding-bottom: 20px;
+box-shadow: 12px 12px 20px 6px #2e6da4;
+}
+td{
+  padding: 6px;
+line-height: 1.428571429;
+vertical-align: top;
+border-top: 1px solid #dddddd;
+text-align: justify;
+font-size:16px;
+}
+.page_links{
+cursor: pointer;
+
+}
+  
+  .pagination { display: inline-block;}
+  .pagination a { color: black; float: left; padding: 8px 16px; text-decoration: none;}
+  .pagination a.active { background-color: #4CAF50; color: white;}
+  .pagination a:hover:not(.active) {background-color: #ddd;}
+  .actionbtns{
+    cursor: pointer;
+  
+  }
+  .headholder{
+    margin-top: 5px;
+    background-color: #495549 !important;
+    font-weight: bold;
+    color:#fff !important;
+    text-align: center !important;
+    text-transform: uppercase;
+  }
+   /* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.active {
+  background-color: #ccc  !important;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+} 
+.tabcontent {
+  animation: fadeEffect 1s; /* Fading effect takes 1 second */
+}
+
+/* Go from zero to full opacity */
+@keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+.company_tabs{
+  min-height: 30px;
+  margin-top: 4px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+  text-align: justify;
+font-size: 13px;
+padding: .50rem .50rem;
+}
+.company_tabs:hover{
+  background-color: #1B2652;
+    color: #fff !important;
+}
+.activetab{
+  background-color: #1B2652  !important;
+    color: #fff !important;
+}
+#maininstitution_header{
+  min-height: 30px;
+  margin-top: 21px;
+  font-size:16px;
+  font-weight:bold;
+  font-style: italic;
+  padding-left: 10px;
+}
+
+
+</style>
+<div class="card">
+    <div class="card-body">
+
+    <div class="col-12" style="margin-bottom: 5px">
+      <span class="btn btn-danger btnback"><i class="fa fa-arrow-left"></i> Back</span>
+     
+        
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="col-sm-12">INSTITUTIONS</div>
+        {% for p in surveyaudience %}
+        {% if p.status == 'audience' %}
+            {% if forloop.counter == 1 %}
+            <script>
+              var maininfor='{{p.institution.name}}'
+              $("#maininstitution_header").html(maininfor)
+            </script>
+            <div class="col-sm-12 company_tabs activetab" role="{{p.institution.id}}" name="{{p.institution.name}}">{{forloop.counter}}.){{p.institution.name}}</div>
+     
+            {% else %}
+            <div class="col-sm-12 company_tabs " role="{{p.institution.id}}" name="{{p.institution.name}}">{{forloop.counter}}.){{p.institution.name}}</div>
+     
+      {% endif %}
+      {% else %}
+      {% endif %}
+      {% endfor %}
+      </div>
+      <div class="col-sm-9">
+   <div class="col-sm-12" id="maininstitution_header"></div>
+    <!-- Tab links -->
+ <div class="tab">
+  {% for p in surveyaudience %}
+    {% if p.status == 'audience' %}
+    <script>
+     $(document).ready(function(){
+      var companycheck='{{forloop.counter}}'
+      if (companycheck==1){
+        $('.tablinks1').addClass('graduations')
+        
+      }else{
+       
+      }
+    
+      $('.tablinks').hide()
+      $('.graduations').show()
+     })
+    </script>
+    {% for j in graduationyear %}
+  
+    {% if j.status == 'audience' %}
+    <script>
+      $(document).ready(function(){
+       var companycheck='{{forloop.counter}}'
+       if (companycheck==1){
+         $('.tabscount1').addClass('active')
+         $('.active').click()
+       }else{
+        
+       }
+     
+      })
+     </script>
+  {% if forloop.counter == 1 %}
+  <button class="tablinks institutionfamily{{p.institution.id}} tablinks{{forloop.parentloop.counter}} tabscount{{forloop.counter}} " id="tabscount{{forloop.counter}}" role="{{p.institution.id}}{{j.id}}"  >{{j.name}}</button>
+
+  {% else %}
+ 
+  <button class="tablinks institutionfamily{{p.institution.id}} tablinks{{forloop.parentloop.counter}} tabscount{{forloop.counter}}" id="tabscount{{forloop.counter}}" role="{{p.institution.id}}{{j.id}}" >{{j.name}}</button>
+{% endif %}
+  {% else %}
+  {% endif %}
+  {% endfor %}
+  
+  {% else %}
+  {% endif %}
+  {% endfor %}
+  {% if customeaudiencecount > 0 %}
+  <button class="tablinks tablinks1" role="custom" id="customAudienceList">CUSTOM LIST</button>
+
+ 
+  {% else %}
+  {% endif %}
+</div>
+
+<!-- Tab content -->
+    <table class='table '  id="loadtable">
+      <thead style="font-size: 11px;">
+        <tr  style="font-size: 11px;background: #106eea !important;">
+         
+          <th>NAME</th>
+          <th>EMAIL</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+    {% for p in surveyaudience %}
+    {% if p.status == 'audience' %}
+    {% for j in graduationyear %}
+
+    <script>
+      $(document).ready(function(){
+        var defaultcounter='{{forloop.counter}}'
+        if (defaultcounter==1){
+          var defaultdisplay='{{p.institution.id}}{{j.id}}'
+          $(".graduates"+defaultdisplay).show()
+        }else{
+
+        }
+      
+      })
+      </script>
+    {% if j.status == 'audience' %}
+   {% for g in audienceadded %}
+   {% if j == g.graduation_year %}
+   {% if p.institution == g.institution %}
+ <tr class="tabcontent graduates{{p.institution.id}}{{j.id}}"><td>
+    {{g.member.first_name}} {{g.member.middle_name}} {{g.member.last_name}}
+   
+    </td>
+  <td>{{g.member.email}}</td>
+  <td></td>
+  </tr>
+     {% else %}
+     {% endif %}
+     {% else %}
+     {% endif %}
+     {% endfor %}
+     {% else %}
+     {% endif %}
+     {% endfor %}
+   
+     {% else %}
+     {% endif %}
+     {% endfor %}
+   
+
+ {% if customeaudiencecount > 0 %}
+<tr style="color:green;background:#495549;display:none" class="tabcontent graduatescustom">
+  
+  <!-- <th>
+    Custom Audience List 
+  </th>
+  <th></th>
+      <th><span style="float:right ;">{{customeaudiencecount}}</span></th>
+    </tr> -->
+    
+       {% for g in customeaudienceadded %}
+      <tr class="tabcontent graduatescustom" style="display: none ;"><td>
+        {{g.first_name}} {{g.last_name}}
+       
+         </td> <td>{{g.email}}</td>
+         <td></td>
+         </tr>
+         {% endfor %}
+      
+         {% else %}
+         {% endif %}
+
+</table>
+    
+
+
+
+</div>
+</div>
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  $(document).ready(function(){
+    $(".company_tabs").click(function(){
+      var company=$(this).attr('role')
+      $(".company_tabs").removeClass('activetab')
+      $(this).addClass('activetab')
+      var maininfor=$(this).attr('name')
+      $("#maininstitution_header").html(maininfor)
+      var institution=$(this).attr('role')
+      $('.tablinks').removeClass('active')
+      $(".tablinks").hide()
+      
+      $('.tabscount1').addClass('active')
+      $('.institutionfamily'+institution).show()
+      $('#customAudienceList').show()
+      $('.tabcontent').hide()
+      
+      $('.graduates'+institution+'1').show()
+      
+    })
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+  var surveyId='{{survey.id}}'
+    $(".btnback").click(function(){
+      window.location='/viewSurveys/'
+//     $.post('/dashboard/surveys/viewSurveys/',{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+
+//  $('.content-wrapper').html(data)
+//     })
+  })
+
+
+
+
+$(".tablinks").click(function(){
+  $('.tablinks').removeClass('active')
+  $(this).addClass('active')
+  var graduation_year=$(this).attr('role')
+  $('.tabcontent').hide()
+  $('.graduates'+graduation_year).show()
+
+})
+
+
+})
+// })
+// function openCity(evt, cityName) {
+//   // Declare all variables
+//   var i, tabcontent, tablinks;
+
+//   // Get all elements with class="tabcontent" and hide them
+//   tabcontent = document.getElementsByClassName("tabcontent");
+//   for (i = 0; i < tabcontent.length; i++) {
+//     tabcontent[i].style.display = "none";
+//   }
+
+//   // Get all elements with class="tablinks" and remove the class "active"
+//   tablinks = document.getElementsByClassName("tablinks");
+//   for (i = 0; i < tablinks.length; i++) {
+//     tablinks[i].className = tablinks[i].className.replace(" active", "");
+//   }
+
+//   // Show the current tab, and add an "active" class to the button that opened the tab
+//   document.getElementById(cityName).style.display = "block";
+//   evt.currentTarget.className += " active";
+// } 
+</script>

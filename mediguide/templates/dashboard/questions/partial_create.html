@@ -1,0 +1,276 @@
+
+{% load static %}
+{% load bootstrap5 %}
+
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+<style>
+    .form-group{
+        margin-top:10px !important;
+    }
+    .independent{display: none;
+    }
+</style>
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<div class="inner" style="min-height: 700px;">
+    <span class="btn btn-danger" style="margin-top:5px;margin-left:5px;" id="back-to-view"><i class="fa fa-arrow-left"></i> Back</span>
+   
+    <div class="row">
+        <div class="col-lg-12">
+            <h4> {{Title}} </h4>
+        </div>
+    </div>
+      <hr />
+     <!--BLOCK SECTION -->
+     <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+            <div class="card-body ">
+     
+            <form action="" method="POST" role="{{PageAction}}" class="col-md-12" id="DefaultForm">
+				{% csrf_token %}
+				 <!--{% bootstrap_form form %}--> 
+                {{form.media}}
+                <div class="row" style="overflow: auto;">
+                   
+                    <div class="form-group col-sm-4">
+                        <label>Survey Type: <span class="special_class" style="color: red">*</span></label>
+                        <select class="form-control col-sm-12" id="survey_type" name="survey_type">
+                            
+                            {% if instance %}
+                            <option value="{{instance.survey_type.id}}" >{{instance.survey_type.name}}</option>
+                            {% else %}
+                            <option value="" >--------</option>
+                            {% endif %}
+                            
+                            {% for i in surveytypes %}
+                            {% if instance %}
+                            {% if instance.survey_type.id == i.id %}
+                            {% else %}
+                            <option class="" value="{{i.id}}" role="{{i.id}}">{{i.name}}</option>
+                            {% endif %}
+                            {% else %}
+                            <option class="" value="{{i.id}}" role="{{i.id}}">{{i.name}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label>Question Category:<span class="special_class" style="color: red">*</span> </label>
+                        
+                      
+                        <select class="form-control col-sm-12" id="question_category" name="question_category">
+                            {% if instance %}
+                            <option value="{{instance.question_category.id}}" >{{instance.question_category.name}}</option>
+                            {% else %}
+                            <option value="" >--------</option>
+                            {% endif %}
+                            
+                            
+                            {% for i in questioncategories %}
+                           
+                            <option class="surveytypes surveytype{{i.survey_type.id}}" style="display:none" role="{{i.id}}" value="{{i.id}}">{{i.name}}</option>
+                           
+                            {% endfor %}
+                           </select>
+                        <!-- {{ form.last_name }} -->
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label>Question type:<span class="special_class" style="color: red">*</span></label>
+                        <select class="form-control col-sm-12" id="question_type" name="question_type">
+                            {% if instance %}
+                            <option value="{{instance.question_type.id}}" >{{instance.question_type.name}}</option>
+                            {% else %}
+                            <option value="" >--------</option>
+                            {% endif %}
+                            
+                         {% for i in questiontypes %}
+                            <option class="" value="{{i.id}}" role="{{i.id}}">{{i.name}}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- {{ form.roll_number }} -->
+                    </div>
+                   
+
+                    <div class="form-group col-sm-4">
+                        <label>Question Mode:<span class="special_class" style="color: red">*</span></label>
+                        <select class="form-control col-sm-12" id="question_mode" name="question_mode">
+                            {% if instance %}
+                            <option value="{{instance.question_mode.id}}" >{{instance.question_mode.name}}</option>
+                            {% else %}
+                            <option value="" >--------</option>
+                            {% endif %}
+                         {% for i in questionmodes %}
+                            <option class="" value="{{i.id}}" role="{{i.id}}">{{i.name}}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- {{ form.roll_number }} -->
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label>Answer Mode:<span class="special_class" style="color: red">*</span></label>
+                        <select class="form-control col-sm-12" id="answer_mode" name="answer_mode">
+                            {% if instance %}
+                            <option value="{{instance.answer_mode.id}}" >{{instance.answer_mode.name}}</option>
+                            {% else %}
+                            <option value="" >--------</option>
+                            {% endif %}
+                         {% for i in answermodes %}
+                            <option class="" value="{{i.id}}" role="{{i.id}}">{{i.name}}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- {{ form.roll_number }} -->
+                    </div>
+                    <div class="form-group col-sm-4 independent" style="display: none">
+                        <label>Linked Question:<span class="special_class" style="color: red">*</span></label>
+                        <select class="form-control col-sm-12" id="question_linked" name="question_linked">
+                            
+                            
+                            {% if instance %}
+                            
+                           {% if instance.question_mode.id == 2 %}
+                           <option value="{{question_linked.main_question.id}}" >{{question_linked.main_question.name|safe}}</option>
+                            <script>
+                               $('.independent').show() 
+                            </script>
+
+                           {% else %}
+
+                           {% endif %}
+                            
+                            {% else %}
+                            <option value="" >--------</option>
+                            {% endif %}
+                         {% for i in allquestions %}
+                         {% if i.question_type.id == 7 %}
+                            <option class="" value="{{i.id}}" role="{{i.id}}">{{i.name|safe}}</option>
+                            {% elif i.question_type.id == 8 %}
+                            <option class="" value="{{i.id}}" role="{{i.id}}">{{i.name|safe}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        <!-- {{ form.roll_number }} -->
+                    </div>
+                    <div class="form-group col-sm-4 independent" style="display: none">
+                        <label>Linked Choice:<span class="special_class" style="color: red">*</span></label>
+                        <select class="form-control col-sm-12" id="choice_linked" name="choice_linked">
+                            {% if instance %}
+                            
+                            {% if instance.question_mode.id == 2 %}
+                            <option value="{{question_linked.choice.id}}" >{{question_linked.choice.name|safe}}</option>
+                             <script>
+                                $('.independent').show() 
+                             </script>
+ 
+                            {% else %}
+ 
+                            {% endif %}
+                             
+                             {% else %}
+                             <option value="" >--------</option>
+                             {% endif %}
+                         {% for i in choices %}
+                            <option class="question_choices question{{i.question.id}}" value="{{i.id}}" role="{{i.id}}">{{i.name|safe}}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- {{ form.roll_number }} -->
+                    </div>
+                    
+                    <p>&nbsp;</p>
+                    <div class="form-group col-sm-12">
+                        <label>Question:<span class="special_class" style="color: red">*</span></label>
+                        {{ form.name }}
+                    </div>
+                    <p>&nbsp;</p>
+                    <div class="form-group col-sm-12">
+                        <label>Detail:<span class="special_class" style="color: red">*</span></label>
+                        {{ form.detail }}
+                    </div>
+
+
+
+                <!-- {% for field in form %}
+                <div class="col-md-12">
+                    <label for="{{ field.label }}">{{ field.label_tag }}
+
+                        {% if field.field.required %}<span class="special_class" style="color: red">*</span>
+                        {% endif %}
+                    </label>
+
+                    {% bootstrap_field field show_label=False %}
+
+
+                </div>
+
+                {% endfor %} -->
+            </div>
+				
+                {{ form.non_field_errors }}
+				<div class="row">
+                <div class="col-sm-4"></div>
+                <input type="text" hidden value="{{instance.id}}" name="instance" id="instance">
+				<button class="btn-success btn col-md-6"  id="SubmitQuery" role="{{PageAction}}">SAVE</button>
+			</div>
+            </form>
+        </div>
+        </div>
+        </div>
+
+    </div>
+  
+
+</div>
+<script>
+    $(document).ready(function(){
+$("#survey_type").change(function(){
+    var value=$(this).val()
+    $(".surveytypes").hide()
+    $(".surveytype"+value).show()
+    //alert(value)
+})
+$("#question_mode").change(function(){
+    
+    var value=$(this).val()
+    
+    if(value==1){
+        $(".independent").hide()
+    }else{
+        $(".independent").show()
+    }
+    //alert(value)
+})
+$("#question_linked").change(function(){
+    var value=$(this).val()
+   $(".question_choices").hide()
+   $(".question"+value).show()
+   $("#choice_linked").val('')
+
+    //alert(value)
+})
+
+
+
+
+        $("#back-to-view").click(function(){
+    //$.get('/dashboard/questions/viewQuestions/',function(data){
+        $("#modal-staff").modal("hide");
+                                   
+        // $('.content-wrapper').html(data)
+         
+//})
+
+
+})
+    })
+</script>

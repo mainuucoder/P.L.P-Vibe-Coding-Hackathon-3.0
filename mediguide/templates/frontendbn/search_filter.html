@@ -1,0 +1,132 @@
+
+{% load static %}
+<style>
+
+</style>
+<div class="search-style-2">
+                            
+                            <form id="searchForm">
+                                {% csrf_token %}
+				
+                                  {{form.media}}
+                                 <select name="house_type" class="select-active">
+                                    <option>All Types</option>
+                                    <option style="">Rental</option>
+                                    <option>Airbnb</option>
+                                    <option>Shop</option>
+                                    <option>Land</option>
+                                    <!--
+                                    <option>Fast food</option>
+                                    <option>Baking material</option>
+                                    <option>Vegetables</option>
+                                    <option>Fresh Seafood</option>
+                                    <option>Noodles & Rice</option>
+                                    <option>Ice cream</option> -->
+                                </select>
+                                <select name="house_category" class="select-active">
+                                    <option>All Categories</option>
+                                    {% for item in categories %}
+                                    <option style="">{{item}}</option>
+                                    {% endfor %}
+                                    <!-- <option>Wines & Alcohol</option>
+                                    <option>Clothing & Beauty</option>
+                                    <option>Pet Foods & Toy</option>
+                                    <option>Fast food</option>
+                                    <option>Baking material</option>
+                                    <option>Vegetables</option>
+                                    <option>Fresh Seafood</option>
+                                    <option>Noodles & Rice</option>
+                                    <option>Ice cream</option> -->
+                                </select>
+                                <!-- <input type="text" placeholder="Search for items..." /> -->
+                                 <!-- <label for="locationTags">Search by any location details:</label> -->
+                                <select id="locationTags"   name="location_tags" multiple="multiple" style="width: 100% !important;height: 50px !important;">
+                                    {% for item in counties %}
+                                    <option value="{{item}}" role="{{item.id}}">{{item}}</option>
+                                    {% endfor %}
+                                    {% for item in constituencies %}
+                                    <option value="{{item}}" role="{{item.id}}">{{item}}</option>
+                                    {% endfor %}
+                                    {% for item in ward %}
+                                    <option value="{{item}}" role="{{item.id}}">{{item}}</option>
+                                    {% endfor %}
+                                    <!-- <option value="Nairobi">Nairobi</option>
+                                    <option value="Westlands">Westlands</option>
+                                    <option value="Kasarani">Kasarani</option>
+                                    <option value="Ngong Road">Ngong Road</option>
+                                    <option value="Mombasa">Mombasa</option>
+                                    <option value="Pipeline">Pipeline</option> -->
+                                </select>
+                                <button type="submit" id="submit_search">Search</button>
+                                <span style="color: red;" class="loading"></span>
+                            </form>
+                        </div>
+                        <div class="header-action-right" id="search_holder">
+                            <div class="header-action-2">
+                                <div class="search-location">
+                                    <form action="#">
+                                        <select class="select-active">
+                                            <option>Your Location</option>
+                                            <option>Alabama</option>
+                                            <option>Alaska</option>
+                                            <option>Arizona</option>
+                                            <option>Delaware</option>
+                                            <option>Florida</option>
+                                            <option>Georgia</option>
+                                            <option>Hawaii</option>
+                                            <option>Indiana</option>
+                                            <option>Maryland</option>
+                                            <option>Nevada</option>
+                                            <option>New Jersey</option>
+                                            <option>New Mexico</option>
+                                            <option>New York</option>
+                                        </select>
+                                    </form>
+                                </div>
+                             
+                                
+                            </div>
+                        </div>
+<!-- <form method="GET" action="/search/"> -->
+  <!-- <label for="locationTags">Search by any location details:</label>
+  <select id="locationTags" name="location_tags" multiple="multiple" style="width: 100%">
+    <option value="Nairobi">Nairobi</option>
+    <option value="Westlands">Westlands</option>
+    <option value="Kasarani">Kasarani</option>
+    <option value="Ngong Road">Ngong Road</option>
+    <option value="Mombasa">Mombasa</option>
+    <option value="Pipeline">Pipeline</option>
+  </select>
+  <button type="submit">Search</button> -->
+<!-- </form> -->
+
+<script>
+  $(document).ready(function() {
+$('#searchForm').on('submit', function (event) {
+      event.preventDefault(); // 🛑 Prevent default form navigation
+      $(".loading").html('Searching')
+      const formData = $(this).serialize(); // Gather all form data
+
+      $.ajax({
+        url: '/search/',
+        method: 'GET',
+        data: formData,
+        success: function (response) {
+          $('#resultsContainer').html(response);
+         $(".loading").html('')
+      },
+      error: function (xhr, status, error) {
+        console.error('Search error:', error);
+         $(".loading").html('')
+        //  $(".loading").html('error')
+      }
+      });
+    });
+    // $("#locationTags").select2().css("height","50px").
+    $('#locationTags').select2({
+      placeholder: "Enter County, Constituency...",
+      tags: true,
+      allowClear: true
+    });
+  });
+</script>

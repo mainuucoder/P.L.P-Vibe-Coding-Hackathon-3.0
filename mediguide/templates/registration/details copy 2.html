@@ -1,0 +1,176 @@
+
+{% load static %}
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<style>
+     .ff-el-form-control{
+  background-clip: padding-box;
+  background-image: none;
+  border: 1px solid #dadbdd;
+  border-radius: 7px;
+  color: #606266;
+  display: block;
+  font-family: -apple-system,"system-ui",Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+  line-height: 1;
+  margin-bottom: 0;
+  max-width: 100%;
+  padding: 11px 15px;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  width: 100%;
+    }
+    .reg_places{
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        min-height: 200px;
+        padding: 10px;
+
+    }
+    .not_shown{
+        display: none;
+    }
+    .ff-el-form-control{
+        /* background-color: #606266; */
+    }
+</style>
+<div class="row">
+<div class="col-sm-6" >
+<div class="col-sm-12 reg_places" >   
+<div class="row">    
+<div class="col-sm-6">
+        Name:
+        <input type="text" readonly disabled  class="col-sm-12 ff-el-form-control" value="{{user.first_name}} {{user.middle_name}} {{user.last_name}}">
+</div>
+<div class="col-sm-6">
+        National Id:
+        <input type="text" readonly disabled  class="col-sm-12 ff-el-form-control" value="{{user.national_id}}">
+</div>
+<div class="col-sm-6">
+        Email:
+        <input type="text" readonly disabled  class="col-sm-12 ff-el-form-control" value="{{user.email}}">
+</div>
+<div class="col-sm-6">
+        Phone: (Used for payment. N.b you can change)
+        <input type="text" class="col-sm-12 ff-el-form-control" id="new_phone" disabled readonly maxlength="12" value="{{payment.phone}}">
+</div>
+<div class="col-sm-6">
+        Training Category:
+        <input type="text" readonly disabled  class="col-sm-12 ff-el-form-control" value="{{payment.category}}">
+</div>
+<div class="col-sm-6">
+        Training:
+        <input type="text" readonly disabled  class="col-sm-12 ff-el-form-control" value="{{payment.training}}">
+</div>
+<div class="col-sm-6">
+        Training County:
+        <input type="text" readonly disabled  class="col-sm-12 ff-el-form-control" value="{{payment.county}}">
+</div>
+<div class="col-sm-6">
+        Institution:
+        <input type="text" readonly disabled  class="col-sm-12 ff-el-form-control" value="{{payment.institution_county.institution}}">
+</div>
+<div class="col-sm-6">
+        Cost:
+        <input type="text" readonly disabled  class="col-sm-12 ff-el-form-control" value="(Ksh). {{payment.price}}">
+</div>
+</div>
+</div>
+</div>
+<div class="col-sm-6 " >
+
+    <div class="col-sm-12 reg_places "  id="payment_div">
+     {{response|safe}}
+    </div>
+    <!-- <div class="col-sm-12" ></div> -->
+
+</div>
+
+
+</div>
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> -->
+<script>
+    $(document).ready(function(){
+        $("#page_three").show()
+        $(".last_page_pay").show()
+        $(".registrarion_details").show()
+        $(".complete-process").hide()
+        var loader=$("#loader").html()
+        var csrfmiddlewaretoken= '{{csrf_token}}';
+        var total_price='{{payment.price}}'
+        if(total_price>0){
+           
+           var billRefNumber='{{payment.bill_reference}}'
+           var bill=btoa(billRefNumber)
+        //    alert(bill)
+        //    window.location='/make-payment-request/'+bill
+          window.location='/payment/'+bill
+
+               }else{
+                $(".complete_institution").show()
+                
+               }
+             
+       
+        // $("#payment_div").html(loader).show()
+        // alert()
+        // $(".complete-process").click(function(){
+            
+        //     if(total_price>0){
+      
+        //     var billRefNumber='{{payment.bill_reference}}'
+            
+        //     var bill=btoa(billRefNumber)
+          
+        // $.post('/make-payment-request/',{csrfmiddlewaretoken:csrfmiddlewaretoken,code:my_secureHash,bill:bill},function(data){
+        //         if($.trim(data)=='redirect'){
+        //         window.location='/account/'
+        //         }else{
+        //     $("#payment_div").html(data)
+        //         $('#payment_div script').attr('src', '');
+
+        // //    $('#payment_div link[rel="stylesheet"]').attr('href', '');
+        //     $("#payment_div").show()
+        //     // $('.card-footer .btn-primary').addClass('complete-process');
+        //         $(".complete_institution").hide()
+        //         $(".complete-process-btn").show()
+        //         var invoice=$("#mpesaModal1").prop('invoice_no')
+        //         // alert(invoice)
+        //         Vue.use(axios);
+        //         }
+        //         })
+        // }else{
+        //   $(".complete_institution").show()
+        //   $("#payment_div").hide()
+        // }
+        // })
+      
+       
+        $("#new_phone").focusout(function(){
+         
+            var phone=$(this).val()
+            // alert(phone)
+            var old_phone='{{payment.phone}}'
+            if (phone==old_phone){
+               
+            }else{
+                phone=btoa(phone)
+                // phone=phone
+                $("#payment_div").html('loading.. please wait..')
+                $.post('/change-phone-number/',{csrfmiddlewaretoken:csrfmiddlewaretoken,phone:phone}, function (data) {
+            if($.trim(data)=="success"){
+                $.post('/make-payment-request/',{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                $("#payment_div").html(data).show()
+                
+                })
+            
+            }else{
+
+            }
+            })
+            }
+        })
+
+    })
+</script>
+

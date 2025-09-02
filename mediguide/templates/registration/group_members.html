@@ -1,0 +1,266 @@
+
+{% load static %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+th{
+    font-size: 11px;
+}
+td{
+    font-size: 10px;
+}
+   
+</style>
+
+<div class="col-12">
+          
+      <div class="col-sm-12" style="text-transform: uppercase;">LIST OF {{Title}}</div>
+    </div>
+      <div class="row">
+     
+        <div class="col-12" style="margin-bottom:3px ;">
+            <div class="card">
+    <div class="card-body">
+        <div class="col-12" style="text-align: right;">
+          <div class="btn btn-success  search-existing" role="{{item.county.id}}" style="" id="search-existing"><i class="fa fa-search" aria-hidden="true"></i>search existing</div>
+       
+          <div class="btn btn-success  Addusersingle" role="{{item.county.id}}" style="" id="Addusersingle"><i class="fa fa-user-plus" aria-hidden="true"></i> Add New</div>
+       
+      <div class="btn btn-success Downloadcsv-all" role="{{item.county.id}}" style="" id="Downloadcsv-all"><i class="fa fa-download" aria-hidden="true"></i> Sample csv</div>
+     
+      <div class="btn btn-success  Addusers" style="" role="{{item.county.id}}" id="Addusers">  <i class="fa fa-upload" aria-hidden="true"></i> Upload Users</div>
+       </div>
+      
+  </div>
+</div>
+
+          <table class='table file-export' id="datatable-basic">
+            <thead style="font-size: 11px;background: #07aa91;color:#fff">
+              <tr>
+                <th>#</th>
+                <th>NAME</th>
+                <th>EMAIL</th>
+                <th>PHONE</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            {% for item in list %}
+            <tr>
+              <td>{{forloop.counter}}</td>
+              <td>
+               {% if item.user.first_name %}
+                {{item.user.first_name}} {{item.user.last_name}}
+                {% endif %}
+              </td>
+              <td>
+                {{item.user.email}}
+               
+              </td>
+              <td>
+                {% if item.user.phone_number %}
+                {{item.user.phone_number}}
+                {% endif %}
+              </td>
+              <td>
+
+                {% if user.is_superuser or user.is_ict_admin %}
+              
+  
+{% endif %}
+
+
+<!-- <span class="btn update-user-details" role="{{item.user.id}}"><i class="fa fa-edit"></i></span> -->
+{% if item.user == user %}
+{% else %}
+<span class="btn delete-user-details" role="{{item.user.id}}"><i class="fa fa-trash"></i></span>
+{% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+          </div>
+          </div>
+  </div>
+  </div>
+  </div>
+  </div>
+
+
+<div class="modal fade" id="modal-staff">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+
+
+
+
+<script>
+  $(document).ready(function(){
+      $(".complete_institution").hide()
+    var members=parseInt("{{members}}")
+    // alert(members)
+    $(".error_page").html('')
+    if(members>1){
+        $(".complete_institution_group").show()
+    }else{
+        $(".complete_institution_group").hide()
+    }
+
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+    var level='{{level}}'
+    var level_name='GET'
+   var total_price=parseInt('{{instance.price}}')
+   var bill_ref='{{instance.bill_reference}}'
+   var bill_instance='{{instance.id}}'
+   var bill_registration='{{registration.id}}'
+   var bill_price='{{instance.price}}'
+    $(".bill_ref").val(bill_ref)
+    $(".bill_instance").val(bill_instance)
+    $(".bill_registration").val(bill_registration)
+    $(".bill_price").val(bill_price)
+    
+    // $(".complete_institution_group").show()
+//     $('.complete_institution_group').click(function(){
+    
+
+
+//     if(total_price>0){
+           
+//            var billRefNumber='{{instance.bill_reference}}'
+           
+//            var bill=btoa(billRefNumber)
+//         //    alert(bill)
+//         //    window.location='/make-payment-request/'+bill
+//           window.location='/payment/'+bill
+
+//                }else{
+
+//       var instance='{{instance.id}}'
+//     var registration='{{registration.id}}'
+//      $.post('/complete-registration-group/',{registration:registration,instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+//     //   $("#modal-staff").modal("show");    
+//     window.location='/account/'
+      
+//         //$('.content-wrapper').html(data)
+//  })
+//                 }
+                
+//                })
+    // alert(level)
+    $(".payment_div").html('')
+
+
+  $(".update_user_rights").change(function(){
+  var uuid=$(this).attr('name')
+  var role=$(this).attr('role')
+  if($(this).prop('checked')){
+    var action='add'
+  
+  }else{
+    var action='remove'
+  }
+$.post('/update-users-roles/',{role:role,uuid:uuid,action:action,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+
+})
+
+})
+$(".Downloadcsv-all").click(function() {
+      var csrfmiddlewaretoken= '{{csrf_token}}';
+ var url='/download-sample-users-csv/';
+ window.open(url, '_blank');
+});
+$(".Addusers").click(function(){
+  var institution=$(this).attr('role'); 
+  var instance='{{instance.id}}'
+    var registration='{{registration.id}}'
+     $.post('/create-learner-user-upload-csv/',{registration:registration,instance:instance,institution:institution,level_name:level_name,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+        var olddata=$('.home_div').html()    
+      $(".payment_div").html(olddata)                 
+      $(".home").html(data)
+        //$('.content-wrapper').html(data)
+ })
+ 
+ })
+ $(".Addusersingle").click(function(){
+  var institution=$(this).attr('role'); 
+    //  alert()
+    // var institution='{{institution.id}}';
+    // alert(institution)
+    // alert(institution)
+    var instance='{{instance.id}}'
+    var registration='{{registration.id}}'
+     $.post('/create-new-learner-single/',{registration:registration,instance:instance,institution:institution,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+    //   $("#modal-staff").modal("show");    
+      var olddata=$('.home_div').html()    
+      $(".payment_div").html(olddata)                 
+      $(".home").html(data)
+      
+        //$('.content-wrapper').html(data)
+ })
+ 
+ })
+ $("#search-existing").click(function(){
+  var institution=$(this).attr('role'); 
+  
+    var instance='{{instance.id}}'
+    var registration='{{registration.id}}'
+     $.post('/search-user-new/',{registration:registration,instance:instance,institution:institution,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+   
+      var olddata=$('.home_div').html()    
+      $(".payment_div").html(olddata)                 
+      $(".home").html(data)
+      
+        //$('.content-wrapper').html(data)
+ })
+ 
+ })
+
+
+ 
+ $(".update-user-details").click(function(){
+     var instance=$(this).attr('role')
+     var registration='{{instance.id}}'
+     $.post('/update-learner-user-details/',{registration:registration,level:level,instance:instance,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+        var olddata=$('.home_div').html()    
+      $(".payment_div").html(olddata)                 
+      $(".home").html(data)
+       
+ })
+ 
+ })
+
+ $(".delete-user-details").click(function(){
+     var instance=$(this).attr('role')
+     var registration='{{instance.id}}'
+     $.post('/remove-user-from-group/',{registration:registration,level:level,instance:instance,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+        var olddata=$('.home_div').html()    
+      $(".payment_div").html(olddata)                 
+      $(".home").html(data)
+       
+ })
+ 
+ })
+
+})
+ 
+</script>

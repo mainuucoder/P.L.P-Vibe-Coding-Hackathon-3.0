@@ -1,0 +1,55 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block content %}
+            <div class="rs-banner style4">
+               <div class="container">
+                   <div class="row">
+                       <div class="col-lg-8">
+                           <div class="banner-content" style="margin-top: -30px;" >
+                               <h2 class="title">Document <span style="color: black;"> System!</span></h2>
+                               <div class="description" style="text-align: justify;">
+                                    <!-- <p> -->
+                                        <!-- A tender management system is a digital platform designed to enhance the efficiency and effectiveness of tender processes within an organization. It fosters collaboration among stakeholders involved in tendering, including suppliers, procurement teams, and administrators, optimizing the management of tender documents, vendor selection, and contract negotiation. This system streamlines the tendering processes, improves vendor interactions, and promotes transparency and accountability in procurement activities. </p> -->
+                                </div>
+                                <!-- <div class="btn-part">
+                                    <a class="readon2 get-new" href="{% url 'account_check' %}">Transforming governance with your input: Shiriki Usikike sasa</a>
+                                </div> -->
+                           </div>
+                       </div>
+                       <div class="col-lg-4"></div>
+                   </div>
+               </div>
+                <div class="animate-part">
+                    <div class="spiner dot-style">
+                        <img class="rotated-style" src="{% static 'assets/images/banner/style2/banner-shape.png' %}" alt="images">
+                    </div>
+                
+                </div>
+            </div>
+{{training_link}}
+            <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+ 
+            <script>
+            $(document).ready(function(){ 
+            var dynamicValue = '{{training_link}}'
+            alert(dynamicValue)
+        })
+        </script>
+{% if user.is_authenticated %} 
+           
+<script>
+    
+  $(document).ready(function(){ 
+    window.location.href="/account/";
+
+  
+})
+
+
+  </script>
+{% else %}
+
+{% endif %}
+
+{% endblock %}
+

@@ -1,0 +1,44 @@
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+            {% for p in Options %}
+
+            <div class="col-sm-12 col-xs-12" style="margin-bottom:5px ;">
+
+                <label style="font-weight: initial !important" class="submit_radiosd">
+
+            <input type="checkbox"  id="{{p.id}}"  value="{{p.name}}" name="{{p.name}}"  class="innovations_radio" role="{{p.id}}">
+              <span class="checkmarkd"></span>
+               {{p.name}}
+               </label>
+               <span style="text-align: center;">
+               <span class="remove_option btn btn-warning" name="RemoveMutipleChoice/" role="{{p.id}}"><i class="fa fa-minus"></i></span>
+               <span  class="btn btn-info remove_option" name="UpdateMutipleChoice/" role="{{p.id}}"><i class="fa fa-edit"></i></span>
+            </span>
+            </div>
+        {% endfor %}
+<script>
+    $(document).ready(function(){
+        $(".remove_option").click(function(){
+            var optionid=$(this).attr('role');
+            var actionpage=$(this).attr('name')
+            var csrfmiddlewaretoken= '{{csrf_token}}';
+           $.post('/accounts/survey/'+actionpage+optionid,{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                                $(".home").html(data);
+                         })
+
+              })
+    })
+</script>

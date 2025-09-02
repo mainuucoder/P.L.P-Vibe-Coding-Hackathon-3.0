@@ -1,0 +1,25 @@
+<div class="mb-3">
+    <label class="form-label" for="id_ward">Ward</label>
+    <select type="ward" name="ward" maxlength="254" class="form-control"  title=""  id="id_ward">
+        
+        {% if user.ward %}
+        <option class="allward not_shown constituency{{user.ward.constituency.id}}"  value="{{user.ward.id}}">{{user.ward}}</option>
+        {% else %}
+        <option value="">----select ward--</option>
+        {% endif %}
+
+
+        {% for item in wards %}
+        {% if user.ward %}
+        {% if item.id == user.ward.id %}
+
+        {% else %}
+        <option class="allward not_shown constituency{{item.constituency.id}}"  value="{{item.id}}">{{item}}</option>
+        {% endif %}
+        {% else %}
+        <option class="allward not_shown constituency{{item.constituency.id}}"  value="{{item.id}}">{{item}}</option>
+        {% endif %}
+       
+       {% endfor %}
+    </select>
+</div>

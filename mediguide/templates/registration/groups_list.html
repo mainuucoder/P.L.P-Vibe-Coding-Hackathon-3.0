@@ -1,0 +1,146 @@
+
+{% load static %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+th{
+    font-size: 11px;
+}
+td{
+    font-size: 10px;
+}
+   
+</style>
+
+<div class="col-12">
+          
+      <div class="col-sm-12" style="text-transform: uppercase;">LIST OF {{Title}}
+        <span style="float:right" id="close-group-f" class="btn btn-danger">X</span>
+
+      </div>
+    </div>
+      <div class="row">
+     
+        <div class="col-12" style="margin-bottom:3px ;">
+    
+
+          <table class='table file-export' id="datatable-basic">
+            <thead style="font-size: 11px;background: #07aa91;color:#fff">
+              <tr>
+                <th>#</th>
+                <th>NAME</th>
+                <th>MEMBERS</th>
+                <!-- <th>CATEGORY</th>
+                <th>TRAINING</th> -->
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            {% for item in list %}
+            <tr>
+              <td>{{forloop.counter}}</td>
+              <td>
+                {{item.name}}
+              </td>
+              <td>
+                {{item.trainees_registered}}
+               
+              </td>
+              <!-- <td>
+                {{item.category}}
+              </td> -->
+              <!-- <td>
+                {% if item.category.name == 'Foundational Digital Skills' %}
+                Foundational Digital Skills
+                {% elif item.category.name == 'Basic Digital Skills' %}
+                 Basic Digital Skills
+                {% else %}
+               {{item.training.name}}
+               {% endif %}
+              </td> -->
+              <td>
+              <span class="btn btn-success btn-select-goup" role="{{item.id}}"><i class="fa fa-check"></i></span>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+          </div>
+          </div>
+  </div>
+  </div>
+  </div>
+  </div>
+
+
+<div class="modal fade" id="modal-staff">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- <script src="{% static 'assets/js/jquery.min.js' %}"></script> -->
+
+
+
+
+<script>
+  $(document).ready(function(){
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+    var level='{{level}}'
+    var level_name='GET'
+    total_price=parseInt('{{instance.price}}')
+
+
+    $('#close-group-f').click(function(){
+   
+   $(".register_pages").hide()
+         $("#page_two").show()
+
+})
+    
+      $(".complete_institution").hide()
+    var members=parseInt("{{members}}")
+    // alert(members)
+    if(members>1){
+        $(".complete_institution_group").show()
+    }else{
+        $(".complete_institution_group").hide()
+    }
+
+   
+
+
+ $('.btn-select-goup').click(function(){
+  
+    var instance=$(this).attr('role') 
+    // alert(instance)
+    var registration='{{instance.id}}'
+    var loader=$('#loader').html()
+    $(".error_page").html(loader)
+    $.post('/get-group-members/',{csrfmiddlewaretoken:csrfmiddlewaretoken,instance:instance,registration:registration},function(data){
+        $(".home").html(data)
+        $(".error_page").html('')
+    }) 
+ })
+ 
+
+
+})
+ 
+</script>

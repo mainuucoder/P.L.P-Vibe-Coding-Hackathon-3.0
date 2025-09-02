@@ -1,0 +1,23 @@
+<script>
+    $(document).ready(function(){
+
+       var audinceId='{{audinceId}}'
+       var  surveyId='{{surveyId}}'
+        var csrfmiddlewaretoken= '{{csrf_token}}';
+ $.post('/dashboard/surveys/selectAudience/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+    $('.content-wrapper').html(data)
+        $.post('/dashboard/surveys/addAudience/',{action:action,audinceId:audinceId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            $.post('/dashboard/surveys/loadCustom/',{audinceId:audinceId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            
+         $('#audienceLobby').html(data)
+      $.post('/dashboard/surveys/getFinalAudiencelistcustom/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+$('#list_holder').html(data)
+   })
+            })
+           })
+           
+})
+    })
+</script>

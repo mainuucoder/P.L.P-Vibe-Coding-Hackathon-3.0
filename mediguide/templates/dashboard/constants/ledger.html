@@ -1,0 +1,142 @@
+{% extends 'dashboard/base3.html' %}
+{% load static %}
+{% block content %}
+{% load humanize %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+<div class="row">
+  <div class="col-xl-12">
+      <div class="card custom-card">
+          <div class="card-header col-sm-12" >
+           
+              <div class="card-title">
+                {{Title}}
+                
+              </div>
+          </div>
+          <div class="card-body  ">
+            
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 row-cols-xl-4 table-responsive">
+                    
+                  
+                    <table class="table table-striped">
+                        <thead style="font-size: 14px;background: #e1edff;color:#000">
+                        <tr style="border: 1px solid #ccd;">
+                            <th style="border:1px solid #ccd">ITEM</th>
+                            <th colspan="" style="border:1px solid #ccd">DESCRIPTION</th>
+                            <th style="border:1px solid #ccd">INCOME (KES)</th>
+                            <th style="border:1px solid #ccd">TAX CHARGED</th>
+                            <th style="border:1px solid #ccd">COMMISSION CHARGED</th>
+
+                            <th style="border:1px solid #ccd">EXPENDITURE (KES)</th>
+                            <!-- <th style="border:1px solid #ccd">BALANCE (KES)</th> -->
+                            <!-- <th colspan="" style="border:1px solid #ccd">&nbsp;</th>
+                            <th style="border:1px solid #ccd">AMOUNT IN (USD)</th>
+                            <th style="border:1px solid #ccd">AMOUNT OUT (USD)</th> -->
+                            <!-- <th style="border:1px solid #ccd">BALANCE (USD)</th> -->
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {% for instance in list %}
+                        <tr >
+                            <td style="border:1px solid #ccd;border-left: 1px solid #ccd;">{{instance.name}}</td>
+                            <td colspan="" style="border:1px solid #ccd">{{instance.description}}</td>
+                            <td style="border:1px solid #ccd;text-align: right;">{% if instance.amount_in_kes > '0' %}{{instance.amount_in_kes|floatformat|intcomma}}{% endif %}</td>
+                            <td style="border:1px solid #ccd;text-align: right;">{% if instance.tax > '0' %}{{instance.tax|floatformat|intcomma}}{% endif %}</td>
+                            <td style="border:1px solid #ccd;text-align: right;">{% if instance.commission > '0' %}{{instance.commission|floatformat|intcomma}}{% endif %}</td>
+                            <td style="border:1px solid #ccd;text-align: right;">{% if instance.amount_out_kes > '0' %}{{instance.amount_out_kes|floatformat|intcomma}}{% endif %}</td>
+                            <!-- <td style="border:1px solid #ccd">BALANCE (KES)</td> -->
+                            <!-- <td colspan="" style="border:1px solid #ccd">&nbsp;</td>
+                            <td style="border:1px solid #ccd">{{instance.amount_in_usd|intcomma}}</td>
+                            <td style="border:1px solid #ccd;border-right: 1px solid #ccd;">{{instance.amount_out_usd|intcomma}}</td> -->
+                            <!-- <td style="border:1px solid #ccd">BALANCE (USD)</td> -->
+                        </tr>
+                        {% endfor %}
+                        <tr style="border:1px solid #ccd !important">
+                            <td style="border:1px solid #ccd;border-bottom: 1px solid #ccd;border-left: 1px solid #ccd;"></td>
+                            <td colspan="" style="border:1px solid #ccd;border-bottom: 1px solid #ccd;"></td>
+                            <td style="border:1px solid #ccd;border-bottom: 1px solid #ccd;"></td>
+                            <td style="border:1px solid #ccd;border-bottom: 1px solid #ccd;"></td>
+                            <td style="border:1px solid #ccd;border-bottom: 1px solid #ccd;"></td>
+                            <td style="border:1px solid #ccd;border-bottom: 1px solid #ccd;"></td>
+                            <!-- <td style="border:1px solid #ccd;border-bottom: 1px solid #ccd;">BALANCE (KES)</td> -->
+                            <!-- <td colspan="" style="border:1px solid #ccd;border-bottom: 1px solid #ccd;">&nbsp;</td>
+                            <td style="border:1px solid #ccd;border-bottom: 1px solid #ccd;"></td>
+                            <td style="border:1px solid #ccd;border-bottom: 1px solid #ccd;border-right: 1px solid #ccd;"></td> -->
+                            <!-- <td style="border:1px solid #ccd">BALANCE (USD)</td> -->
+                        </tr>
+                        <tr style="font-weight: bold;border:1px solid #ccd !important">
+                            <td style="border:1px solid #ccd" colspan="2">TOTAL</td>
+                            <!-- <td colspan="" style="border:1px solid #ccd"></td> -->
+                            <td style="border:1px solid #ccd;text-align: right;">{{total_amount_in_kes|intcomma}}</td>
+                            <td style="border:1px solid #ccd;text-align: right;">{{total_tax_kes|intcomma}}</td>
+                            <td style="border:1px solid #ccd;text-align: right;">{{total_commission_kes|intcomma}}</td>
+                            <td style="border:1px solid #ccd;text-align: right;">{{total_amount_out_kes|intcomma}}</td>
+                            <!-- <td style="border:1px solid #ccd">BALANCE (KES)</td> -->
+                            <!-- <td colspan="" style="border:1px solid #ccd">&nbsp;</td>
+                            <td style="border:1px solid #ccd">{{total_amount_in_usd|intcomma}}</td>
+                            <td style="border:1px solid #ccd">{{total_amount_out_usd|intcomma}}</td> -->
+                            <!-- <td style="border:1px solid #ccd">BALANCE (USD)</td> -->
+                        </tr>
+                        <tr style="font-weight: bold;border:1px solid #ccd">
+                            <td style="border:1px solid #ccd" colspan="5">BALANCE =INCOME - (COMMISSION + EXPENDITURE + TAX) </td>
+                            <!-- <td colspan="" style="border:1px solid #ccd"></td> -->
+                            <!-- <td style="border:1px solid #ccd"></td> -->
+                            <td style="border:1px solid #ccd;text-align: right;">{{total_amount_balance_kes|intcomma}}</td>
+                            <!-- <td style="border:1px solid #ccd">BALANCE (KES)</td> -->
+                            <!-- <td colspan="" style="border:1px solid #ccd">&nbsp;</td>
+                            <td style="border:1px solid #ccd"></td>
+                            <td style="border:1px solid #ccd">{{total_amount_balance_usd|intcomma}}</td> -->
+                            <!-- <td style="border:1px solid #ccd">BALANCE (USD)</td> -->
+                        </tr>
+                     </tbody>
+                    </table>
+                   
+					<!-- <div class="col">
+						<div class="card">
+							<img src="{% static 'static_assets/images/gallery/02.png' %}" class="card-img-top" alt="...">
+							<div class="card-body">
+								<h5 class="card-title">Card title</h5>
+								<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>	<a href="javascript:;" class="btn btn-danger">Go somewhere</a>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="{% static 'static_assets/images/gallery/03.png' %}" class="card-img-top" alt="...">
+							<div class="card-body">
+								<h5 class="card-title">Card title</h5>
+								<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>	<a href="javascript:;" class="btn btn-success">Go somewhere</a>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<img src="{% static 'static_assets/images/gallery/04.png' %}" class="card-img-top" alt="...">
+							<div class="card-body">
+								<h5 class="card-title">Card title</h5>
+								<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>	<a href="javascript:;" class="btn btn-warning">Go somewhere</a>
+							</div>
+						</div>
+					</div> -->
+				</div>
+           
+            <div class="col-sm-12" style="text-align: center;" id="error_page"></div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,139 @@
+
+{% load static %}
+{% load bootstrap5 %}
+
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+<style>
+    .form-group{
+        margin-top:10px !important;
+    }
+    .independent{display: none;
+    }
+    .not_shown{
+        display: none;
+    }
+</style>
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<!-- <script src="{% static 'assets/js/jquery.min.js' %}"></script> -->
+    <!--Date picker-->
+ 
+  <!-- XDSoft DateTimePicker -->
+ 
+        <!-- datepicker full js -->
+        <!-- Datepicker css -->
+     <link rel="stylesheet" href="{% static 'assets/css/jquery.datetimepicker.min.css' %}">
+       <script src="{% static 'assets/js/jquery.datetimepicker.full.min.js' %}"></script> 
+
+       <script>  
+       $(document).ready(function(){
+        $(function () {
+      $(".datepicker,.datepicker2,#id_end_datetime,#id_start_datetime").datetimepicker({
+        format: 'Y-m-d H:m:s',
+        minDate:new Date()
+      });
+    });
+   
+  
+        })
+       </script> 
+
+<div class="inner" style="min-height: 300px;">
+    <span class="btn btn-danger" style="margin-top:5px;margin-left:5px;" id="back-to-view"><i class="fa fa-arrow-left"></i> Back</span>
+   
+    <div class="row">
+        <div class="col-lg-12 common-headers center-align">
+            <h6 style="text-align: center;"> {{Title}} </h6>
+        </div>
+    </div>
+      <hr />
+     <!--BLOCK SECTION -->
+     <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+            <div class="card-body ">
+     
+            <form action="" method="POST" role="{{PageAction}}" name="{{success_url}}" title="{{not_success_url}}" class="col-md-12" id="NormalForm">
+				
+                <div class="row" style="overflow: auto;">
+                    {% csrf_token %}
+				
+                    {{form.media}}
+                    {% for field in form %}
+                  
+                   
+
+                 
+                    {% if field.name == 'description' or  field.name == 'title' %}
+
+                    <div class="form-group col-sm-12">
+                        {% bootstrap_field field %}
+                      
+                    </div>
+                  
+                    
+                    {% else %}
+ 
+                    
+                    <div class="form-group col-sm-6">
+                        {% bootstrap_field field %}
+                      
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                   </div> 
+				<div class="row">
+                <div class="col-sm-3"></div>
+                <input type="text" hidden value="{{level}}" name="level" id="level_name">
+                <input type="text" hidden value="{{level_name}}" name="level_name" id="level_name">
+				<input type="text" hidden value="{{instance.id}}" name="instance" id="instance">
+                <input type="text" hidden value="{{institution.id}}" name="institution" id="institution">
+				<input type="text" hidden value="{{success_url}}" name="success_url" id="success_url">
+				
+                
+                
+			</div>
+            <div class="col-sm-12">
+                <button class="btn-success btn "  style="float: right;" id="SubmitQuery" role="{{PageAction}}">SAVE</button> 
+                <div id="error_page" class="col-sm-12 error_page" style="text-align:center ;color:red"></div>
+
+
+            </div>
+            </form>
+        </div>
+        </div>
+        </div>
+
+    </div>
+  
+
+</div>
+<script>
+    $(document).ready(function(){
+
+        $("#back-to-view").click(function(){
+   
+        $("#modal-staff").modal("hide");
+        $(".main_tables").show()
+         $(".minor_table").html('').show()
+       })
+
+    $("#id_category").change(function(){
+     var category = $(this).val()
+     $(".categories").hide()
+     $(".category"+category).show()
+    })
+    })
+</script>

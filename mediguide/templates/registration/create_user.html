@@ -1,0 +1,156 @@
+
+{% load static %}
+{% load bootstrap5 %}
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <!--Date picker-->
+ 
+  <!-- XDSoft DateTimePicker -->
+ 
+        <!-- datepicker full js -->
+        <!-- Datepicker css -->
+        <!-- <link rel="stylesheet" href="{% static 'assets/css/jquery.datetimepicker.min.css' %}">
+        <script src="{% static 'assets/js/jquery.datetimepicker.full.min.js' %}"></script> -->
+  <!-- end of date picker-->
+       <script>  
+    //    $(document).ready(function(){
+    //     $(function () {
+    //   $(".datepicker,.datepicker2,#id_Start_Date,#id_End_Date").datetimepicker({
+    //     format: 'Y-m-d H:m:s',
+    //     minDate:new Date()
+    //   });
+    // });
+   
+  
+    //     })
+       </script> 
+<div class="inner" style="">
+    <!-- <span class="btn btn-danger" style="margin-top:5px;margin-left:5px;" id="back-to-view"><i class="fa fa-arrow-left"></i> Back</span> -->
+          
+<div class="row">
+    <div class="col-lg-12 common-headers center-align">
+        <h6 style="text-align: center;"> {{Title}} </h6>
+
+        <span style="float:right" id="close-group-d" class="btn btn-danger">X</span>
+    </div>
+</div>
+  <hr />
+
+ <div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body ">
+            <form action="" method="POST" role="{{PageAction}}" class="col-md-12" id="NormalForm">
+                {% csrf_token %}
+				<!-- {% bootstrap_form form %} -->
+                {{form.media}}
+				<div class="row" style="overflow: auto;">
+                    {% for field in form %}
+                    <div class="col-md-12">
+                        <label for="{{ field.label }}">{{ field.label_tag }}
+    
+                            {% if field.field.required %}<span class="special_class" style="color: red">*</span>
+                            {% endif %}
+                        </label>
+    
+                        {% bootstrap_field field show_label=False %}
+    
+    
+                    </div>
+                    
+                    {% endfor %}
+                    <input type="text" name="level_name" hidden readonly value="POST">
+                    <input type="text" name="level" hidden readonly value="{{level}}">
+                    <input type="text" name="institution" hidden readonly value="{{institution.id}}">
+                    <input type="text" name="instance" hidden readonly value="{{instance.id}}">
+                    <input type="text" name="registration" hidden readonly value="{{registration.id}}">
+                </div>
+                <div class="col-sm-12">
+                    <button class="btn-success btn "  style="float: right;" id="SubmitForum" role="{{PageAction}}">Upload</button>
+                </div>
+				
+			</form>
+            <div id="errorpage" class="col-sm-12 " style="text-align:center ;color:red"></div>
+
+        </div>
+
+    </div>
+      <!--END BLOCK SECTION -->
+  
+     <!--TABLE, PANEL, ACCORDION AND MODAL  -->
+
+</div>
+</div>
+</div>
+
+<script>
+ $(document).ready(function(){
+    $(".error_page").html('')
+var csrfmiddlewaretoken= '{{csrf_token}}';
+var level='{{level}}'
+var level_name='GET'
+var instance='{{instance.group.id}}'
+var registration='{{registration.id}}'
+    $('#close-group-d').click(function(){
+        var loader=$('#loader').html()
+    $(".error_page").html(loader)
+    $.post('/get-group-members/',{csrfmiddlewaretoken:csrfmiddlewaretoken,instance:instance,registration:registration},function(data){
+        $(".home").html(data)
+        $(".error_page").html('')
+    }) 
+
+
+   })
+$("#id_file").change(function(){
+   // var allowedFiles = [".csv"];
+    var allowedFiles = [".csv"];
+        var fileUpload = $("#id_file");
+        var errorpage = $("#errorpage");
+        
+        var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:()])+(" + allowedFiles.join('|') + ")$");
+
+        if (!regex.test(fileUpload.val().toLowerCase())) {
+            errorpage.html("Please upload files having extensions: <b>" + allowedFiles.join(', ') + "</b> only.");
+            return false;
+            errorpage=''
+            $(this).val('')
+        }
+        errorpage.html('');
+        return true;
+    
+
+})
+
+
+    $("#back-to-view").click(function(){
+        //$.get('/dashboard/questions/viewQuestions/',function(data){
+            $("#modal-staff").modal("hide");
+                                       
+            // $('.content-wrapper').html(data)
+             
+    //})
+    
+    
+    });
+    $('.datepicker').datepicker({
+              changeMonth: true,
+              changeYear: true,
+              yearRange: "1970:2022",
+          });
+          $('.datepicker2').datepicker({
+              changeMonth: true,
+              changeYear: true,
+              yearRange: "1970:2022",
+          });
+          $('select').selectpicker();
+    
+        })
+    </script>

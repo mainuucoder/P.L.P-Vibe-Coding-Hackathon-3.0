@@ -1,0 +1,44 @@
+
+{% load static %}
+{% load bootstrap5 %}
+{% block title %} Question Categories {% endblock %}
+
+{% block content %}
+<style>
+    tr {
+        line-height: 15px !important;
+        min-height: 15px !important;
+        height: 15px !important;
+    }
+</style>
+<div class="card">
+    <div class="card-body table-responsive">
+        <table id="staff-table" class="table table-striped example3">
+            <a href="#" class="btn btn-primary mb-2 mb-md-0 me-2 btn-sm js-create-staff"
+                data-url="{% url 'question_categories_create' %}">Add
+                Question  Category</a>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Detail</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% include 'dashboard/institutions/question_categories/partial_list.html' %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="modal-staff">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'extrajs/publications.js' %}" target="_blank"></script>
+{% endblock %}

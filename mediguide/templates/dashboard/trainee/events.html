@@ -1,0 +1,297 @@
+{% extends 'dashboard/base3.html' %}
+{% load static %}
+{% block content %}
+
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+    .basic_tabs{
+        margin-top: 3px;
+    }
+    .not_shown{
+        display: none;
+    }
+    .class_data{
+        min-height: 400px;
+    }
+</style>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script> -->
+
+    <!-- <h1>Time table</h1> -->
+
+    <div class="row">
+        <div class="col-3" style="margin-bottom:3px;">
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-sm-12"><strong>CLASSES</strong></div>
+        
+        
+                   
+                    <hr>
+         <div class="col-sm-12" style="max-height: 400px;overflow: auto;"> 
+        {% for item in classes %}
+        {% if forloop.counter == 1 %}
+        <div class="col-sm-12 btn btn-success active basic_tabs" style="text-align:left;"  role="{{item.id}}">
+            {{forloop.counter}}. {{item.training_class.name}}({{item.county}})
+        </div>
+        {% else %}
+        <div class="col-sm-12 btn btn-dark btn-icta-primary active basic_tabs" style="text-align:left;"  role="{{item.id}}">
+            {{forloop.counter}}. {{item.training_class.name}}({{item.county}})
+        </div>
+        {% endif %}
+        {% endfor %}
+        </div>
+        </div>
+        </div>
+        </div>
+        <div class="col-xl-9">
+            <div class="card custom-card">
+                  <div class="card-body table-responsive">
+                    <div class="col-sm-12 main_tables home minor_table" style="padding:0px"></div>
+                    <div class="col-sm-12 main_tables major_table " style="padding:0px">
+                  {% for item in list %}
+                      
+                     
+                  <div class="col-sm-12  {% if forloop.counter == 1 %}  {% else%} not_shown {% endif %}  table_tabs table_tab{{item.class.id}}">
+                  <div class="col-sm-12 " style="text-transform: uppercase;margin-bottom: 15px;"><strong> TIME TABLE FOR {{item.class}}({{item.class.county}})</strong> <span role="{{item.class.id}}" style="float:right;font-size: 10px;margin-bottom: 10px;" class="btn btn-success add-events-now"><i class="fa fa-plus"></i> Add New</span></div>
+                  <!-- <div id="calendar{{item.class.id}}" class="col-sm-12 class_data"></div> -->
+                  <div id="calendar{{item.class.id}}" class="col-sm-12 calendar{{item.class.id}} class_data"></div>
+
+                  <script>
+//                      $(document).ready(function() {
+//     var class_id = '{{ item.class.id }}';
+//     var calendar_name = 'calendar' + class_id;
+
+//     // Initialize FullCalendar using the calendar_name as the element ID
+//     var calendar = $('#' + calendar_name).fullCalendar({
+//         plugins: [ 'interaction', 'dayGrid', 'timeGrid' ],
+//         header: {
+//             left: 'prev,next today',
+//             center: 'title',
+//             right: 'month,agendaWeek,agendaDay'
+//         },
+//         editable: true,  // Enable editing
+//         eventStartEditable: true,  // Allow dragging and resizing events
+//         events: [
+//             {
+//                 title: 'Event 1',
+//                 start: '2024-02-10T10:00:00', // Start time for Event 1
+//                 end: '2024-02-10T12:00:00'    // End time for Event 1
+//             },
+//             {
+//                 title: 'Event 2',
+//                 start: '2024-02-17T14:00:00', // Start time for Event 2
+//                 end: '2024-02-17T16:00:00'    // End time for Event 2
+//             }
+//             // Add more events as needed
+//         ],
+//         dateClick: function(info) {
+//             var title = prompt('Enter event title:');
+//             if (title) {
+//                 calendar.addEvent({
+//                     title: title,
+//                     start: info.dateStr + 'T00:00:00', // Start time for new event (midnight)
+//                     end: info.dateStr + 'T23:59:59'    // End time for new event (end of day)
+//                 });
+//             }
+//         }
+//     });
+
+//     // Render the calendar
+//     calendar.render();
+// });
+
+                  </script>
+                      <script>
+                         $(document).ready(function() {
+                        var class_id = '{{ item.class.id }}';
+                        var calendar_name = 'calendar' + class_id;
+                        
+                        var calendar = $('.' + calendar_name).fullCalendar({
+                            editable: true,
+                            eventStartEditable: true,  // Allow dragging and resizing events
+                            header: {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'month,agendaWeek,agendaDay'
+                            },
+
+                        editable: true,  // Enable editing
+                        eventStartEditable: true,  // Allow dragging and resizing events
+                            events: [
+                                {% for event in item.list %}
+                                {   id: '{{ event.id|escapejs }}',  // Escape special characters
+                                    title: '{{ event.title|escapejs }}',  // Escape special characters
+                                    description: '{{ event.description|escapejs }}',  // Escape special characters
+                                    start: '{{ event.start_datetime|date:"Y-m-d\\TH:i:s" }}',
+                                    end: '{{ event.end_datetime|date:"Y-m-d\\TH:i:s" }}'
+                                },
+                                {% endfor %}
+                            // ],
+                        //     events: [
+                        // {
+                        //     title: 'Event 1',
+                        //     start: '2024-02-17T10:00:00', // Start time for Event 1
+                        //     end: '2024-02-17T12:00:00'    // End time for Event 1
+                        // },
+                        // {
+                        //     title: 'Event 2',
+                        //     start: '2024-02-17T14:00:00', // Start time for Event 2
+                        //     end: '2024-02-17T16:00:00'    // End time for Event 2
+                        // }
+                        // Add more events as needed
+                    ],
+                    dateClick: function(info) {
+                        var title = prompt('Enter event title:');
+                        if (title) {
+                            calendar.fullCalendar('renderEvent', {
+                                title: title,
+                                start: info.date,
+                                end: moment(info.date).endOf('day') // Set end time to end of the day
+                            }, true);
+                        }
+                    }
+                                        //  dateClick: function(info) {
+                    //     // alert("this is the page")
+                    //     var title = prompt('Enter event title:');
+                    //     if (title) {
+                    //         calendar.addEvent({
+                    //             title: title,
+                    //             start: info.dateStr + 'T00:00:00', // Start time for new event (midnight)
+                    //             end: info.dateStr + 'T23:59:59'    // End time for new event (end of day)
+                    //         });
+                    //     }
+                    // }
+                        });
+    
+                        });
+                         
+                        </script> 
+                        <!-- <div class="col-sm-12 col-xs-12" style="text-align:center;font-weight: bold;text-transform: uppercase;"></div>
+                        <div class="container col-sm-12 col-xs-12 no_padding" style="margin-top: -390px;">
+                         <div id="calendar" class="col-sm-12 col-xs-12"></div>
+                        </div> -->
+                  
+                  
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal fade modal-staff" id="modal-staff">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            </div>
+        </div>
+      </div>
+       <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+
+<script>
+  $(document).ready(function(){
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+    var level='{{level}}'
+    // alert(level)
+    var level_name='GET'
+    var urlb='create-constants'
+  
+$(".actionbtns").click(function(){
+  var instance=$(this).attr('role')
+  var url=$(this).attr('name')
+  $.post('/'+url+'/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+    $(".main_tables").hide()
+                          $(".minor_table").html(data).show()
+                            //$('.content-wrapper').html(data)
+                     })
+})
+$(".add-events-now").click(function(){
+  var instance=$(this).attr('role')
+//   var url=
+  $.post('/add-events-now/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+    // $("#modal-staff").modal("show");                         
+    //   $(".modal-content").html(data)
+    $(".main_tables").hide()
+    $(".minor_table").html(data).show()
+                            //$('.content-wrapper').html(data)
+                     })
+})
+
+$(".basic_tabs").click(function(){
+    var instance=$(this).attr('role')
+   
+    $(".table_tabs").hide()
+    $(".table_tab"+instance).show()
+    $(".basic_tabs").removeClass('btn-success').addClass('btn-dark')
+    $(this).removeClass('btn-dark').addClass('btn-success')
+    $(".main_tables").hide()
+     $(".major_table").show()
+     $(".fc-today-button").click()
+})
+
+//     $.post('/create-constants/',{level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+                          
+//       $(".modal-content").html(data)
+//         //$('.content-wrapper').html(data)
+//  })
+
+
+  
+
+ $("#Addusersingle").click(function(){
+     
+    
+      $("#modal-staff").modal("show");
+     
+
+ 
+ })
+ $(".update-constants").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/update-constants/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       
+ })
+ 
+ })
+ $(".add-institution-counties-constants").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/add-institution-counties/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       
+ })
+ 
+ })
+ 
+
+ $(".delete-constants").click(function(){
+     var instance=$(this).attr('role')
+     var r = confirm("Do you wish to delete item?");
+  if (r == true) {
+     $.post('/delete-constants/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+     window.location='/constants/'+level
+       
+ })
+}else{
+
+}
+ })
+ 
+})
+ 
+</script>
+    {% endblock %}

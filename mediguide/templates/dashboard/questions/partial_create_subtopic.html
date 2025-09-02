@@ -1,0 +1,60 @@
+{% load static %}
+{% load bootstrap5 %}
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<div class="row">
+    <div class="col-lg-12">
+        <span class="btn btn-danger back-to-view" id=""><i class="fa fa-arrow-left"></i> Back</span>
+
+        <h4> {{Title}} </h4>
+    </div>
+</div>
+  <hr />
+  
+            <form action="" method="POST" role="{{PageAction}}" class="row" id="DefaultForm" style="overflow: auto;padding: 10px;">
+				<div class="row" style="overflow: auto;padding:10px">
+				{% csrf_token %}
+				
+                {{form.media}}
+				{% for field in form %}
+				{% if field.name == 'name' %}
+				<div class="col-sm-12" style="padding: 10px;overflow: auto;">
+					{% bootstrap_field field %}
+					<hr>
+				</div>
+				{% else %}
+				<div class="col-sm-3">
+					{% bootstrap_field field %}
+					<hr>
+				</div>
+				{% endif %}
+				{% endfor %}
+                <input type="text" value="{{questionId}}" name="questionid" id="id_question" hidden="true">
+                <input type="text" value="{{topicId}}" name="topicId" id="id_topicId" hidden="true">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-6">
+				<button class="btn-primary btn col-md-12"  id="SubmitForum" role="{{PageAction}}">SAVE</button>
+			     </div>
+			</div>
+			</form>
+			
+            <script>
+				$(document).ready(function(){
+					$(".back-to-view").click(function(){
+						$("#modal-staff").modal("hide"); 
+					})
+				})
+			</script>

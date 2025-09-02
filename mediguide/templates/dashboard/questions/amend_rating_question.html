@@ -1,0 +1,487 @@
+{% load static %}
+{% load bootstrap5 %}
+<style>
+   tr, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-family: Bitter, sans-serif;
+font-size: 1em;
+}
+    .table-data, .th-data, .td-data {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.btn_reacts{
+            color:#000;
+        }
+    
+
+.bdge {
+  height: 21px;
+  background-color: orange;
+  
+  font-size: 11px;
+  padding: 8px;
+  border-radius: 4px;
+  line-height: 3px;
+}
+
+.comments {
+  text-decoration: underline;
+  text-underline-position: under;
+  cursor: pointer;
+}
+
+.dot {
+  height: 7px;
+  width: 7px;
+  margin-top: 3px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.hit-voting:hover {
+  color: blue;
+}
+
+.hit-voting {
+  cursor: pointer;
+}
+.commented-section{
+    text-align: justify;
+}
+.commented-section{
+    box-shadow: 0 0 3px #ccc;
+    border-radius: 2px;
+    padding: 1.5rem !important;
+}
+.starlabel:before {
+    content: '☆';
+    
+    font-size: 2em;
+  }
+  .starlabel.on:before {
+    content: '★';
+    
+    /* uncomment for iOS */
+  /*   font-size: 2.4em;
+    top: -0.1em;
+    left: -0.1em; */
+  }
+  .starrate:checked + .starlabel:before {
+    content: '★'; 
+    /* uncomment for iOS */
+  /*   font-size: 2.4em;
+    top: -0.1em;
+    left: -0.1em; */
+  }
+  .starlabel {  
+    display: inline-block;  
+    cursor: pointer;  
+    position: relative;  
+    padding-left: 25px;  
+    margin-right: 15px;  
+    font-size: 20px; 
+  }
+  .starlabel:before {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    position: absolute;
+    left: 0;
+    border-radius: 10px;
+  }
+  .starrate {
+    display: none;
+    -webkit-appearance: none;
+  }
+  
+  /* Non-essential */
+
+  .question {
+    margin-bottom: 8em;
+  }
+  #q1 {
+    margin-top: 6em;
+  }
+  p {
+    font-family: Bitter, sans-serif;
+    font-size: 2em;
+  }
+  #submit {
+    font-size: 24px;
+    font-family: Bitter, sans-serif;
+    color: #448AC1;
+    width: 80px;
+    height: 80px;
+    border: none;
+    border-radius: 40px;
+  }
+  
+  .btn-scale {
+  min-width: 44px;
+  width: 6%;
+  text-align: center;
+  font-weight: bold;
+  color: black;
+  font-family: 'Lato', sans-serif;
+}
+
+.btn-scale-asc-1, .btn-scale-desc-10 {
+  background-color: #33FF00;
+}
+
+.btn-scale-asc-1:hover,
+.btn-scale-desc-10:hover {
+  background-color: #2CDE00;
+}
+
+.btn-scale-asc-2,
+.btn-scale-desc-9{
+  background-color: #66FF00;
+}
+
+.btn-scale-asc-2:hover,
+.btn-scale-desc-9:hover{
+  background-color: #59DE00;
+}
+
+.btn-scale-asc-3,
+.btn-scale-desc-8 {
+  background-color: #99FF00;
+}
+
+.btn-scale-asc-3:hover,
+.btn-scale-desc-8:hover {
+  background-color: #85DE00;
+}
+
+.btn-scale-asc-4,
+.btn-scale-desc-7 {
+  background-color: #CCFF00;
+}
+
+.btn-scale-asc-4:hover,
+.btn-scale-desc-7:hover {
+  background-color: #B1DE00;
+}
+
+.btn-scale-asc-5,
+.btn-scale-desc-6 {
+  background-color: #FFFF00;
+}
+
+.btn-scale-asc-5:hover,
+.btn-scale-desc-6:hover {
+  background-color: #DEDE00;
+}
+
+.btn-scale-asc-6,
+.btn-scale-desc-5 {
+  background-color: #FFCC00;
+}
+
+.btn-scale-asc-6:hover,
+.btn-scale-desc-5:hover {
+  background-color: #DEB100;
+}
+
+.btn-scale-asc-7,
+.btn-scale-desc-4 {
+  background-color: #FF9900;
+}
+
+.btn-scale-asc-7:hover,
+.btn-scale-desc-4:hover {
+  background-color: #DE8500;
+}
+
+.btn-scale-asc-8,
+.btn-scale-desc-3 {
+  background-color: #FF6600;
+}
+
+.btn-scale-asc-8:hover,
+.btn-scale-desc-3:hover {
+  background-color: #DE5900;
+}
+
+.btn-scale-asc-9,
+.btn-scale-desc-2 {
+  background-color: #FF3300;
+}
+
+.btn-scale-asc-9:hover,
+.btn-scale-desc-2:hover {
+  background-color: #DE2C00;
+}
+
+.btn-scale-asc-10,
+.btn-scale-desc-1 {
+  background-color: #FF0000;
+}
+
+.btn-scale-asc-10:hover,
+.btn-scale-desc-1:hover {
+  background-color: #DE0000;
+}
+
+
+.inputscheckboxes{
+  height: 30px;
+  width: 30px;
+}
+.rating_leaders{
+  font-size: 15px;
+  margin: 11px;
+  font-weight: bold;
+}
+
+</style>
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<div class="card">
+  <div class="card-body">
+<div class="inner" style="min-height:">
+<span class="btn btn-danger" id="back-to-view"><i class="fa fa-arrow-left"></i> Back</span>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h4> {{Title}} </h4>
+        </div>
+    </div>
+      <hr />
+     <!--BLOCK SECTION -->
+     <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-12" style="text-transform:uppercase;margin-bottom:5px;border-bottom:2px solid #ccc"><strong>Question :</strong> {{question.name|safe}}</div>
+            <table class="col-sm-12">
+              <tr style="background-color:#a4a4a4"><td></td><td class="headingholders{{question.id}}">
+              
+                    
+              </td><td></td>
+              <script>
+                $(document).ready(function(){
+                 // alert()
+                  var questionID='{{question.id}}'
+                  var headings=''
+                  var question_leaders='{{question_leaders}}'
+                  //alert(questionID)
+                  for(h=1;h<=question_leaders;h++){
+                    var newhead='<span class="rating_leaders">'+h+'</span>'
+                    headings=headings+newhead
+                  }
+                  $(".headingholders"+questionID).html(headings)
+                })
+                 </script>
+                 </tr>
+                {% for p in ratingtopics %}
+                {% if p.status == 'active' %} 
+                <tr style="background-color:#a4a4a4"><td>{{p.name|safe}}</td><td>  <span class="btn btn-primary add_subtopic" role="{{p.id}}"> <i class="fa fa-plus"></i> Add Sub Topic</span>  </td><td><span class=" update_topic" role="{{p.id}}"> <i class="fa fa-edit"></i></span> <span class=" delete_topic" role="{{p.id}}"> <i class="fa fa-trash"></i> </span></td></tr>
+  
+
+
+
+
+
+
+
+
+
+               {% for ratingsubtopics in p.ratingquestionsubtopic_set.all %}
+               {% if ratingsubtopics.status == 'active' %} 
+               <tr style="background-color: #ccc;">
+                    <th style="font-weight: normal;">{{ratingsubtopics.name|safe}}</th><td><span class="btn btn-secondary add_choices" id="{{ratingsubtopics.id}}" role="{{p.id}}"><i class="fa fa-plus"></i> Add Choices</span></td> <td><span class="edit_subtopic" id="{{ratingsubtopics.id}}" role="{{p.id}}"> <i class="fa fa-edit"></i> </span> <span class=" delete_subtopic" id="{{ratingsubtopics.id}}" role="{{p.id}}"> <i class="fa fa-trash"></i> </span> </td>
+                     <tr>
+                    {% for ratingrange in ratingsubtopics.ratingquestionrange_set.all %}
+                    {% if ratingrange.status == 'active' %}
+                    <tr>
+                     <td>{{ratingrange.name|safe}}</td>
+                     <td id="inputsholderrating{{ratingrange.id}}">
+                       <script>
+                        $(document).ready(function(){
+                        var rangeid='{{ratingrange.id}}';
+                        var finalvalue='{{ratingrange.range_to}}';
+                        var content="";
+                        for(a=1;a<=finalvalue;a++){
+
+                          content=content+' <input type="checkbox" class="inputscheckboxes ratingcheckboxes{{ratingrange.id}}" name="radios{{ratingrange.id}}" id="{{ratingrange.id}}"  role="{{ratingrange.id}}" >'
+                               
+                        }
+                        $("#inputsholderrating"+rangeid).html(content)
+                       //alert(content)
+                    })
+                        </script>
+
+
+                     </td>
+                     <td><span class="update_choices " id="{{ratingsubtopics.id}}" role="{{p.id}}" name="{{ratingrange.id}}"><i class='fa fa-edit'></i></span> <span class="delete_choices " id="{{ratingsubtopics.id}}" role="{{p.id}}" name="{{ratingrange.id}}"><i class='fa fa-trash'></i></span></td>
+                    </tr>
+                    {% else %}
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                    </tr>
+                    {% else %}
+                    {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    {% endif %}
+                    {% endfor %}
+                    <tr><span class="btn btn-success addtopics"><i class='fa fa-plus'></i> Add Topic</span></tr>
+                    
+                </table>
+          <div class="col-sm-12" id="formbasearea" style="margin-top:10px ;">
+
+          </div>
+
+         
+
+
+        </div>
+
+ </div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="modal-staff">
+  <div class="modal-dialog modal-lg">
+    <!-- <div class="modal-dialog modal-xl"> -->
+      <div class="modal-content">
+      </div>
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+        var questionId='{{question.id}}'
+        var csrfmiddlewaretoken= '{{csrf_token}}';
+
+        $(".inputscheckboxes").change(function(){
+  var ratingid=$(this).attr('role')
+
+  if($(this).prop('checked')){
+ $(".ratingcheckboxes"+ratingid).prop('checked',false)
+ $(this).prop('checked',true)
+  }else{
+
+  }
+})
+
+        $(".delete_topic").click(function(){
+          var topicId=$(this).attr('role')
+  $.post('/dashboard/questions/delete_rating_question_topic/',{csrfmiddlewaretoken:csrfmiddlewaretoken,questionId:questionId,topicId:topicId},function(data){
+   
+    $('.content-wrapper').html(data) 
+
+    
+})
+        })
+        $("#back-to-view").click(function(){
+   $.get('/viewQuestions/',function(data){
+    $("#modal-staff").modal("hide"); 
+                            
+      $('.content-wrapper').html(data) 
+
+       
+})
+        })
+        $(".remove_option").click(function(){
+            var optionid=$(this).attr('role');
+            var actionpage=$(this).attr('name')
+          
+           $.post('/dashboard/questions/'+actionpage+optionid,{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+            $("#modal-staff").modal("hide");
+                      $("#modal-staff").modal("show");  
+            $(".modal-content").html(data)  
+
+            
+                         })
+
+              })
+
+$('.addtopics').click(function(){
+    $.post('/dashboard/questions/Add_rating_Question_topic/',{csrfmiddlewaretoken:csrfmiddlewaretoken,questionId:questionId},function(data){
+        $("#modal-staff").modal("show");  
+        $(".modal-content").html(data)
+})
+})
+$('.add_subtopic').click(function(){
+    var topicId=$(this).attr('role')
+    $.post('/dashboard/questions/Add_rating_Question_subtopic/',{csrfmiddlewaretoken:csrfmiddlewaretoken,questionId:questionId,topicId:topicId},function(data){
+        $("#modal-staff").modal("show");  
+            $(".modal-content").html(data)
+})
+})
+$(".edit_subtopic").click(function(){
+  var topicId=$(this).attr('role')
+  var subtopicId=$(this).attr('id')
+  $.post('/dashboard/questions/edit_rating_question_subtopic/',{subtopicId:subtopicId,csrfmiddlewaretoken:csrfmiddlewaretoken,questionId:questionId,topicId:topicId},function(data){
+        $("#modal-staff").modal("show");  
+            $(".modal-content").html(data)
+})
+})
+
+$(".delete_subtopic").click(function(){
+  var topicId=$(this).attr('role')
+  var subtopicId=$(this).attr('id')
+  $.post('/dashboard/questions/delete_rating_question_subtopic/',{subtopicId:subtopicId,csrfmiddlewaretoken:csrfmiddlewaretoken,questionId:questionId,topicId:topicId},function(data){
+    $('.content-wrapper').html(data) 
+
+    
+})
+})
+
+$('.add_choices').click(function(){
+    var subtopicId=$(this).attr('id')
+    var topicId=$(this).attr('role')
+    $.post('/dashboard/questions/partial_create_rating_ranges/',{subtopicId:subtopicId,csrfmiddlewaretoken:csrfmiddlewaretoken,questionId:questionId,topicId:topicId},function(data){
+        $("#modal-staff").modal("show");  
+            $(".modal-content").html(data)
+})
+})
+$('.update_choices').click(function(){
+    var subtopicId=$(this).attr('id')
+    var topicId=$(this).attr('role')
+    var ratingid=$(this).attr('name')
+    $.post('/dashboard/questions/UpdateRatingQuestionratingRange/',{ratingid:ratingid,subtopicId:subtopicId,csrfmiddlewaretoken:csrfmiddlewaretoken,questionId:questionId,topicId:topicId},function(data){
+        $("#modal-staff").modal("show");  
+            $(".modal-content").html(data)
+})
+})
+$('.delete_choices').click(function(){
+    var subtopicId=$(this).attr('id')
+    var topicId=$(this).attr('role')
+    var ratingid=$(this).attr('name')
+    $.post('/dashboard/questions/delete_rating_question_range/',{ratingid:ratingid,subtopicId:subtopicId,csrfmiddlewaretoken:csrfmiddlewaretoken,questionId:questionId,topicId:topicId},function(data){
+      $('.content-wrapper').html(data) 
+
+      
+})
+})
+
+$(".update_topic").click(function(){
+  var topicId=$(this).attr('role')
+  $.post('/dashboard/questions/edit_rating_question_topic/',{csrfmiddlewaretoken:csrfmiddlewaretoken,questionId:questionId,topicId:topicId},function(data){
+        $("#modal-staff").modal("show");  
+            $(".modal-content").html(data)
+})
+})
+
+        })
+</script>

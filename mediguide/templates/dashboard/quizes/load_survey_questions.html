@@ -1,0 +1,1391 @@
+{% load static %}
+
+{% load humanize %}
+<style>
+      table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.btn_reacts{
+            color:#000;
+        }
+    
+
+.bdge {
+  height: 21px;
+  background-color: orange;
+  
+  font-size: 11px;
+  padding: 8px;
+  border-radius: 4px;
+  line-height: 3px;
+}
+
+.comments {
+  text-decoration: underline;
+  text-underline-position: under;
+  cursor: pointer;
+}
+
+.dot {
+  height: 7px;
+  width: 7px;
+  margin-top: 3px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.hit-voting:hover {
+  color: blue;
+}
+
+.hit-voting {
+  cursor: pointer;
+}
+.commented-section{
+    text-align: justify;
+}
+.commented-section{
+    box-shadow: 0 0 3px #ccc;
+    border-radius: 2px;
+    padding: 1.5rem !important;
+}
+.starlabel:before {
+    content: '☆';
+    
+    font-size: 2em;
+  }
+  .starlabel.on:before {
+    content: '★';
+    
+    /* uncomment for iOS */
+  /*   font-size: 2.4em;
+    top: -0.1em;
+    left: -0.1em; */
+  }
+  .starrate:checked + .starlabel:before {
+    content: '★'; 
+    /* uncomment for iOS */
+  /*   font-size: 2.4em;
+    top: -0.1em;
+    left: -0.1em; */
+  }
+  .starlabel {  
+    display: inline-block;  
+    cursor: pointer;  
+    position: relative;  
+    padding-left: 25px;  
+    margin-right: 15px;  
+    font-size: 20px; 
+  }
+  .starlabel:before {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    position: absolute;
+    left: 0;
+    border-radius: 10px;
+  }
+  .starrate {
+    display: none;
+    -webkit-appearance: none;
+  }
+  
+  /* Non-essential */
+
+  .question {
+    margin-bottom: 8em;
+  }
+  #q1 {
+    margin-top: 6em;
+  }
+  p {
+    font-family: Bitter, sans-serif;
+    font-size: 1em;
+  }
+  #submit {
+    font-size: 24px;
+    font-family: Bitter, sans-serif;
+    color: #448AC1;
+    width: 80px;
+    height: 80px;
+    border: none;
+    border-radius: 40px;
+  }
+  
+  .btn-scale {
+  min-width: 44px;
+  width: 6%;
+  text-align: center;
+  font-weight: bold;
+  color: black;
+  font-family: 'Lato', sans-serif;
+}
+
+.btn-scale-asc-1, .btn-scale-desc-10 {
+  background-color: #33FF00;
+}
+
+.btn-scale-asc-1:hover,
+.btn-scale-desc-10:hover {
+  background-color: #2CDE00;
+}
+
+.btn-scale-asc-2,
+.btn-scale-desc-9{
+  background-color: #66FF00;
+}
+
+.btn-scale-asc-2:hover,
+.btn-scale-desc-9:hover{
+  background-color: #59DE00;
+}
+
+.btn-scale-asc-3,
+.btn-scale-desc-8 {
+  background-color: #99FF00;
+}
+
+.btn-scale-asc-3:hover,
+.btn-scale-desc-8:hover {
+  background-color: #85DE00;
+}
+
+.btn-scale-asc-4,
+.btn-scale-desc-7 {
+  background-color: #CCFF00;
+}
+
+.btn-scale-asc-4:hover,
+.btn-scale-desc-7:hover {
+  background-color: #B1DE00;
+}
+
+.btn-scale-asc-5,
+.btn-scale-desc-6 {
+  background-color: #FFFF00;
+}
+
+.btn-scale-asc-5:hover,
+.btn-scale-desc-6:hover {
+  background-color: #DEDE00;
+}
+
+.btn-scale-asc-6,
+.btn-scale-desc-5 {
+  background-color: #FFCC00;
+}
+
+.btn-scale-asc-6:hover,
+.btn-scale-desc-5:hover {
+  background-color: #DEB100;
+}
+
+.btn-scale-asc-7,
+.btn-scale-desc-4 {
+  background-color: #FF9900;
+}
+
+.btn-scale-asc-7:hover,
+.btn-scale-desc-4:hover {
+  background-color: #DE8500;
+}
+
+.btn-scale-asc-8,
+.btn-scale-desc-3 {
+  background-color: #FF6600;
+}
+
+.btn-scale-asc-8:hover,
+.btn-scale-desc-3:hover {
+  background-color: #DE5900;
+}
+
+.btn-scale-asc-9,
+.btn-scale-desc-2 {
+  background-color: #FF3300;
+}
+
+.btn-scale-asc-9:hover,
+.btn-scale-desc-2:hover {
+  background-color: #DE2C00;
+}
+
+.btn-scale-asc-10,
+.btn-scale-desc-1 {
+  background-color: #FF0000;
+}
+
+.btn-scale-asc-10:hover,
+.btn-scale-desc-1:hover {
+  background-color: #DE0000;
+}
+
+
+.scalerate{
+    min-height: 36px;
+min-width: 44px;
+  border-radius:2px !important
+	&:hover,
+	&:checked {
+		+ label,
+		+ input + label {
+			background-color: #0f0;
+			color: #0f0;
+		}
+	}
+	
+
+	&:focus + label {
+		outline: 2px solid black;
+		position: relative;
+		z-index: 2;
+	}
+
+	+ label {
+		display: block;
+		text-align: center;
+		padding: 0.5em 0;
+		//min-width: 1.5em;
+		//flex-grow: 1;
+		//flex-basis: 3em;
+		flex-shrink: 0;
+		border: 1px solid #666;
+		width: 2em;
+		height: 1em;
+		border-radius: 50%;
+		background: #fff;
+		margin-left: -1px;
+		margin-right: 0.25em;
+		color: #fff;
+		font-size: 0;
+		min-height: 1.5rem;
+		min-width: 1.5rem;
+
+		&:focus,
+		&:hover {
+			background-color: #0f0;
+		}
+	}
+}
+
+
+.q-list {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+	//counter-reset: question;
+
+	&__item {
+		counter-increment: question;
+		padding: 0.75em;
+
+		&:nth-child(odd) {
+			background-color: #ddd;
+		}
+	}
+}
+
+.q-block {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+
+	> *:first-child {
+		flex-basis: 10em;
+	}
+	> *:last-child {
+		flex-grow: 1;
+		flex-basis: 20em;
+	}
+}
+
+.q-legend {
+	display: flex;
+	padding: 0.75em;
+
+	> *:first-child {
+		opacity: 0;
+		width: 0;
+
+		@media (min-width: 552px) {
+			flex-basis: 11em;
+		}
+	}
+
+	> *:last-child {
+		flex-grow: 1;
+		flex-basis: 20em;
+		display: flex;
+		flex-direction: row-reverse;
+		max-width: 39.2em;
+		margin-left: auto;
+
+		> * {
+			flex-basis: (100% / 3);
+			flex-grow: 1;
+
+			&:nth-child(2) {
+				text-align: center;
+			}
+
+			&:first-child {
+				text-align: end;
+			}
+			&:last-child {
+				text-align: start;
+			}
+		}
+	}
+}
+
+.q-title {
+	margin-inline-end: 1rem;
+	margin-block-end: 0.5em;
+	margin-block-start: 0.5em;
+
+	&:before {
+		content: counter(question) ". ";
+	}
+}
+
+.vh {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+p {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+fieldset {
+	border: none;
+	margin: 1em;
+	padding: 0;
+
+	legend {
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+}
+.qustion_wrapper{
+  min-height: 80px;
+  box-shadow: 0px 0px 2px #ccc;
+  border-radius: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding:0px;
+  background-color: #fff !important;
+}
+.inputscheckboxes{
+  height: 30px;
+  width: 30px;
+}
+.rating_leaders{
+  font-size: 15px;
+  margin: 11px;
+  font-weight: bold;
+}
+.multichoice7{
+  height: 20px;
+  width: 20px;
+}
+.multichoice8{
+  height: 20px;
+  width: 20px;
+}
+  </style>
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<div class="" style="margin-top: 10px">
+  <div class="col-sm-12" style="padding: 0px;">
+    <div class="row" style="padding: 0px;">
+      <div class="col-lg-12 pr-55 md-pr-15 md-mb-30">
+        <div id="accordion" class="accordion">
+          <div class="card">
+  <div class="card-body" style="padding: 10px !important;">
+    <div class="row" style="padding: 0px;">
+      <div class="col-4 ">
+      <span class="btn  btn-danger surveybackBtn" id="surveybackBtn" >
+        <i class="fa fa-arrow-left"></i> Back</span>
+    </div>
+    <div class="col-4" style="text-align: center;">
+      <span class="timers" style=" font-size: 25px;
+  font-weight: bold;" >Task Ends In:</span>
+      
+      <span class="timers" style=" font-size: 25px;
+  font-weight: bold;" id="timer_display">00.00</span>
+  </div>
+      <div class="col-4">
+        <span class="timers" style="    font-size: 25px;
+    font-weight: bold;" id="timer_display"></span>
+      <span class="btn btn-success submit_suvery" id="" style="float: right;" ><i class="fa fa-arrow-right"></i> NEXT</span>
+    </div>
+  </div>
+    <div class="col-sm-12 " style="padding: 0px;">
+   
+    <div class="col-sm-12 col-xs-12 errorpage" style="color: red;text-align:center"></div>
+<input type="text" hidden value="{{surveyaudeincelist.quiz_start_time}}" id="stert_time_date">
+<input type="text" hidden value="{{surveyaudeincelist.quiz_stop_time}}" id="end_time_date">
+    <h5 id="introduction" style="border-top: none; padding-top: 0;">{{surveyload.Title|safe}}   <span id="time_area" style="float:right"></span></h5>
+  <p>
+      {{surveyload.Brief_Description|safe}}
+      </p>
+  <p >
+      Deadline:
+                          <span class="text-secondary font-weight-bold">{{surveyload.End_Date}}</span>&nbsp;
+                         
+                        </p>
+                        </div>  
+
+
+
+
+<h6><strong>{{questioncategory_retrieved.name|safe}}</strong> </h6>
+{% for i in surveyquestions %}
+
+<div class="col-12 qustion_wrapper qustion_wrapper{{i.question.id}}" id="" role="">
+
+        <div class="col-sm-12">
+          
+          <span><strong>{{i.question.name|safe}}</strong>
+          </span>
+        </div>
+<div class="col-sm-12">
+ 
+  {% if i.question.question_type_id == 1 %}
+
+        {% elif i.question.question_type_id == 2 %}
+
+       
+          
+            <div class="question" id="q1">
+              <input class="starrate" type="radio" name="needs" id="a1" value="1">
+              <label class="starlabel" for="a1"></label>
+              <input class="starrate" type="radio" name="needs" id="a2" value="2">
+              <label class="starlabel" for="a2"></label>
+              <input class="starrate" type="radio" name="needs" id="a3" value="3">
+              <label class="starlabel" for="a3"></label>
+              <input class="starrate" type="radio" name="needs" id="a4" value="4">
+              <label class="starlabel" for="a4"></label>
+              <input class="starrate" type="radio" name="needs" id="a5" value="5">
+              <label class="starlabel" for="a5"></label>
+            </div>
+          
+          
+
+        {% elif i.question.question_type_id == 3 %}
+
+        <table class="col-sm-12">
+          {% for p in i.question.ratingquestiontopic_set.all %}
+          {% if p.status == 'active' %} 
+          <tr style="background-color:#a4a4a4"><td class="col-sm-10">{{p.name|safe}}</td><td class="col-sm-2 headingholders{{i.id}}">
+      
+          
+          </td>
+          <script>
+            $(document).ready(function(){
+           
+              var questionID='{{i.id}}'
+              var headings=''
+              var question_leaders='{{question_leaders}}'
+             
+              for(h=1;h<=question_leaders;h++){
+                var newhead='<span class="rating_leaders">'+h+'</span>'
+                headings=headings+newhead
+              }
+              $(".headingholders"+questionID).html(headings)
+            })
+             </script>
+        </tr>
+         {% for ratingsubtopics in p.ratingquestionsubtopic_set.all %}
+         {% if ratingsubtopics.status == 'active' %} 
+         <tr style="background-color: #ccc;">
+              <th style="font-weight: normal;">{{ratingsubtopics.name|safe}}</th><td>  </td>
+               <tr>
+              {% for ratingrange in ratingsubtopics.ratingquestionrange_set.all %}
+              {% if ratingrange.status == 'active' %}
+            
+              {% if i.status == 'yes' %}
+              {% for rateresponce in userresponceratings %}
+             
+              {% if ratingrange.id == rateresponce.RatingQuestionRange_id %}
+              
+               <span id="valueholder{{ratingrange.id}}" role="{{rateresponce.name}}"></span> 
+            
+              {% endif %}
+              {% endfor %}
+             
+              {% endif %}
+              <tr>
+               <td>{{ratingrange.name|safe}}</td>
+               <td id="inputsholderrating{{ratingrange.id}}">
+                 <script>
+                  $(document).ready(function(){
+                    var rateresponce='{{ratingrange.id}}'
+                   
+                  var rangeid='{{ratingrange.id}}';
+      
+                  var selectedvalue=$("#valueholder"+rateresponce).attr('role');
+                 
+                  var finalvalue='{{ratingrange.range_to}}';
+                  var content="";
+                  var checkboxvalues=''
+                
+                  for(a=1;a<=finalvalue;a++){
+                    if(a==selectedvalue){
+                      checkboxvalues='checked';
+                    }else{
+                      checkboxvalues=''
+                    }
+                    content=content+' <input type="checkbox"  '+checkboxvalues+'  value='+a+' class="inputscheckboxes ratingcheckboxes{{ratingrange.id}}" name="{{ratingsubtopics.id}}" id="{{p.id}}"  role="{{ratingrange.id}}" >'
+                             
+                  }
+                  $("#inputsholderrating"+rangeid).html(content)
+           
+              })
+                  </script>
+      
+      
+               </td>
+              </tr>
+              {% else %}
+              {% endif %}
+              {% endfor %}
+          </tr>
+              </tr>
+              {% else %}
+              {% endif %}
+              {% endfor %}
+              {% else %}
+              {% endif %}
+              {% endfor %}
+              
+              
+          </table>
+{% elif i.question.question_type_id == 4 %}
+<select class="col-lg-12 SelectQuestionsOptions" id="questions{{i.question.id}}" name="{{i.question.id}}">
+  <option></option>  
+  {% for choice in i.question.choice_set.all %}
+  {% if choice.status == 'active' %}
+<option>{{ choice.name }}</option>  
+{% else %}
+{% endif %}
+        {% endfor %}
+
+</select>
+
+{% elif i.question.question_type_id == 5 %}
+
+{% for r in userresponcetext %}
+
+{% if r.question == i.question %}
+<script>
+  $(document).ready(function(){
+    var question_answer='{{r.Answers}}'
+    var quetionpid='{{i.question.id}}'
+    $('#textareaQuestions'+quetionpid).text(question_answer)
+  })
+  </script>
+
+{% else %}
+
+{% endif %}
+{% endfor %}
+
+
+
+<textarea class="col-lg-12 textareaQuestions" id="textareaQuestions{{i.question.id}}" role="{{i.question.id}}" name="{{i.question.id}}"
+style="min-height:80px;resize: none;" maxlength="1200" role="{{i.question_type}}">
+</textarea>
+
+
+{% elif i.question.question_type_id == 6 %}
+
+
+{% elif i.question.question_type_id == 7 %}
+
+  {% for related_question in i.question.relatedquestion_set.all %}
+  {% if related_question.main_question.id == i.question.id %}
+  <script>
+    $(document).ready(function(){
+    var relatedq='{{related_question.linked_question.id}}'
+    var mainq='{{related_question.main_question.id}}'
+    var choice_linked='{{related_question.choice.id}}'
+   
+      $(".qustion_wrapper"+relatedq).hide()
+ 
+  
+    $(".qustion_wrapper"+relatedq).addClass('linked_question'+mainq)
+   $(".qustion_wrapper"+relatedq).addClass('linked_choice'+choice_linked)
+    })
+  </script>
+ 
+
+  {% endif %}
+{% endfor %}
+  <div class="col-sm-12 col-xs-12  parentselect" id="questions{{i.question.id}}" role="{{i.question.id}}">
+    {% for choice in i.question.choice_set.all %}
+    {% if choice.status == 'active' %}
+    <div class="col-sm-12 col-xs-12" style="margin-bottom:5px ;">
+   {% if userresponce %}
+
+   {% if i.status == 'yes' %}
+
+    {% for b in userresponce %}
+    
+    {% if b.question == i.question %}
+      {% if b.Choices == choice %}
+      {% if choice.name == 'Other' %}
+      {% if b.status == 'Specify' %}
+       <script>
+        $(document).ready(function(){
+        var questionId='{{i.question.id}}'
+        var specifiedValue='{{b.Answers}}'
+        $("#specify_field"+questionId).html(specifiedValue)
+        $("#specify"+questionId).show()
+        })
+        </script>
+      {% elif b.status == 'active' %}
+      <script>
+        $(document).ready(function(){
+        var questionId='{{i.question.id}}'
+        var specifiedValue='{{b.Answers}}'
+        $("#specify_field"+questionId).html(specifiedValue)
+        $("#specify"+questionId).show()
+        })
+        </script>
+     
+      {% endif %}
+     
+     
+      {% endif %}
+      <label style="font-weight: initial !important" class="submit_radiosd">
+  
+        <input type="checkbox" checked id="{{choice.id}}" role="{{i.question.id}}"  value="{{choice.name}}" name="{{questionId}}"  class=" multichoice7 multichoiced{{i.question.id}}" >
+          <span class="checkmarkd"></span>
+          <script>
+            $(document).ready(function(){
+    
+              var choice_linked='{{choice.id}}'
+              $('.linked_choice'+choice_linked).show()
+            })
+            </script>
+         
+          {{ choice.name }}
+           </label>
+  
+      {% else %}
+      <label style="font-weight: initial !important" class="submit_radiosd">
+  
+        <input type="checkbox"   id="{{choice.id}}" role="{{i.question.id}}"  value="{{choice.name}}" name="{{questionId}}"  class=" multichoice7 multichoiced{{i.question.id}}" >
+          <span class="checkmarkd"></span>
+          {{ choice.name }}
+           </label>
+      {% endif %}    
+  
+  {% endif %}
+  {% endfor %}
+
+  {% else %}
+  <label style="font-weight: initial !important" class="submit_radiosd">
+  
+    <input type="checkbox"   id="{{choice.id}}" role="{{i.question.id}}"  value="{{choice.name}}" name="{{questionId}}"  class=" multichoice7 multichoiced{{i.question.id}}" >
+      <span class="checkmarkd"></span>
+      {{ choice.name }}
+       </label>
+  {% endif %}
+  {% else %}
+  <label style="font-weight: initial !important" class="submit_radiosd">
+  
+    <input type="checkbox"   id="{{choice.id}}" role="{{i.question.id}}"  value="{{choice.name}}" name="{{questionId}}"  class=" multichoice7 multichoiced{{i.question.id}}" >
+      <span class="checkmarkd"></span>
+      {{ choice.name }}
+       </label>
+  {% endif %}
+
+
+
+  </div>
+  
+    {% endif %}
+  {% endfor %}
+  
+  <div class="col-12" style="display:none" id="specify{{i.question.id}}">
+    Kindly specify:
+  <textarea class="col-sm-12 specify_fields " id="specify_field{{i.question.id}}" style="resize:none;" role="{{i.question.id}}" placeholder="Specify here.."></textarea>
+ </div>
+</div>
+
+
+{% elif i.question.question_type_id == 8 %}
+
+  {% for related_question in i.question.relatedquestion_set.all %}
+  {% if related_question.main_question.id == i.question.id %}
+  <script>
+    $(document).ready(function(){
+    var relatedq='{{related_question.linked_question.id}}'
+    var mainq='{{related_question.main_question.id}}'
+    var choice_linked='{{related_question.choice.id}}'
+ 
+      $(".qustion_wrapper"+relatedq).hide()
+   
+  
+    $(".qustion_wrapper"+relatedq).addClass('linked_question'+mainq)
+   $(".qustion_wrapper"+relatedq).addClass('linked_choice'+choice_linked)
+    })
+  
+  </script>
+
+  {% endif %}
+{% endfor %}
+  <div class="col-sm-12 col-xs-12  parentselect" id="questions{{i.question.id}}" role="{{i.question.id}}">
+    {% for choice in i.question.choice_set.all %}
+    {% if choice.status == 'active' %}
+    <div class="col-sm-12 col-xs-12" style="margin-bottom:5px ;">
+  
+      <label style="font-weight: initial !important" class="submit_radiosd">
+  
+        <input type="checkbox"  id="{{choice.id}}" role="{{i.question.id}}"  value="{{choice.name}}" name="{{questionId}}"  class=" multichoice8 multichoiced{{i.question.id}}" >
+          <span class="checkmarkd"></span>
+        
+          {{ choice.name }}
+           </label>
+  
+      {% if userresponce %}
+
+   {% if i.status == 'yes' %}
+ 
+
+
+
+    {% for b in userresponce %}
+    
+    {% if b.question == i.question %}
+      {% if b.Choices == choice %}
+      {% if choice.name == 'Other' %}
+      {% if b.status == 'Specify' %}
+       <script>
+        $(document).ready(function(){
+        var questionId='{{i.question.id}}'
+        var specifiedValue='{{b.Answers}}'
+        $("#specify_field"+questionId).html(specifiedValue)
+        $("#specify"+questionId).show()
+        })
+        </script>
+      {% elif b.status == 'active' %}
+      <script>
+        $(document).ready(function(){
+        var questionId='{{i.question.id}}'
+        var specifiedValue='{{b.Answers}}'
+        $("#specify_field"+questionId).html(specifiedValue)
+        $("#specify"+questionId).show()
+        })
+        </script>
+    
+      {% endif %}
+     
+     
+      {% endif %}
+    
+          <script>
+            $(document).ready(function(){
+    
+              var choice_linked='{{choice.id}}'
+                    $('.linked_choice'+choice_linked).show()
+              $('#'+choice_linked).attr("checked", "checked");
+            })
+            </script>
+         
+      
+      {% endif %}    
+  
+  
+  {% endif %}
+  {% endfor %}
+
+
+  {% endif %}
+ 
+
+  {% endif %}
+
+
+
+  </div>
+  
+    {% endif %}
+  {% endfor %}
+  
+  <div class="col-12" style="display:none" id="specify{{i.question.id}}">
+    Kindly specify:
+  <textarea class="col-sm-12 specify_fields " id="specify_field{{i.question.id}}" style="resize:none;" role="{{i.question.id}}" placeholder="Specify here.."></textarea>
+ </div>
+</div>
+
+
+
+{% elif i.question.question_type_id == 9 %}
+
+
+
+
+
+      {% endif %}
+    
+</div>
+</div>
+ {% endfor %}
+ <div class="row" style="padding: 0px;">
+  <div class="col-6 ">
+  <span class="btn  btn-danger surveybackBtn" id="surveybackBtn" >
+    <i class="fa fa-arrow-left"></i> Back</span>
+</div>
+  <div class="col-6">
+  <span class="btn btn-success submit_suvery" id="" style="float: right;" ><i class="fa fa-arrow-right"></i> NEXT</span>
+</div>
+</div>
+ <!-- <div class="row">
+  <div class="btn col-sm-2 btn-danger surveybackBtn" id="surveybackBtn" ><i class="fa fa-arrow-left"></i> Back</div>
+  <div class=" col-sm-8 " id="" ></div>
+  
+  <div class="btn col-sm-2 btn-success submit_suvery" id="" ><i class="fa fa-arrow-right"></i> NEXT</div>
+</div> -->
+ <div class="col-sm-12 col-xs-12 errorpage" style="color: red;text-align:center"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+ <script>
+$(document).ready(function(){
+
+//   function addHours(date, hours) {
+//   const hoursToAdd = hours * 60 * 60 * 1000;
+//   date.setTime(date.getTime() + hoursToAdd);
+//   return date;
+// }
+// const date = new Date('2022-05-15T12:00:00.000Z');
+// const newDate1 = addHours(date, 2);
+
+
+
+
+const targetDateTime = new Date(document.getElementById("end_time_date").value);
+const timer_display=document.getElementById("timer_display")
+// Function to start the countdown
+function startCountdown() {
+    const timer = setInterval(() => {
+        // Calculate the difference in milliseconds between now and the target DateTime
+        const now = new Date();
+        const timeDifference = targetDateTime - now;
+
+        if (timeDifference <= 0) {
+            clearInterval(timer); // Stop the timer when target is reached or passed
+            performAction(); // Call the action when countdown reaches zero
+        } else {
+            // Convert timeDifference to seconds
+            const countdownValue = Math.floor(timeDifference / 1000);
+
+            // Calculate minutes and seconds
+            const minutes = Math.floor(countdownValue / 60);
+            const seconds = countdownValue % 60;
+
+            // Display in MM:SS format
+            timer_display.innerHTML = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+    }, 1000); // Update every 1 second
+}
+// Function to define the action when countdown reaches zero
+function performAction() {
+  
+  // var loader=$('#loader').html()
+  // $(".errorpage").html('..Submitting Task...kindly wait.. '+loader)
+  //  $.post('/dashboard/quizes/PublishAnswers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+    
+  //   if($.trim(data)=='success'){
+  //     var quizb='{{survey.is_quiz}}'
+  //     if (quizb){
+  //       location.replace('/quiz-list/')
+  //     }else{
+  //       location.replace('/quiz-list-feedback/')
+  //     }
+      
+  //   }else{
+  //     $(".errorpage").html('An error occured.. kindly try again')
+  //   }
+
+
+
+  //                })
+
+}
+
+// Start the countdown
+startCountdown();
+
+
+
+  var questioncategory=parseInt('{{questioncategory}}')
+    
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId='{{survey}}';
+  $(".surveybackBtn").click(function(){
+    if(questioncategory==1){
+      $("#surveysquestionsarea").hide();
+    $(".surveyspanels").show();
+    }else{
+      questioncategory=questioncategory-1
+
+      
+      $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory-1;
+                         if(questioncategory<1){
+                          $("#surveysquestionsarea").hide();
+                        $(".surveyspanels").show();
+                        }else{
+                        checkexistingcategoriesback(questioncategory,surveyId)
+
+
+                        }
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+
+                    
+                      
+                       }
+                      })
+                      
+    }
+    
+      
+        })
+
+var category='{{category}}'
+
+$(".inputscheckboxes").change(function(){
+  var ratingid=$(this).attr('role')
+  var topicId=$(this).attr('id')
+  var subtopic=$(this).attr('name')
+  var ratingvalue=$(this).val()
+  //alert(ratingid+" "+topicId+" "+subtopic)
+  if($(this).prop('checked')){
+ $(".ratingcheckboxes"+ratingid).prop('checked',false)
+ $(this).prop('checked',true)
+
+ $.post('/dashboard/quizes/submit_rating_answers/',{ratingvalue:ratingvalue,ratingid:ratingid,topicId:topicId,subtopic:subtopic,questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                     if($.trim(data)=="success"){
+                     }else{
+
+                     }
+                     })
+
+  }else{
+
+  }
+})
+
+
+
+
+  $(".SelectQuestionsOptions").change(function(){
+    var selectedValue=$(this).val()
+    if(selectedValue){
+    
+    var questionId=$(this).attr('name');
+    var surveyId='{{survey}}'
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+                 $.post('/dashboard/quizes/saveSelectionQuestion/',{csrfmiddlewaretoken:csrfmiddlewaretoken,selectedValue:selectedValue,questionId:questionId,surveyId:surveyId},function(data){
+                                //alert(data)
+                           })
+
+                          }else{
+
+
+                            var questionId=$(this).attr('name');
+    var surveyId='{{survey}}'
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+                 $.post('/dashboard/quizes/deleteSelectionQuestionChoice/',{csrfmiddlewaretoken:csrfmiddlewaretoken,selectedValue:selectedValue,questionId:questionId,surveyId:surveyId},function(data){
+                                //alert(data)
+                           })
+
+
+                          }
+  })
+  $(".submit_suvery").click(function(){
+    var loader=$("#loader").html()
+    $('.errorpage').html('submiting...please wait..'+loader)
+    var questioncategory=parseInt('{{questioncategory}}')
+    
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId='{{survey}}';
+       $.post('/dashboard/quizes/submitSurvey/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                     if($.trim(data)=="success"){
+                      $.post('/dashboard/quizes/PublishAnswersminor/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                      })
+                      
+                      $('.errorpage').html('success');
+                      questioncategory=questioncategory+1;
+                      $('.errorpage').html('..loading...kindly wait.. '+loader);
+                      $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory+1;
+                        checkexistingcategories(questioncategory,surveyId)
+
+
+
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/Load_final_list_answers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                          $(".surveyspanels").hide()
+                          $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                        })
+
+                      
+                       }
+                      })
+
+                     }else{
+                    $('.errorpage').html('All Questions Required!');
+                     }
+                 })
+    
+
+  })
+ 
+   
+       $('.multichoice8').change(function(){
+
+
+  var questionId=$(this).attr('role')
+
+
+if($(this).prop('checked')){
+var choicevalue=$(this).val()
+
+var choice_linked=$(this).attr('id')
+// $('.linked_question'+questionId).hide()
+$('.linked_choice'+choice_linked).show()
+
+
+
+if(choicevalue=='Other'){
+  var choiceID=$(this).attr('id')
+  $("#specify"+questionId).show()
+  //  $(".multichoiced"+questionId).prop("checked", false);
+  $(this).prop("checked", true);
+  var optionId=$(this).attr('id')
+   var csrfmiddlewaretoken= '{{csrf_token}}';
+   var surveyId='{{survey}}';
+  // alert(optionId+questionId+surveyId)
+   $.post('/dashboard/quizes/saveQuestionChoice/',{csrfmiddlewaretoken:csrfmiddlewaretoken,optionId:optionId,questionId:questionId,surveyId:surveyId},function(data){})
+}else{
+  // $("#specify"+questionId).hide()
+  // $("#specify"+questionId).val("")
+// $(".multichoiced"+questionId).prop("checked", false);
+$(this).prop("checked", true);
+var choice_linked=$(this).attr('id')
+$('.linked_choice'+choice_linked).show()
+var optionId=$(this).attr('id')
+   var csrfmiddlewaretoken= '{{csrf_token}}';
+   var surveyId='{{survey}}';
+  // alert(optionId+questionId+surveyId)
+   $.post('/dashboard/quizes/saveQuestionChoice/',{csrfmiddlewaretoken:csrfmiddlewaretoken,optionId:optionId,questionId:questionId,surveyId:surveyId},function(data){
+                  
+             })
+            }
+}else{
+ $("#specify"+questionId).hide()
+   $("#specify"+questionId).val("")
+  var choice_linked=$(this).attr('id')
+ $('.linked_choice'+choice_linked).hide()
+
+    var optionId=$(this).attr('id')
+    var questionId=$(this).attr('role')
+       var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId='{{survey}}';
+       $.post('/dashboard/quizes/removeUserQuestionChoice/',{csrfmiddlewaretoken:csrfmiddlewaretoken,optionId:optionId,questionId:questionId,surveyId:surveyId},function(data){
+                      
+                 })
+    
+
+
+}
+
+
+
+  })
+
+  $('.multichoice7').change(function(){
+    var questionId=$(this).attr('role')
+
+    //alert(questionId)
+  if($(this).prop('checked')){
+    var choicevalue=$(this).val()
+   // $(".qustion_wrapper"+questionId).hide()
+    var choice_linked=$(this).attr('id')
+    $('.linked_question'+questionId).hide()
+    $('.linked_choice'+choice_linked).show()
+    
+    
+    
+    if(choicevalue=='Other'){
+      var choiceID=$(this).attr('id')
+       $("#specify"+questionId).show()
+       $(".multichoiced"+questionId).prop("checked", false);
+      $(this).prop("checked", true);
+      var optionId=$(this).attr('id')
+       var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId='{{survey}}';
+      // alert(optionId+questionId+surveyId)
+       $.post('/dashboard/quizes/saveQuestionSingleChoice/',{csrfmiddlewaretoken:csrfmiddlewaretoken,optionId:optionId,questionId:questionId,surveyId:surveyId},function(data){})
+    }else{
+      $("#specify"+questionId).hide()
+      $("#specify"+questionId).val("")
+   $(".multichoiced"+questionId).prop("checked", false);
+    $(this).prop("checked", true);
+    var choice_linked=$(this).attr('id')
+    $('.linked_choice'+choice_linked).show()
+    var optionId=$(this).attr('id')
+       var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId='{{survey}}';
+      // alert(optionId+questionId+surveyId)
+       $.post('/dashboard/quizes/saveQuestionSingleChoice/',{csrfmiddlewaretoken:csrfmiddlewaretoken,optionId:optionId,questionId:questionId,surveyId:surveyId},function(data){
+                      
+                 })
+                }
+  }else{
+    $("#specify"+questionId).hide()
+      $("#specify"+questionId).val("")
+      var choice_linked=$(this).attr('id')
+    $('.linked_choice'+choice_linked).hide()
+    var optionId=$(this).attr('id')
+    var questionId=$(this).attr('role')
+       var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId='{{survey}}';
+       $.post('/dashboard/quizes/removeUserQuestionChoice/',{csrfmiddlewaretoken:csrfmiddlewaretoken,optionId:optionId,questionId:questionId,surveyId:surveyId},function(data){
+                      
+                 })
+
+  }
+
+  })
+
+  $('.textareaQuestions').focusout(function(){
+  var questionId=$(this).attr('role')  
+  var selectedvalue=$(this).val()
+  var csrfmiddlewaretoken= '{{csrf_token}}';
+  var surveyId='{{survey}}'; 
+  if(selectedvalue){
+  $.post('/dashboard/quizes/SaveUserTextInputQuestions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,selectedvalue:selectedvalue,questionId:questionId,surveyId:surveyId},function(data){})
+  }else{
+    $.post('/dashboard/quizes/RemoveUserTextInputQuestions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,selectedvalue:selectedvalue,questionId:questionId,surveyId:surveyId},function(data){})
+  }
+
+  })
+
+          $('.starrate').click(function() {
+              var theNumber = $(this).attr('id').slice(-1);
+              $(this).siblings('label').each(function() {
+                var sibNumber = $(this).attr('for').slice(-1);
+                if (sibNumber <= theNumber) {
+                  $(this).addClass('on');
+                } else {
+                  $(this).removeClass('on');
+                }
+              });
+            });
+     
+            
+$(".scalerate3").change(function(){
+  var topic=$(this).attr('name')
+  var subtopic=$(this).attr('name')
+  var rangename=$(this).attr('name')
+  var subtopic=$(this).attr('name')
+  var questionid=$(this).attr('role')
+
+})
+
+$(".specify_fields").focusout(function(){
+  var name=$(this).val()
+  var questionId=$(this).attr('role')
+  var choice='Other';
+  var csrfmiddlewaretoken= '{{csrf_token}}';
+  var surveyId='{{survey}}';
+       $.post('/dashboard/quizes/saveUserSpecifiedInput/',{choice:choice,csrfmiddlewaretoken:csrfmiddlewaretoken,name:name,questionId:questionId,surveyId:surveyId},function(data){})
+    
+  
+})
+})
+
+function checkexistingcategories(questioncategory,surveyId){
+   var questioncategory=questioncategory;
+    //alert(questioncategory)
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId=surveyId;
+       $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory+1;
+                        checkexistingcategories(questioncategory,surveyId)
+
+
+
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/Load_final_list_answers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                          $(".surveyspanels").hide()
+                          $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                        })
+
+                   
+                      
+                       }
+                      })
+   
+}
+function checkexistingcategoriesback(questioncategory,surveyId){
+   var questioncategory=questioncategory;
+  
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId=surveyId;
+      
+       $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory-1;
+                        if(questioncategory<1){
+                          $("#surveysquestionsarea").hide();
+                        $(".surveyspanels").show();
+                        }else{
+                          checkexistingcategoriesback(questioncategory,surveyId)
+                        }
+
+
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+
+                    
+                      
+                       }
+                      })
+   
+}
+
+
+
+</script>

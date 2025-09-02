@@ -1,0 +1,258 @@
+
+{% load static %}
+{% load bootstrap5 %}
+
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<style>
+    .form-group{
+        margin-top:10px !important;
+    }
+    .independent{display: none;
+    }
+    .not_shown{
+        display: none;
+    }
+    .xdsoft_timepicker{
+        display: none !important;
+    }
+    .form-label{
+        text-transform: capitalize !important;
+    }
+</style>
+<link rel="stylesheet" href="{% static 'assets/css/jquery.datetimepicker.min.css' %}">
+<script src="{% static 'assets/js/jquery.datetimepicker.full.min.js' %}"></script> 
+<!-- end of date picker-->
+<script>  
+$(document).ready(function(){
+$(function () {
+$("#id_birth_date").datetimepicker({
+format: 'Y-m-d H:m:s',
+maxDate:new Date()
+});
+});
+
+
+})
+</script> 
+<div class="inner" style="min-height: 300px;">
+    <span class="btn btn-danger" style="margin-top:5px;margin-left:5px;" id="back-to-view"><i class="fa fa-arrow-left"></i> Back</span>
+   
+    <div class="row">
+        <div class="col-lg-12 common-headers center-align">
+            <h6 style="text-align: center;"> {{Title}} </h6>
+        </div>
+    </div>
+      <hr />
+     <!--BLOCK SECTION -->
+     <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+            <div class="card-body ">
+     
+            <form action="" method="POST" role="{{PageAction}}" name="{{success_url}}" title="{{not_success_url}}" class="col-md-12" id="NormalForm">
+				
+                <div class="row" style="overflow: auto;">
+                    {% csrf_token %}
+				
+                    {{form.media}}
+                    {% for field in form %}
+                    {% if field.name == 'birth_date' %}
+                    <div class="form-group col-sm-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="id_date_birth">Date Of Birth</label>
+                            <input type="text" placeholder="yyyy/mm/dd" id="id_birth_date" name="birth_date" class="form-control" value="{{user.birth_date|date}}">
+                               </div>
+                               </div>
+
+                               {% elif field.name == 'birth_certificate' %}
+                               <div class="form-group col-sm-4">
+                                <div class="mb-3"><label class="form-label" for="id_birth_certificate">Birth Certificate Number (Under 18 years only)</label>
+                                    <input type="text" name="birth_certificate" value="" maxlength="200" class="form-control" placeholder="Birth Certificate Number" title="" id="id_birth_certificate"></div>
+                              
+                            </div>
+           
+                               
+                    {% elif field.name == 'county' %}
+                    
+                    <div class="form-group col-sm-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="id_county">County</label>
+                            <select type="county" name="county" maxlength="254" class="form-control"  title=""  id="id_county">
+                                {%if user.county %}
+                                <option value="{{user.county.id}}">{{user.county}}</option>
+                                {% else %}
+                                <option value="">----select county--</option>
+                                {% endif %}
+                                {% for item in county %}
+                                {%if user.county %}
+                                {% if item.id == user.county.id %}
+                                {% else %}
+                                <option value="{{item.id}}">{{item}}</option>
+                                {% endif %}
+                                {% else %}
+                                <option value="{{item.id}}">{{item}}</option>
+                                {% endif %}
+                               {% endfor %}
+                            </select>
+                            </div>
+                    </div>
+                  
+                    {% elif field.name == 'constituency' %}
+
+
+                    <div class="form-group col-sm-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="id_constituency">Sub-County</label>
+                            <select type="constituency" name="constituency" maxlength="254" class="form-control"  title=""  id="id_constituency">
+                               {% if user.constituency %}
+                               <option class="counties  county{{user.constituency.county.id}}"  value="{{user.constituency.id}}">{{user.constituency}}</option>
+                               {% else %}
+                                <option value="">----select sub county--</option>
+                                {% endif %}
+                                {% for item in constituency %}
+                                {% if user.constituency %}
+                                {% if user.constituency.id == item.id %}
+                                {% else %}
+                                <option class="counties not_shown county{{item.county.id}}"  value="{{item.id}}">{{item}}</option>
+                                {% endif %}
+                                {% else %}
+                                <option class="counties not_shown county{{item.county.id}}"  value="{{item.id}}">{{item}}</option>
+                                {% endif %}
+                                
+                               {% endfor %}
+                            </select>
+                            </div>
+                    </div>
+                    
+                    {% elif field.name == 'ward' %}
+
+
+                   <div class="form-group col-sm-4" id="location_ward">
+                      
+                    </div> 
+                    {% else %}
+                    <div class="form-group col-sm-4">
+                        {% bootstrap_field field %}
+                        <!-- <hr> -->
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    <div class="row" id="location_details">
+
+
+                    </div>
+                   </div> 
+				
+            <div class="col-sm-12">
+                <button class="btn-success btn "  style="float: right;" id="SubmitQuery" role="{{PageAction}}">SAVE</button>
+            </div>
+            </form>
+        </div>
+        </div>
+        </div>
+
+    </div>
+  
+
+</div>
+<script>
+    $(document).ready(function(){
+        $.get('/get-location-wards/',function(data){
+            $('#location_ward').html(data)
+        })
+        $("#id_county").change(function(){
+       
+       var county=$(this).val()
+    //    alert(county)
+       if (county){
+      $(".counties").hide()
+       $(".allward").hide()
+       $('.county'+county).show()
+       $("#id_constituency").val('')
+       $("#id_ward").val('')
+       }else{
+           $(".counties").hide()
+       $(".allward").hide()
+       }
+
+      })
+      $("#id_constituency").change(function(){
+      
+      var constituency=$(this).val()
+      
+      if (constituency){
+      $(".allward").hide()
+      $('.constituency'+constituency).show()
+      $("#id_ward").val('')
+      }else{
+      $(".allward").hide()
+      }
+
+     })
+        $("#back-to-view").click(function(){
+   
+        $("#modal-staff").modal("hide");
+                                   
+ 
+
+})
+    })
+    // Fetch the input element
+
+    $('#id_birth_date').change(function(){
+    const dateInput = $(this).val();
+
+    // Get the entered value
+    let enteredDate = this.value;
+
+    // Format the date to YYYY-MM-DD
+    let formattedDate = formatDate(enteredDate);
+
+    // Update the input value with the formatted date
+    this.value = formattedDate;
+});
+
+// Function to format the date to YYYY-MM-DD
+function formatDate(date) {
+    // Regular expression to match date in different formats
+    const regex = /(\d{4})-(\d{2})-(\d{2})|(\d{2})\/(\d{2})\/(\d{4})|(\d{2})\.\s*(\d{2})\.\s*(\d{4})/;
+
+    if (regex.test(date)) {
+        // Extract the date components based on the matched regex
+        const parts = date.match(regex);
+
+        // Reorder the date to YYYY-MM-DD format
+        if (parts[1] !== undefined) {
+            // YYYY-MM-DD format is already provided
+            return parts[0];
+        } else if (parts[4] !== undefined) {
+            // MM/DD/YYYY format
+            return `${parts[6]}-${parts[4]}-${parts[5]}`;
+        } else if (parts[7] !== undefined) {
+            // DD. MM. YYYY format
+            return `${parts[9]}-${parts[7]}-${parts[8]}`;
+        }
+    } else {
+        // Return an empty string if the entered date doesn't match any format
+        return '';
+    }
+}
+
+</script>

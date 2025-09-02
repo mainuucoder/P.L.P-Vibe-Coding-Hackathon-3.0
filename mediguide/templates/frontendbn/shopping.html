@@ -1,0 +1,287 @@
+ {% extends "frontend/base.html" %}
+ {% load static %}
+{% load humanize %}
+{% block content %}
+
+<!-- Notification Messages -->
+{% if messages %}
+  {% for message in messages %}
+    <script>
+      notify('{{ message.level_tag }}', "{{ message|escapejs }}");
+    </script>
+  {% endfor %}
+{% endif %}
+
+ <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <span></span> Buildings
+                    <span></span> List
+                </div>
+            </div>
+        </div>
+        <div class="container mb-80 mt-50">
+            <div class="row">
+                <div class="col-lg-8 mb-40">
+                    <h5 class="heading-2 mb-10">My List</h6>
+                    <div class="d-flex justify-content-between">
+                        <h6 class="text-body">There are <span class="text-brand">{{count}}</span> products list</h6>
+                        <h6 class="text-body clear-list" ><a  class="text-muted"><i class="fi-rs-trash mr-5"></i>Clear List</a></h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive shopping-summery">
+                        <table class="table table-wishlist">
+                            <thead>
+                                <tr class="main-heading">
+                                    <!-- <th scope="col">Image</th> -->
+                                    
+                                    <th scope="col" colspan="2">Item</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Room</th>
+                                    <!-- <th scope="col">Subtotal</th> -->
+                                    <th scope="col" class="">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               {% for item in list %}
+                                <tr class="">
+                                    <!-- <td class="image product-thumbnail " style="padding: 2px 0px 0px 5px !important;"><img src="{{ MEDIA }}{{ item.building.image.url }}" height="100px" width="100px" alt="#" /></td> -->
+                                   
+                                    
+                                    <td class="image product-thumbnail " style="padding: 2px;"><img src="{{ MEDIA }}{{ item.building.image.url }}" height="100px" width="100px" alt="#" /></td>
+                                    <td class="product-des product-name">
+                                        <h6 class="mb-5"><a class="product-name mb-10 text-heading" href="shop-product-right.html">{{item.building.name}}</a></h6>
+                                        <div class="product-rate-cover">
+                                            <div class="product-rate d-inline-block">
+                                                <div class="product-rating" style="width:90%">
+                                                </div>
+                                            </div>
+                                            <span class="font-small ml-5 text-muted"> (4.0)</span>
+                                        </div>
+                                    </td>
+                                    <!-- <td class="price" data-title="Price">
+                                        <h4 class="text-body">1 </h4>
+                                    </td> -->
+                                    <!-- <td class="text-center detail-info" data-title="Stock">
+                                        <div class="detail-extralink mr-15">
+                                            <div class="detail-qty border radius">
+                                                <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                                <input type="text" name="quantity" class="qty-val" value="1" min="1">
+                                                <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                            </div>
+                                        </div>
+                                    </td> -->
+                                    <td class="price" data-title="Price">
+                                        <h4 class="text-brand">Kes:{{item.building.price|intcomma}} </h4>
+                                    </td>
+                                     <td class="price" data-title="Price">
+                                        {{item.room.name}} <span class="btn btn-outline-primary details-btn-b" role="{{item.building.id}}" style="background: #fff;border: 1px solid #3bb77e;color:#3bb77e;">Select</span>
+                                    </td>
+                                    <td class="action text-center remove-cart-item" role="{{item.id}}" data-title="Remove"><a href="#" class="text-body"><i class="fi-rs-trash"></i></a></td>
+                                </tr>
+                                {% endfor %}
+                                <!-- <tr>
+                                    <td class="custome-checkbox pl-30">
+                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox2" value="">
+                                        <label class="form-check-label" for="exampleCheckbox2"></label>
+                                    </td>
+                                    <td class="image product-thumbnail"><img src="assets/imgs/shop/product-2-1.jpg" alt="#"></td>
+                                    <td class="product-des product-name">
+                                        <h6 class="mb-5"><a class="product-name mb-10 text-heading" href="shop-product-right.html">Blue Diamond Almonds Lightly Salted</a></h6>
+                                        <div class="product-rate-cover">
+                                            <div class="product-rate d-inline-block">
+                                                <div class="product-rating" style="width:90%">
+                                                </div>
+                                            </div>
+                                            <span class="font-small ml-5 text-muted"> (4.0)</span>
+                                        </div>
+                                    </td>
+                                    <td class="price" data-title="Price">
+                                        <h4 class="text-body">$3.2 </h4>
+                                    </td>
+                                    <td class="text-center detail-info" data-title="Stock">
+                                        <div class="detail-extralink mr-15">
+                                            <div class="detail-qty border radius">
+                                                <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                                <input type="text" name="quantity" class="qty-val" value="1" min="1">
+                                                <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="price" data-title="Price">
+                                        <h4 class="text-brand">$3.2 </h4>
+                                    </td>
+                                    <td class="action text-center" data-title="Remove"><a href="#" class="text-body"><i class="fi-rs-trash"></i></a></td>
+                                </tr>
+                                <tr>
+                                    <td class="custome-checkbox pl-30">
+                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox3" value="">
+                                        <label class="form-check-label" for="exampleCheckbox3"></label>
+                                    </td>
+                                    <td class="image product-thumbnail"><img src="assets/imgs/shop/product-3-1.jpg" alt="#"></td>
+                                    <td class="product-des product-name">
+                                        <h6 class="mb-5"><a class="product-name mb-10 text-heading" href="shop-product-right.html">Fresh Organic Mustard Leaves Bell Pepper</a></h6>
+                                        <div class="product-rate-cover">
+                                            <div class="product-rate d-inline-block">
+                                                <div class="product-rating" style="width:90%">
+                                                </div>
+                                            </div>
+                                            <span class="font-small ml-5 text-muted"> (4.0)</span>
+                                        </div>
+                                    </td>
+                                    <td class="price" data-title="Price">
+                                        <h4 class="text-body">$2.43 </h4>
+                                    </td>
+                                    <td class="text-center detail-info" data-title="Stock">
+                                        <div class="detail-extralink mr-15">
+                                            <div class="detail-qty border radius">
+                                                <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                                <input type="text" name="quantity" class="qty-val" value="1" min="1">
+                                                <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="price" data-title="Price">
+                                        <h4 class="text-brand">$2.43 </h4>
+                                    </td>
+                                    <td class="action text-center" data-title="Remove"><a href="#" class="text-body"><i class="fi-rs-trash"></i></a></td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                   
+
+                    <div class="row mt-50">
+
+                            <div class="col-lg-5">
+                            <div class="p-40">
+                                <h4 class="mb-10">Apply Coupon</h4>
+                                <p class="mb-30"><span class="font-lg text-muted">Using A Promo Code?</p>
+                                <form action="#">
+                                    <div class="d-flex justify-content-between">
+                                        <input class="font-medium mr-15 coupon" name="Coupon" placeholder="Enter Your Coupon">
+                                        <button class="btn"><i class="fi-rs-label mr-10"></i>Apply</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-7">
+                             <div class="divider-2 mb-30"></div>
+                     
+
+
+                            <div class="border p-md-4 cart-totals ml-30">
+                        <div class="table-responsive">
+                            <table class="table no-border">
+                                <tbody>
+                                    <!-- <tr>
+                                        <td class="cart_total_label">
+                                            <h6 class="text-muted">Subtotal</h6>
+                                        </td>
+                                        <td class="cart_total_amount">
+                                            <h4 class="text-brand text-end">Kes:{{total|intcomma}}</h4>
+                                        </td>
+                                    </tr> -->
+                                    <!-- <tr>
+                                        <td scope="col" colspan="2">
+                                            <div class="divider-2 mt-10 mb-10"></div>
+                                        </td>
+                                    </tr> -->
+                                    <!-- <tr>
+                                        <td class="cart_total_label">
+                                            <h6 class="text-muted">Shipping</h6>
+                                        </td>
+                                        <td class="cart_total_amount">
+                                            <h5 class="text-heading text-end">Free</h4</td> </tr> <tr>
+                                        <td class="cart_total_label">
+                                            <h6 class="text-muted">Estimate for</h6>
+                                        </td>
+                                        <td class="cart_total_amount">
+                                            <h5 class="text-heading text-end">United Kingdom</h4</td> </tr> <tr>
+                                        <td scope="col" colspan="2">
+                                            <div class="divider-2 mt-10 mb-10"></div>
+                                        </td>
+                                    </tr> -->
+                                    <tr>
+                                        <td class="cart_total_label">
+                                            <h6 class="text-muted">Total</h6>
+                                        </td>
+                                        <td class="cart_total_amount">
+                                            <h4 class="text-brand text-end">KES: {{total|intcomma}}</h4>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="{% url 'complete' %}" class="btn mb-20 w-100">(NB Payment is on site) Proceed to reserve<i class="fi-rs-sign-out ml-15"></i></a>
+                    </div>
+                        </div>
+
+
+                    
+                    </div>
+                </div>
+                 
+            </div>
+        </div>
+    </main>
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+
+    <script>
+        // clear-list
+ $(document).ready(function(){
+                var loader =$('#loader').html()
+            var csrfmiddlewaretoken= '{{csrf_token}}';
+            // alert(csrfmiddlewaretoken)
+            // var level='{{level}}'
+            var level_name='GET'
+            var urlb='create-constants'
+          $(".details-btn-b").click(function(){
+                
+              var instance=$(this).attr('role')
+        
+                 $.post('/details/',{instance:instance,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                //    window.location="/products" 
+                $("#modal-staff").modal("show");                         
+              $(".modal-content").html(data)
+                            
+                })
+        
+            })
+            $(".clear-list").click(function(){
+                
+            //   var instance=$(this).attr('role')
+        
+                 $.post('/clear-list/',{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                   window.location="/selected-items" 
+            //     $("#modal-staff").modal("show");                         
+            //   $(".modal-content").html(data)
+                            
+                })
+        
+            })
+
+         $(".remove-cart-item").click(function(){
+                
+              var instance=$(this).attr('role')
+        
+                 $.post('/remove-cart/',{csrfmiddlewaretoken:csrfmiddlewaretoken,instance:instance},function(data){
+                   window.location="/selected-items" 
+            //     $("#modal-staff").modal("show");                         
+            //   $(".modal-content").html(data)
+                            
+                })
+        
+            })
+            
+        })
+    </script>
+    
+{% endblock %}

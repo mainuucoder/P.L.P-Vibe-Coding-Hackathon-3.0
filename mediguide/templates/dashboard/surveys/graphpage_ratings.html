@@ -1,0 +1,77 @@
+
+<div class="col-sm-12" style="margin-top:20px">
+    <div class="col-xs-12 main_canvases">
+      <!-- <div id="canvas_headone" >{{questionone.name|safe}}</div> -->
+      <figure class="highcharts-figure">
+        <div id="indicator_divone"></div>
+       
+      
+        <table id="datatable_indicatortwo" style="display:none" >
+          <thead>
+           
+            <tr>
+                <th></th>
+            {% for data in responcecreater %}
+              <th></th>
+              {% endfor %}
+            </tr>
+           
+          </thead>
+          <tbody>
+            {% for data in responcecreater %}
+            <tr>
+                {% for item in choicelabels %}
+                {% if forloop.parentloop.counter == forloop.counter %}
+                <td>{{item}}</td>
+                
+                {% endif %}
+                {% endfor %}
+            {% for key,value in  data.items %}
+              <!-- <td>{{key}}</td> -->
+              <td>{{value}}</td>
+            
+            {% endfor %}
+           </tr>
+            {% endfor %}
+             
+          </tbody>
+        </table>
+      </figure>
+    </div>
+</div>
+
+<script>
+
+Highcharts.chart('indicator_divone', {
+  data: {
+    table: 'datatable_indicatortwo'
+  },
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'table'
+  },
+  subtitle: {
+    text:
+      'Source: GTS-'+'table'
+  },
+  xAxis: {
+    type: 'category'
+  },
+  yAxis: {
+    allowDecimals: false,
+    title: {
+      text: 'Respondents'
+    }
+  },
+  tooltip: {
+    formatter: function () {
+      return '<b>' + this.series.name + '</b><br/>' +
+        this.point.y + ' ' + this.point.name.toLowerCase();
+    }
+  }
+});
+
+
+</script>

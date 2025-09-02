@@ -1,0 +1,23 @@
+<!-- templates/join_meeting.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Join Meeting</title>
+</head>
+<body>
+    <h1>Join a Meeting</h1>
+    <input type="text" id="meetingID" placeholder="Enter Meeting ID">
+    <button id="joinButton">Join</button>
+    <script>
+        document.getElementById('joinButton').onclick = function() {
+            const meetingID = document.getElementById('meetingID').value;
+            if (meetingID) {
+                window.location.href = '/meetings/' + meetingID + '/';
+            } else {
+                alert('Please enter a meeting ID.');
+            }
+        };
+    </script>
+</body>
+</html>

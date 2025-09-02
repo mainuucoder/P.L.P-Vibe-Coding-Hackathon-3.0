@@ -1,0 +1,59 @@
+{% load static %}
+<!-- <script src="{% static 'main_assets/js/vendor/jquery-3.6.0.min.js' %}"></script> -->
+{% load humanize %}
+
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<ul>
+                                           
+    {% for item in cart %}
+    <li>
+        <div class="shopping-cart-img">
+            <a href="shop-product-right.html"><img alt="{{item.package.name}}" height="30" width="30" src="{{MEDIA}}{{item.package.category.image.url}}" /></a>
+        </div>
+        <div class="shopping-cart-title">
+            <h6><a href="">{{item.package.name}}</a> <a  class="shopping-cart-delete" style="color: red;" role="{{item.package.id}}" href="#"><i class="fi-rs-cross-small"></i></a></h6>
+            <h6><span>{{item.count}} × </span>{{item.package.price_yearly}} 
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               {% if item.count == '1' %}
+                <span class="btn btn-adjust " disabled style="background: rgb(216, 201, 201);color: #fff;">-</span>
+                {% else %}
+              
+                <span class=" btn adjust-items btn-adjust " name="reduce" role="{{item.id}}" style="background: red;color: #fff;">-</span>
+                {% endif %}
+                <span  class="btn  adjust-items btn-adjust btn-success" name="add" role="{{item.id}}">+</span>
+                </h6>
+        </div>
+        <!-- <div class="shopping-cart-delete" role="{{item.package.id}}">
+            <a href="#"><i class="fi-rs-cross-small"></i></a>
+        </div> -->
+    </li>
+    <hr>
+    {% endfor %}
+    
+</ul>
+{% if items > 0 %}
+<div class="shopping-cart-footer">
+    <div class="shopping-cart-total">
+        <h4>Total <span>Ksh. {{total_price}}</span></h4>
+    </div>
+    <div class="shopping-cart-button">
+        <a href="" class="outline">View cart</a>
+        <a href="{% url 'check-out-cart' %}">Checkout</a>
+    </div>
+</div>
+{% endif %}

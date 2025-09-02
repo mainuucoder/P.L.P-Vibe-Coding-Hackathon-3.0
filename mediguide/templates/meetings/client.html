@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Client</title>
+    <!-- Include FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-v7ZkvZGW2qKU4xhWROrDZo71LKt8Mm3/JpSzKNhcf4GplpwUJQdHg/RYX+Kb0aGb3AQ4JxSQ08PBoJQdoRM3xw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Meeting Client</h1>
+        <div>
+            <video id="localVideo" autoplay playsinline></video>
+            <div id="remoteVideos"></div>
+        </div>
+        <div>
+            <button id="startButton">Start</button>
+            <button id="joinButton">Join</button>
+            <button id="hangupButton">Hangup</button>
+            <button id="screenShareButton">Share Screen</button>
+            <button id="recordButton">Record</button>
+            <button id="stopRecordButton">Stop Recording</button>
+            <button id="muteMicButton">Mute Mic</button>
+            <button id="muteVideoButton">Mute Video</button>
+        </div>
+        <video id="screensharingvideoplayer" autoplay playsinline></video>
+    </div>
+
+    <script>
+        // Add your JavaScript code here
+        const localVideo = document.getElementById('localVideo');
+        const remoteVideos = document.getElementById('remoteVideos');
+        const startButton = document.getElementById('startButton');
+        const joinButton = document.getElementById('joinButton');
+        const hangupButton = document.getElementById('hangupButton');
+        const screenShareButton = document.getElementById('screenShareButton');
+        const recordButton = document.getElementById('recordButton');
+        const stopRecordButton = document.getElementById('stopRecordButton');
+        const mainscreen = document.getElementById('screensharingvideoplayer');
+        const muteMicButton = document.getElementById('muteMicButton');
+        const muteVideoButton = document.getElementById('muteVideoButton');
+
+        let localStream;
+        let screenStream;
+        let peerConnections = {};
+        let mediaRecorder;
+        let recordedChunks = {};
+
+        const servers = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'turn:your.turn.server', username: 'user', credential: 'pass' }
+            ]
+        };
+
+        // Initialize roomName correctly
+        const roomName = 'meetings'; // Replace 'yourRoomName' with the actual room name
+
+        startButton.onclick = async () => {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                localVideo.srcObject = localStream;
+                mainscreen.srcObject = localStream;
+            } catch (error) {
+                console.error('Error accessing media devices.', error);
+            }
+        };
+
+        joinButton.onclick = () => {
+            callRoom(roomName);
+        };
+
+        async function callRoom(roomName) {
+            const ws = new WebSocket('wss://' + window.location.host + '/ws/meetings/' + roomName + '/');
+
+            ws.onmessage = (message) => {
+                const data = JSON.parse(message.data);
+                handleSignalingData(data);
+            };
+
+            ws.onopen = () => {
+                ws.send(JSON.stringify({ type: 'join' }));
+            };
+
+            function handleSignalingData(data) {
+                const peerId = data.sender;
+                if (data.type === 'offer') {
+                    createPeerConnection(peerId, ws);
+                    peerConnections[peerId].setRemoteDescription(new RTCSessionDescription(data.offer));
+                    peerConnections[peerId].createAnswer()
+                        .then(answer => peerConnections[peerId].setLocalDescription(answer))
+                        .then(() => {
+                            ws.send(JSON.stringify({ type: 'answer', answer: peerConnections[peerId].localDescription, sender: peerId }));
+                        });
+                } else if (data.type === 'answer') {
+                    peerConnections[peerId].setRemoteDescription(new RTCSessionDescription(data.answer));
+                } else if (data.type === 'ice') {
+                    peerConnections[peerId].addIceCandidate(new RTCIceCandidate(data.ice));
+                } else if (data.type === 'join' && data.sender !== ws.channel) {
+                    createPeerConnection(peerId, ws);
+                    peerConnections[peerId].createOffer()
+                        .then(offer => peerConnections[peerId].setLocalDescription(offer))
+                        .then(() => {
+                            ws.send(JSON.stringify({ type: 'offer', offer: peerConnections[peerId].localDescription, sender: peerId }));
+                        });
+                }
+            }
+
+            function createPeerConnection(peerId, ws) {
+                const peerConnection = new RTCPeerConnection(servers);
+                peerConnections[peerId] = peerConnection;
+
+                localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+                if (screenStream) {
+                    screenStream.getTracks().forEach(track => peerConnection.addTrack(track, screenStream));
+                }
+
+                peerConnection.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        ws.send(JSON.stringify({ type: 'ice', ice: event.candidate, sender: peerId }));
+                    }
+                };
+
+                peerConnection.ontrack = (event) => {
+                    let remoteVideo = document.getElementById(peerId);
+                    if (!remoteVideo) {
+                        remoteVideo = document.createElement('video');
+                        remoteVideo.id = peerId;
+                        remoteVideo.autoplay = true;
+                        remoteVideos.appendChild(remoteVideo);
+                    }
+                    remoteVideo.srcObject = event.streams[0];
+                };
+
+                peerConnection.oniceconnectionstatechange = () => {
+                    if (peerConnection.iceConnectionState === 'disconnected') {
+                        let remoteVideo = document.getElementById(peerId);
+                        if (remoteVideo) {
+                            remoteVideo.remove();
+                        }
+                        delete peerConnections[peerId];
+                    }
+                };
+            }
+        }
+
+        hangupButton.onclick = () => {
+            for (const peerId in peerConnections) {
+                peerConnections[peerId].close();
+                let remoteVideo = document.getElementById(peerId);
+                if (remoteVideo) {
+                    remoteVideo.remove();
+                }
+            }
+            peerConnections = {};
+        };
+
+        screenShareButton.onclick = async () => {
+            screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+            const screenShareVideo = document.createElement('video');
+            screenShareVideo.id = 'screenShareVideo';
+            screenShareVideo.autoplay = true;
+            screenShareVideo.srcObject = screenStream;
+            mainscreen.autoplay = true;
+            mainscreen.srcObject = screenStream;
+            screenStream.getTracks().forEach(track => {
+                for (const peerId in peerConnections) {
+                    peerConnections[peerId].addTrack(track, screenStream);
+                }
+            });
+        };
+
+        recordButton.onclick = () => {
+            let allStreams = new MediaStream();
+            for (const track of localStream.getTracks()) {
+                allStreams.addTrack(track);
+            }
+            for (const peerId in peerConnections) {
+                for (const track of peerConnections[peerId].getReceivers().map(receiver => receiver.track)) {
+                    allStreams.addTrack(track);
+                }
+            }
+            mediaRecorder = new MediaRecorder(allStreams);
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+            mediaRecorder.start();
+        };
+
+        stopRecordButton.onclick = () => {
+            mediaRecorder.stop();
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'recording.webm';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        };
+
+        // Mute/Unmute Microphone
+        muteMicButton.onclick = () => {
+            const audioTracks = localStream.getAudioTracks();
+            audioTracks.forEach(track => track.enabled = !track.enabled);
+            muteMicButton.textContent = audioTracks[0].enabled ? 'Mute Mic' : 'Unmute Mic';
+        };
+
+        // Mute/Unmute Video
+        muteVideoButton.onclick = () => {
+            const videoTracks = localStream.getVideoTracks();
+            videoTracks.forEach(track => track.enabled = !track.enabled);
+            muteVideoButton.textContent = videoTracks[0].enabled ? 'Mute Video' : 'Unmute Video';
+        };
+    </script>
+</body>
+</html>

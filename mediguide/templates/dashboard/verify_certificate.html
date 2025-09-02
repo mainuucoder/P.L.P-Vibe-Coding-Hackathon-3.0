@@ -1,0 +1,173 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+
+    
+    
+    
+    
+.dropbtn {
+      color: #000;
+      padding: 1px;
+      font-size: 1px;
+      border: none;
+      cursor: pointer;
+    }
+    
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 200px;
+      left:-144px;
+      height: 300px !important;
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 9;
+    }
+    
+    /* Links inside the dropdown */
+    .dropdown-content a {
+      color: black;
+      /* padding: 12px 16px; */
+      text-decoration: none;
+      display: block;
+    }
+    .btn-app-dropdown:hover{
+      background-color: #ccc;
+    }
+    .btn-app-dropdown{
+      Border-bottom:1px solid #ccc
+    }
+    /* Change color of dropdown links on hover */
+    /* .dropdown-content a:hover {background-color: #f1f1f1} */
+    
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    
+    /* Change the background color of the dropdown button when the dropdown content is shown */
+    .dropdown:hover .dropbtn {
+      
+    }
+    .actionbtns{
+      text-align: left;
+    }
+    td{
+      font-size: 12px !important;
+    }
+    th{
+      font-size: 13px !important;
+    }
+</style>
+<div class="row">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+<div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12" style="margin-bottom:3px ;">
+        
+          <div class="row">
+          <div class="col-sm-2"><a href="{% url 'dashboard' %}"><span style="" class="btn-danger btn" role="Back">Back</span></a>
+               </div>
+         
+      <div class="col-sm-12" style="text-transform: uppercase;">
+        
+        {% if registration %}
+       
+        PAYMENT RECEIPT  FOR {{registration.user.first_name}} {{registration.user.last_name}}
+        
+        {% else %}
+        SORRY! THIS DOCUMENT DOES NOT EXIST IN OUR SYSTEM
+    {% endif %}
+    </div>
+    </div>
+      </div>
+      </div>
+      <div class="row">
+        <div class="col-12 table-responsive" style="margin-bottom:3px ;">
+            {% if registration %}  
+          <table id="file-export" class="table  text-nowrap w-100">
+            <thead style="font-size: 11px;background: #07aa91;color:#fff">
+              <tr>
+                <th>#</th>
+                <th>NAME</th>
+                <th>CATEGORY</th>
+                {% if registration.category == basic_digital %}
+
+              {% else %}
+                <th>TRAINING</th>
+               {% endif %}
+                <th>RECEIPT NUMBER</th>
+                <th>INVOICE NUMBER</th>
+                <th>INVOICED AMOUNT</th>
+                <th>BILL REFFERENCE</th>
+                <th>AMOUNT PAID</th>
+                <th>MPESA REFFERENCE</th>
+               
+             
+              </tr>
+            </thead>
+            <tr style="padding-top:15px;padding-bottom:15px;">
+              <td style="padding-top:15px;padding-bottom:15px;">{{forloop.counter}}</td>
+              <td style="padding-top:15px;padding-bottom:15px;text-transform: capitalize;">
+               
+                {{registration.user.first_name}} {{registration.user.last_name}}
+             
+              
+              </td>
+
+              <td style="padding-top:15px;padding-bottom:15px;">{{registration.receipt_no}} </td>
+
+              <td style="padding-top:15px;padding-bottom:15px;">{{registration.category}} </td>
+              {% if registration.category == basic_digital %}
+
+              {% else %}
+              <td style="padding-top:15px;padding-bottom:15px;"> {% if registration.category == basic_digital %} {{registration.category}} {% else %} {{registration.category}} {% endif %}</td>
+              {% endif %}
+              <td style="padding-top:15px;padding-bottom:15px;">
+               
+                {{registration.invoice_number}} 
+               
+              </td>
+              <td style="padding-top:15px;padding-bottom:15px;">
+            
+             KSH. {{registration.invoice_amount}}
+ 
+              </td>
+              <td style="padding-top:15px;padding-bottom:15px;">{{registration.bill_reference}}</td>
+              <td style="padding-top:15px;padding-bottom:15px;">{{registration.amount}}</td>
+              <td style="padding-top:15px;padding-bottom:15px;">{{registration.payment_reference}}</td>
+              
+            </tr>
+           
+          </table>
+          {% endif %}
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+
+  {% endblock %}
+

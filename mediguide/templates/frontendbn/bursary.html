@@ -1,0 +1,332 @@
+
+{% extends "frontend/base.html" %}
+{% load static %}
+
+{% load humanize %}
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<style>
+  .surveyspanels{
+    min-height: 80px;
+    background: #fff;
+    margin-top: 5px;
+  }
+    .field_row{
+        min-height: 40px;
+        margin-bottom: 5px;
+        margin-top: 5px;
+    }
+    .required{
+    color: red;
+    }
+    .bordered{
+    margin-top:5px;margin-bottom:5px;border:1px solid #ccc;border-radius:5px
+   }
+   .header_data{
+        font-weight: bold;
+        font-size: 13px;
+    }
+    #application_errors{
+        text-align: center ;
+        color: red;
+    }
+    .manu_headers {
+  width: 100%;
+  height: 40px;
+  position: relative;
+  background: #6C6E71;
+  text-align: center;
+  padding-top: 10px;
+  padding-left: 20px;
+  color:#fff;
+}
+.manu_headers:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 20px solid white;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+}
+.manu_headers:before {
+  content: "";
+  position: absolute;
+  right: -20px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 20px solid #6C6E71;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+}
+ .active_page{
+    background:#00A652;
+    color:#fff;
+    font-size: 13px;
+    font-weight: bold;
+ }  
+ .active_page:before{
+    border-left: 20px solid #00A652;
+ }  
+ .edit_btns{
+  color: green;
+  font-size:20px;
+  cursor: pointer;
+ }
+ .edit_btns:hover{
+  font-weight: bold;
+  font-size:22px;
+  cursor: pointer;
+ }
+ .modal{
+  position: relative;
+  
+  transition: opacity .2s ease;
+ }
+ .modal.visible {
+  opacity: 1;
+}
+thead{
+    background:#00A652;
+    color:#fff;
+}
+tr{
+    border-bottom: 1px solid #ccc;
+    margin-top: 3px;
+}
+ 
+</style>
+
+<div class="row card" style="padding-top: 10px;">
+<div style="text-align: center;">
+<h3 style="color: #00A652;">Open Bursaries</h3>
+    </div>
+</div>
+ <div class="rs-faq inner   md-pb-80" style="margin-top: 10px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 pr-55 md-pr-15 md-mb-30">
+   {% if bursaries %}
+ 
+  <div id="accordion" class="accordion">
+    {% for bursary in bursaries %}
+    
+      <div class="card">
+          <div class="card-header" >
+              <a class="collapsed card-link" data-bs-toggle="collapse" data-bs-target=".collapseOne{{bursary.id}}" href="#" aria-expanded="false" style="padding-bottom:0px">{{bursary.Title|safe}}</a>
+             
+            </div>
+          <div id="collapseOne{{bursary.id}}" class="collapseOne{{bursary.id}} collapse" data-bs-parent="#accordion">
+              <div class="card-body">
+                {{bursary.Brief_Description|safe}}
+                
+                <a href="{% url 'account_check_bursary' bursary.id %}" style="float: right;" data-toggle="collapse" data-target=".forum-content{{bursary.id}}" class="text-body read_more" role="{{bursary.id}}" style="color: #000 !important;font-weight:bold;">
+                  <span class="btn btn-success" >Apply now</span><b></b></a>
+    
+       
+              </div>
+          </div>
+         
+           <span class="" style="margin-left:10px ;color:#000">
+                  <span style="color:#00A652">
+                  
+                 
+                  {% if bursary.institution.logo %}
+                  <img src="{{MEDIA}}{{bursary.institution.logo.url}}" height="40px" width="40px" style="height:30px;width:30px;border-radius: 10%;">
+                  {% endif %}
+                 
+    
+                    <i style="font-size:13px !important">
+              {{bursary.institution.name}}
+              </i>
+                </span>
+                <span style="float: right;margin-right: 10px;font-size:13px !important;margin-top: 2px;margin-bottom: 10px;"  class=" text-secondary font-weight-bold"> Deadline: <i style="color: #00A652;">{{bursary.End_Date|date}}</i></span>
+            
+              </span> 
+             
+     
+    </span>
+      
+     
+      </div>
+    
+    {% endfor %}
+    </div>
+    {% else %} 
+
+
+  <div class="alert alert-danger tex-center" role="alert" style="text-align: center;margin:100px">
+    There are currently  no open bursaries!!!!!   {% if not user.is_authenticated %} <a href="">Login here to check open bursaries.</a> {% endif %}
+  </div>
+  {% endif %}
+  
+  
+  
+  
+  
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<script>
+    $(document).ready(function(){
+      
+        var questioncategory=parseInt('{{questioncategory.id}}')
+        
+        var csrfmiddlewaretoken= '{{csrf_token}}';
+         $(".btnviewresponces").click(function(){
+        
+          var loader= $('#loader').html()
+          
+          $('#loadingadge').html(loader)
+         var surveyId=$(this).attr('role');
+         
+         $.post('/dashboard/quizes/view_user_submissions/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+          $(".surveyspanels").hide()
+            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+surveyId).show()
+        
+          
+        $('.surveybackBtn').show()           
+         })
+        })
+     
+        $(".read_more").click(function(){
+         
+           var loader= $('#loader').html()
+          
+           $('#loadingadge').html(loader)
+          var survey=$(this).attr('role');
+          //alert(survey)
+          var surveyId=survey
+          
+         $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory+1;
+                        checkexistingcategories(questioncategory,surveyId)
+
+
+
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/Load_final_list_answers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                          $(".surveyspanels").hide()
+                          $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                        })
+
+                      
+                       }
+                      })
+
+
+
+
+                    })
+
+
+
+
+
+
+
+  
+      });
+
+
+      function checkexistingcategories(questioncategory,surveyId){
+   var questioncategory=questioncategory;
+    
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+       var surveyId=surveyId;
+       //alert(surveyId)
+       $.post('/dashboard/quizes/checkSurveycategoryquestion/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                        
+
+                        if($.trim(data)=='loadquestions'){
+                          $.post('/dashboard/quizes/loadSurveyQuestionsToUsers/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:surveyId,questioncategory:questioncategory},function(data){
+                            $(".surveyspanels").hide()
+                            $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                          })
+                       
+  
+  
+                        }else if($.trim(data)=='missing'){
+                        questioncategory=questioncategory+1;
+                        checkexistingcategories(questioncategory,surveyId)
+
+
+
+
+                       } else if($.trim(data)=='success'){
+                        $.post('/dashboard/quizes/Load_final_list_answers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                          $(".surveyspanels").hide()
+                          $('#scrollUp').click()
+            $("#surveysquestionsarea").html(data).show();
+            $("#surveyspanel"+survey).show()
+        
+          
+        $('.surveybackBtn').show()
+                        })
+
+                         //$.post('/dashboard/quizes/PublishAnswers/',{questioncategory:questioncategory,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+                         
+                         
+                          //$(".main-content").html(data)
+
+
+
+                     //})
+                      
+                       }
+                      })
+   
+}
+      </script>
+{% endblock %}

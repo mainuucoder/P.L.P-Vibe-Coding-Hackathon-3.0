@@ -1,0 +1,620 @@
+
+{% load static %}
+{% load humanize %}
+
+<style>
+    .tab-pane{
+        text-align: justify;
+    }
+.slider { position: relative; width: 100%; margin: 5px;overflow: hidden; }
+/* .slides{ */
+	/* min-width: 100%;
+	min-height: 100%; */
+
+/* } */
+.slides .slide-item {
+    display: none;
+    position: relative;
+}
+
+.slides .slide-item.active {
+    display: block;
+    animation: fadeIn 1s;
+}
+
+.slides .caption {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+    /* .slides img { width: 100%; display: none; }
+    .slides img.active { display: block; animation: fadeIn 1s; } */
+    .thumbnails { display: flex; justify-content: center; margin-top: 10px; }
+    .thumbnails img { width: 100px; margin: 0 5px; cursor: pointer; opacity: 0.6; }
+    .thumbnails img.active-thumb { opacity: 1; border: 2px solid #333; }
+    .nav { position: absolute; top: 45%; width: 100%; display: flex; justify-content: space-between; }
+    .nav span { cursor: pointer; font-size: 2em; color: #333; background: rgba(255,255,255,0.6); padding: 0 10px; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="row">
+<div class="inner" style="padding: 10px;">
+    <span class="btn btn-danger back-to-view" style="margin-top:5px;margin-left:5px; background: #f25252;" id="back-to-view"><i class="fa fa-arrow-left"></i> Back</span>
+          
+<div class="row" style="text-align: center;">
+    <div class="col-lg-12">
+        <h4> {{Title}} </h4>
+    </div>
+</div>
+</div>
+</div>
+  <hr />
+		<div class="row" style="padding: 10px;">
+
+				
+
+				 <div class="row">
+					<div class="row g-0">
+					  <div class="col-md-4 border-end" style="padding: 8px;">
+					
+						{% if list %}
+						<div class="slider" >
+							<div class="slides" style="height:315px">
+								{% for item in list %}
+
+							  <div class="slide-item {% if forloop.first %}active{% endif %}">
+								{% if limited == 'limited-view' %}
+							 {% if forloop.counter > 2 %}
+                               	<img src="{{ MEDIA }}{{ item.image.url }}" style=" filter: blur(15px);" height="300px" style="border-radius: 5px;" alt="{{ item.name }}">
+					
+							 {% else %}
+                              	<img src="{{ MEDIA }}{{ item.image.url }}" height="300px" style="border-radius: 5px;" alt="{{ item.name }}">
+						
+							{% endif %}
+							{% else %}
+							 {% if forloop.counter > 2 %}
+							<img src="{{ MEDIA }}{{ item.image.url }}" style=" filter: blur(15px);" height="300px" style="border-radius: 5px;" alt="{{ item.name }}">
+							{% else %}
+                              	<img src="{{ MEDIA }}{{ item.image.url }}" height="300px" style="border-radius: 5px;" alt="{{ item.name }}">
+							 {% endif %}
+							 {% endif %}
+						
+							<div class="caption">{{ item.name }} </div>
+						</div>
+						{% endfor %}
+							</div>
+
+							<div class="nav">
+								<span class="prev">&#10094;</span>
+								<span class="next">&#10095;</span>
+							</div>
+
+							<div class="thumbnails">
+							 {% for item in list %}
+							 {% if limited == 'limited-view' %}
+							 {% if forloop.counter > 2 %}
+                               <img src="{{ MEDIA }}{{ item.image.url }}" style=" filter: blur(5px);" class="{% if forloop.first %}active-thumb{% endif %}" data-index="{{ forloop.counter0 }}" alt="{{item.name}}">
+                               {% else %}
+                                <img src="{{ MEDIA }}{{ item.image.url }}"  class="{% if forloop.first %}active-thumb{% endif %}" data-index="{{ forloop.counter0 }}" alt="{{item.name}}">
+                               {% endif %}
+                               {% else %}
+                               <img src="{{ MEDIA }}{{ item.image.url }}" style=" filter: blur(5px);"  class="{% if forloop.first %}active-thumb{% endif %}" data-index="{{ forloop.counter0 }}" alt="{{item.name}}">
+                               {% endif %}
+                        {% endfor %}
+							</div>
+							</div>
+
+              
+                  
+						{% else %}
+						<!-- <img src="{{MEDIA}}{{instance.image.url}}" height="350" width="350" class="img-fluid" alt="..." style="margin-left: 2x;border: 5px;"> -->
+						<div class="slider" >
+							<div class="slides">
+							
+						<div class="slide-item active">
+							<img src="{{ MEDIA }}{{instance.image.url}}" height="300" width="415" style="border-radius: 5px;" alt="{{ instance.name }}">
+							<div class="caption">{{ instance.name }}</div>
+						</div>
+						<div class="slide-item ">
+							<img src="{{ MEDIA }}{{instance.image.url}}" height="300" width="415" style="border-radius: 5px;" alt="{{ instance.name }}">
+							<div class="caption">{{ instance.name }}</div>
+						</div>
+							</div>
+
+							<div class="nav">
+								<span class="prev">&#10094;</span>
+								<span class="next">&#10095;</span>
+							</div>
+
+							<div class="thumbnails">
+                               <img src="{{ MEDIA }}{{instance.image.url }}" width="100px" height="74.9px" class="active-thumb" data-index="0" alt="{{instance.name}}">
+                             <img src="{{ MEDIA }}{{instance.image.url }}" width="100px" height="74.9px" class="" data-index="1" alt="{{instance.name}}">
+                   
+							</div>
+							</div>
+						
+						
+						{% endif %}
+
+					  </div>
+					  <div class="col-md-8">
+						<div class="card-body">
+						  <h4 style="font-size: 12px;" class="card-title"><span style="float: right;">
+                            <!-- <a href="https://wa.me/254759606091?text=Hello%2C%20I%20have%20a%20question%20about%20your%20services" style="background-color:#25D366;color:white;padding:10px 15px;border-radius:5px;text-decoration:none;">
+                            <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png" style="vertical-align:middle; margin-right:8px;">
+                            Message us on WhatsApp
+                            </a> -->
+                          </span></h4>
+						  <div class="d-flex gap-3 py-3">
+							<div class="cursor-pointer">
+								<i class='bx bxs-star text-warning'></i>
+								<i class='bx bxs-star text-warning'></i>
+								<i class='bx bxs-star text-warning'></i>
+								<i class='bx bxs-star text-warning'></i>
+								<i class='bx bxs-star text-secondary'></i>
+							  </div>	
+							  <div>{{instance.views}} views</div>
+							 
+							   <div class="text-info"><i class='bx bxs-cart-alt align-middle'></i> {{instance.reviews}} Reviews</div>
+					
+							  <div class="text-success"><i class='bx bxs-cart-alt align-middle'></i> {{instance.bookings}} Bookings</div>
+						  
+                          
+                            </div>
+						  <div class="mb-3 row"> 
+                            <div class="col-sm-4">
+							<span class="price h4">KSH:{{instance.price|intcomma}}</span> 
+							<span class="text-muted">/Monthly</span> 
+                        </div>
+                      
+                        <hr>
+                      
+						</div>
+
+
+                        
+                        {% if rooms %}
+                        <div class="row" style="max-height: 300px;overflow: auto;padding-top: 20px;">
+						<h6 style="margin-top: -10px;">Available Rooms {{total_rooms}}</h6>
+                        <!-- {% for item in rooms %} -->
+                           <!--  <div class="col-sm-3" style="padding: 5px;">
+                                <div style="border:1px solid #ccc;padding: 5px;">
+
+                                
+						   <span title="{{item.description}} {{item.distance}},Contact:{{item.contact}}">
+                            <div class="row">
+							<img class="col-sm-6" src="{{MEDIA}}{{item.block.wing.floor.building.room_image.url}}" style="border-radius: 17px;" height="80">
+                            <div class="col-sm-6">
+                                <h6 style="font-size: 11px;">Floor sn.:{{item.block.wing.floor.id}}</h6><br>
+                                <h6 style="font-size: 11px;">Wing Sn.:{{item.block.wing.id}}</h6><br>
+                                <h6 style="font-size: 11px;">Block sn.:{{item.block.id}}</h6>
+                            </div>
+                            </div>
+                            <div class="row">
+							<h6 class="col-sm-12" style="font-size: 11px;margin-top: 6px;">Room {{item.id}}:Kes:{{item.block.wing.floor.building.price|intcomma}}</h6>
+						   <span class="col-sm-12" style="margin-top: -17px;text-align: right;"><input style="height: 30px;width:30px" type="checkbox" name="{{item.block.wing.floor.building.id}}" class="check-boxex" role="{{item.id}}"></span>
+                      
+                      </div>
+                    </span>
+                        </div>      
+                        </div>  -->
+                            <!-- {% endfor %} -->
+                           </div>
+                           {% endif %}
+						{% if ammenities %}
+						<h6 style="margin-top: -10px;">Ammenities</h6>
+						
+						<div class="row" >
+                           {% for item in ammenities %}
+                            <div class="col-sm-4">
+						   <span title="{{item.description}} {{item.distance}},Contact:{{item.contact}}">
+							<img src="{{MEDIA}}{{item.type.image.url}}" width="20" height="20">
+							<h6 style="font-size: 11px;">{{item.name}}:{{item.distance}}</h6>
+						   </span>
+                              </div>
+
+						   {% endfor %}
+                        </div>
+						
+						{% else %}
+                          {% if rooms %}
+                         {% else %}
+						<div class="row" style="min-height: 200px;"></div>
+						{% endif %}
+                        {% endif %}
+						<div class="gap-3 mt-3" style="text-align: right;">
+							
+
+							  {% if in_cart %}
+                            <span style="font-size: 10px;" role="{{product.product_id}}" class="decrease_in_cart_all btn btn-danger"> <i class="fa fa-minus"></i></span>
+                            <span style="" role="{{product.product_id}}" class="reduce_in_cart">{{in_cart.count}}</span>
+                            <span style="font-size: 10px;" role="{{product.product_id}}" class="increase_in_cart_all btn btn-success"><i class="fa fa-plus"></i></span>
+                            {% else %}
+                            <a href="#" role="{{instance.id}}" class="add_to_cart_all btn btn-outline-primary" style="margin-bottom: 5px;;float: right;background-color: #fff;color: #3bb77e;border: 1px solid #3bb77e;"><i class="fa fa-shopping-cart"></i> Book</a>
+							<span style="float: right;">&nbsp;</span>
+                            <a  role="{{instance.id}}" class="wishlistbtn-ba btn btn-outline-primary" style="float: right;background-color: #fff;color: #3bb77e;border: 1px solid #3bb77e;"><i style="color: #3bb77e !important;" class="fa fa-shopping-heart"></i> Add to Wishlist</a>
+						    
+                            {% endif %}
+						</div>
+						</div>
+					  </div>
+					</div>
+                    <hr/>
+                    <div class="row">
+					<div class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+					    <!-- Left Content -->
+					    <div class="lg:col-span-2 space-y-6">
+					      <!-- Title & Meta -->
+					      <div class="space-y-2">
+					        <h1 class="text-3xl font-bold text-green-800">{{item.name}}</h1>
+					        <div class="flex items-center text-sm text-gray-500 space-x-4">
+					          <span>📍 Vipingo, Kilifi</span>
+					          <span>👁️ 15,021 views</span>
+					          <span>📅 Dec 22, 2023</span>
+					          <span>⭐ (0 reviews)</span>
+					        </div>
+					        <div class="flex items-center text-green-600 font-bold">
+					          <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2"
+					               viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round"
+					               d="M12 8c.347 0 .692.03 1.03.089a3 3 0 10-2.06 5.83c.338.058.683.088 1.03.088m0 0a3 3 0 11-3-3m3 3v4"></path></svg>
+					          400 m²
+					        </div>
+					      </div>
+
+					      <!-- Description -->
+					      <div class="bg-white p-5 rounded shadow space-y-4">
+					        <!-- <h2 class="text-xl font-semibold text-green-700">Prime Plots for Sale in Vipingo Beach - Your Coastal Dream Awaits!</h2>
+					        <p>Unlock the opportunity to own a piece of paradise with these <strong>prime plots for sale in Vipingo, Mombasa</strong>. Just a stone’s throw from the <strong>pristine Vipingo Beach</strong>, these <strong>secure, gated community plots</strong> offer the ideal setting for your <em>dream coastal home</em> or a tranquil <em>vacation getaway</em>.</p>
+					        
+					        <p class="font-semibold">Key Features for Ideal Vipingo Living & Investment:</p>
+					        <ul class="list-disc pl-5 space-y-1">
+					          <li><strong>Prime Beach Proximity:</strong> Near Vipingo Beach, perfect for <em>coastal living</em>.</li>
+					          <li><strong>Secure Gated Community Plots:</strong> Controlled estate with access and peace of mind.</li>
+					          <li><strong>Ready to Build:</strong> Electricity and reliable water supply already on-site.</li>
+					          <li><strong>Top-Notch Amenities:</strong> Swimming pool, jogging tracks, cabro roads.</li>
+					          <li><strong>Flexible Payment Plans:</strong> Options to invest with ease.</li>
+					        </ul> -->
+					      </div>
+
+					      <!-- Features -->
+					      <div class="bg-white p-5 rounded shadow">
+					        <h3 class="font-semibold mb-2 text-lg text-green-700">Features</h3>
+					        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm text-gray-600">
+					          <span>✅ Parking</span>
+					          <span>✅ Swimming pool</span>
+					          <span>✅ Garden</span>
+					          <span>✅ Security</span>
+					          <span>✅ Fitness center</span>
+					        </div>
+					      </div>
+
+					      <!-- Distance -->
+					      <div class="bg-white p-5 rounded shadow">
+					        <h3 class="font-semibold mb-2 text-lg text-green-700">Distance key between facilities</h3>
+					        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm text-gray-600">
+					          <span>🏥 Hospital - 1km</span>
+					          <span>🛒 Super Market - 1km</span>
+					          <span>🏫 School - 2km</span>
+					          <span>✈️ Airport - 35km</span>
+					          <span>🏖️ Beach - 200m</span>
+					          <span>🛍️ Mall - 1km</span>
+					        </div>
+					      </div>
+					    </div>
+
+					    <!-- Right Sidebar -->
+					    <div class="space-y-6">
+					      <!-- Price -->
+					      <div class="bg-white p-5 rounded shadow text-center space-y-2">
+					        <h2 class="text-2xl font-bold text-green-700">Price:</h2>
+					        <div class="text-3xl font-bold text-green-800">KES: {{item.instance|intcomma}}</div>
+					        <div class="text-green-600 font-semibold">Sale</div>
+					        <div class="text-sm text-gray-600">Square: 400 m²</div>
+					      </div>
+
+					      <!-- Contact Form -->
+					      <form class="bg-white p-5 rounded shadow space-y-4" action="/submit-message/">
+					        <h3 class="font-semibold text-lg text-green-700">Contact</h3>
+					        <input type="text" placeholder="Name" value="{{user.first_name}} {{user.last_name}}" class="w-full border rounded p-2" required>
+					        <input type="tel" placeholder="Phone" value="{{user.phone_number}}" class="w-full border rounded p-2" required>
+					        <input type="email" placeholder="Email" value="{{user.email}}" class="w-full border rounded p-2" required>
+					        <input type="text" placeholder="property_id" value="{{instance.id}}" class="w-full border rounded p-2" required>
+					        <input type="text" value="{{instance.name}}" class="w-full border rounded p-2" readonly>
+					        <textarea placeholder="Message" rows="4" class="w-full border rounded p-2"></textarea>
+					        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">Send</button>
+					      </form>
+
+					      <!-- WhatsApp Button -->
+					      <a href="https://wa.me/254759606091?text=Hello%2C%20I%20have%20a%20question%20about%20{{instance.name}}"class="block bg-green-500 text-white text-center py-2 rounded hover:bg-green-600 transition text-lg font-semibold">📱 Chat on WhatsApp</a>
+<!-- 
+					      <a href="https://wa.me/254759606091?text=Hello%2C%20I%20have%20a%20question%20about%20your%20services" style="background-color:#25D366;color:white;padding:10px 15px;border-radius:5px;text-decoration:none;">
+                            <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png" style="vertical-align:middle; margin-right:8px;">
+                            Message us on WhatsApp
+                            </a> -->
+					    </div>
+					  </div>
+					</div>
+
+				  </div>
+
+
+					<h6 class="text-uppercase mb-0">Related </h6>
+					<hr/>
+                     <div class="row row-cols-1 row-cols-lg-3 pt-10">
+
+                        {% for item in other_items %}
+						   <div class="col">
+							<div class="card">
+								<div class="row g-0 card-body">
+								  <div class="col-md-4">
+                                          <div style="max-height: 300px;" class="banner-img wow animate__animated animate__fadeInUp" data-wow-delay="0">
+                        <img src="{{MEDIA}}{{item.image.url}}" height="150px" width="150px" alt="" />
+                        <!-- <div class="banner-text"> -->
+                            <!-- <h4 style="color: aliceblue;">
+                                {{item}}<br />KES: {{item.price|intcomma}}<br />
+                               
+                            </h4> -->
+                            <!-- <a role="{{item.id}}" class="details-btn btn btn-xs">View <i class="fi-rs-arrow-small-right"></i></a> -->
+                        <!-- </div> -->
+                    </div>
+									 </div>
+								  <div class="col-md-8">
+									<div class="card-body">
+									  <h6 class="card-title">{{item.name}}</h6>
+									  <div class="cursor-pointer my-2">
+										<i class="bx bxs-star text-warning"></i>
+										<i class="bx bxs-star text-warning"></i>
+										<i class="bx bxs-star text-warning"></i>
+										<i class="bx bxs-star text-warning"></i>
+										<i class="bx bxs-star text-secondary"></i>
+									  </div>
+									  <div class="clearfix">
+										<p class="mb-0 float-start fw-bold">
+                                               <span>KES:{{item.price|intcomma}}</span>
+                                            <span class=" details-btn-b  btn btn-outline-primary" style="background-color: #fff;color: #3bb77e;" role="{{item.id}}">View</span>
+
+                                        </p>
+									 </div>
+									</div>
+								  </div>
+								</div>
+							  </div>
+						   </div>
+                           {% endfor %}
+						 
+					   </div>
+					
+		</div>
+        <script>
+            $(document).ready(function(){
+				//   let current = 0;
+    const images = $(".slides .slide-item ");
+    const thumbnails = $(".thumbnails img");
+    const total = images.length;
+	let current=0
+	
+    let autoplayInterval;
+
+    function showSlide(index) {
+        images.removeClass("active").hide();
+        images.eq(index).addClass("active").fadeIn();
+
+        thumbnails.removeClass("active-thumb");
+        thumbnails.eq(index).addClass("active-thumb");
+        // alert(current)
+        current = index;
+    }
+
+    function nextSlide() {
+		// if(current<6){
+		// 	current=current+5
+		// }
+        current = (current + 1) % total;
+		// alert(current)
+        showSlide(current);
+    }
+
+    function prevSlide() {
+		// if(current<6){
+		// 	current=current+5
+		// }
+        current = (current - 1 + total) % total;
+		// alert(current)
+        showSlide(current);
+    }
+
+    // Initialize first slide
+    showSlide(current);
+
+    // Manual Navigation
+    $(".next").click(function() {
+        nextSlide();
+        resetAutoplay();
+    });
+
+    $(".prev").click(function() {
+        prevSlide();
+        resetAutoplay();
+    });
+
+    thumbnails.click(function() {
+        const index = $(this).index();
+		// if(index<6){
+		// 	index=index+5
+		// }
+        showSlide(index);
+		// alert(index)
+        resetAutoplay();
+    });
+
+    // Autoplay
+    function startAutoplay() {
+        autoplayInterval = setInterval(nextSlide, 5000); // 4 seconds per slide
+    }
+
+    function resetAutoplay() {
+        clearInterval(autoplayInterval);
+        startAutoplay();
+    }
+
+    startAutoplay();
+				
+                var loader =$('#loader').html()
+            var csrfmiddlewaretoken= '{{csrf_token}}';
+            // alert(csrfmiddlewaretoken)
+            var level='{{level}}'
+            var level_name='GET'
+            var urlb='create-constants'
+          
+            $(".details-btn-b").click(function(){
+                
+              var instance=$(this).attr('role')
+        
+                 $.post('/details/',{instance:instance,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                //    window.location="/products" 
+                if($.trim(data)=='topup'){
+                     var level='wallet-top-up'
+        var level_name='Get'
+        
+        $.post('/create-constants/',{level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+                                
+                                $(".modal-content").html(data)
+                                    //$('.content-wrapper').html(data)
+                                    $("#modal-staff").modal("show");
+                                    $("#error_page").html('')
+                            })
+        
+            }else{
+            $("#modal-staff").modal("show");                         
+            $(".modal-content").html(data)
+            }
+                            
+                })
+        
+            })
+
+ $(".check-boxex").click(function(){
+                if ($(this).prop('checked')){
+                $(".check-boxex").prop('checked',false)
+                var action='add'
+                $(this).prop('checked',true)
+                }else{
+                var action='remove'
+                }
+              var instance=$(this).attr('role')
+              var building=$(this).attr('name')
+        
+                 $.post('/add-selected-room/',{action:action,instance:instance,building:building,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                //    window.location="/products" 
+            //     $("#modal-staff").modal("show");                         
+            //   $(".modal-content").html(data)
+                            
+                })
+        
+            })
+
+            
+            $(".back-to-view").click(function(){
+                // alert("new app")
+                $("#modal-staff").modal("hide");  
+            })
+            $(".wishlistbtn-ba").click(function(){
+      var instance=$(this).attr('role')
+    //   alert(instance)
+      var level='building'
+         $.post('/add-wishlist-items/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+        //    window.location="/products" 
+        // $("#modal-staff").modal("hide");                         
+    //   $(".modal-content").html(data)
+                    
+        })
+
+    })
+            $(".decrease_in_cart_all").click(function(){
+                var currency=''
+                if ($("#currency").prop('checked')){
+                var currency='USD'
+                }else{
+                   var currency='KES'
+                }
+                // alert(currency)
+                var action="reduce"
+                var instance=$(this).attr('role')
+                $.post('/adjust-cart/',{instance:instance,action:action,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                   window.location="/products"              
+                })
+            })
+            $(".increase_in_cart_all").click(function(){
+                var currency=''
+                if ($("#currency").prop('checked')){
+                var currency='USD'
+                }else{
+                   var currency='KES'
+                }
+                // alert(currency)
+                var action="add"
+                var instance=$(this).attr('role')
+                $.post('/adjust-cart/',{instance:instance,action:action,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                   window.location="/products"              
+                })
+            })
+        // 
+            $(".add_to_cart_all").click(function(){
+
+               var instance=$(this).attr('role')
+               var level='building'
+
+                $.post('/add-to-list/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                   $("#modal-staff").modal("hide");   
+                //    window.location="/"              
+                })
+
+                // var currency=''
+                // if ($("#currency").prop('checked')){
+                // var currency='USD'
+                // }else{
+                //    var currency='KES'
+                // }
+                // // alert(currency)
+                // var action="add"
+                // var instance=$(this).attr('role')
+                // $.post('/add-cart/',{instance:instance,action:action,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+                //    window.location="/products"              
+                // })
+            })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+        })
+        </script>

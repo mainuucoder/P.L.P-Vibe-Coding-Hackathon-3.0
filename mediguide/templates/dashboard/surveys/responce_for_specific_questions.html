@@ -1,0 +1,634 @@
+{% load static %}
+
+{% load humanize %}
+<style>
+      table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.btn_reacts{
+            color:#000;
+        }
+    
+
+.bdge {
+  height: 21px;
+  background-color: orange;
+  
+  font-size: 11px;
+  padding: 8px;
+  border-radius: 4px;
+  line-height: 3px;
+}
+
+.comments {
+  text-decoration: underline;
+  text-underline-position: under;
+  cursor: pointer;
+}
+
+.dot {
+  height: 7px;
+  width: 7px;
+  margin-top: 3px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.hit-voting:hover {
+  color: blue;
+}
+
+.hit-voting {
+  cursor: pointer;
+}
+.commented-section{
+    text-align: justify;
+}
+.commented-section{
+    box-shadow: 0 0 3px #ccc;
+    border-radius: 2px;
+    padding: 1.5rem !important;
+}
+.starlabel:before {
+    content: '☆';
+    
+    font-size: 2em;
+  }
+  .starlabel.on:before {
+    content: '★';
+    
+    /* uncomment for iOS */
+  /*   font-size: 2.4em;
+    top: -0.1em;
+    left: -0.1em; */
+  }
+  .starrate:checked + .starlabel:before {
+    content: '★'; 
+    /* uncomment for iOS */
+  /*   font-size: 2.4em;
+    top: -0.1em;
+    left: -0.1em; */
+  }
+  .starlabel {  
+    display: inline-block;  
+    cursor: pointer;  
+    position: relative;  
+    padding-left: 25px;  
+    margin-right: 15px;  
+    font-size: 20px; 
+  }
+  .starlabel:before {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    position: absolute;
+    left: 0;
+    border-radius: 10px;
+  }
+  .starrate {
+    display: none;
+    -webkit-appearance: none;
+  }
+  
+  /* Non-essential */
+
+  .question {
+    margin-bottom: 8em;
+  }
+  #q1 {
+    margin-top: 6em;
+  }
+  p {
+    font-family: Bitter, sans-serif;
+    font-size: 1em;
+  }
+  #submit {
+    font-size: 24px;
+    font-family: Bitter, sans-serif;
+    color: #448AC1;
+    width: 80px;
+    height: 80px;
+    border: none;
+    border-radius: 40px;
+  }
+  
+  .btn-scale {
+  min-width: 44px;
+  width: 6%;
+  text-align: center;
+  font-weight: bold;
+  color: black;
+  font-family: 'Lato', sans-serif;
+}
+
+.btn-scale-asc-1, .btn-scale-desc-10 {
+  background-color: #33FF00;
+}
+
+.btn-scale-asc-1:hover,
+.btn-scale-desc-10:hover {
+  background-color: #2CDE00;
+}
+
+.btn-scale-asc-2,
+.btn-scale-desc-9{
+  background-color: #66FF00;
+}
+
+.btn-scale-asc-2:hover,
+.btn-scale-desc-9:hover{
+  background-color: #59DE00;
+}
+
+.btn-scale-asc-3,
+.btn-scale-desc-8 {
+  background-color: #99FF00;
+}
+
+.btn-scale-asc-3:hover,
+.btn-scale-desc-8:hover {
+  background-color: #85DE00;
+}
+
+.btn-scale-asc-4,
+.btn-scale-desc-7 {
+  background-color: #CCFF00;
+}
+
+.btn-scale-asc-4:hover,
+.btn-scale-desc-7:hover {
+  background-color: #B1DE00;
+}
+
+.btn-scale-asc-5,
+.btn-scale-desc-6 {
+  background-color: #FFFF00;
+}
+
+.btn-scale-asc-5:hover,
+.btn-scale-desc-6:hover {
+  background-color: #DEDE00;
+}
+
+.btn-scale-asc-6,
+.btn-scale-desc-5 {
+  background-color: #FFCC00;
+}
+
+.btn-scale-asc-6:hover,
+.btn-scale-desc-5:hover {
+  background-color: #DEB100;
+}
+
+.btn-scale-asc-7,
+.btn-scale-desc-4 {
+  background-color: #FF9900;
+}
+
+.btn-scale-asc-7:hover,
+.btn-scale-desc-4:hover {
+  background-color: #DE8500;
+}
+
+.btn-scale-asc-8,
+.btn-scale-desc-3 {
+  background-color: #FF6600;
+}
+
+.btn-scale-asc-8:hover,
+.btn-scale-desc-3:hover {
+  background-color: #DE5900;
+}
+
+.btn-scale-asc-9,
+.btn-scale-desc-2 {
+  background-color: #FF3300;
+}
+
+.btn-scale-asc-9:hover,
+.btn-scale-desc-2:hover {
+  background-color: #DE2C00;
+}
+
+.btn-scale-asc-10,
+.btn-scale-desc-1 {
+  background-color: #FF0000;
+}
+
+.btn-scale-asc-10:hover,
+.btn-scale-desc-1:hover {
+  background-color: #DE0000;
+}
+
+
+.scalerate{
+    min-height: 36px;
+min-width: 44px;
+  border-radius:2px !important
+	&:hover,
+	&:checked {
+		+ label,
+		+ input + label {
+			background-color: #0f0;
+			color: #0f0;
+		}
+	}
+	
+
+	&:focus + label {
+		outline: 2px solid black;
+		position: relative;
+		z-index: 2;
+	}
+
+	+ label {
+		display: block;
+		text-align: center;
+		padding: 0.5em 0;
+		//min-width: 1.5em;
+		//flex-grow: 1;
+		//flex-basis: 3em;
+		flex-shrink: 0;
+		border: 1px solid #666;
+		width: 2em;
+		height: 1em;
+		border-radius: 50%;
+		background: #fff;
+		margin-left: -1px;
+		margin-right: 0.25em;
+		color: #fff;
+		font-size: 0;
+		min-height: 1.5rem;
+		min-width: 1.5rem;
+
+		&:focus,
+		&:hover {
+			background-color: #0f0;
+		}
+	}
+}
+.wrapper {
+	display: flex;
+	flex-direction: row-reverse;
+	max-width: 39em;
+	justify-content: space-between;
+}
+
+.q-list {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+	//counter-reset: question;
+
+	&__item {
+		counter-increment: question;
+		padding: 0.75em;
+
+		&:nth-child(odd) {
+			background-color: #ddd;
+		}
+	}
+}
+
+.q-block {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+
+	> *:first-child {
+		flex-basis: 10em;
+	}
+	> *:last-child {
+		flex-grow: 1;
+		flex-basis: 20em;
+	}
+}
+
+.q-legend {
+	display: flex;
+	padding: 0.75em;
+
+	> *:first-child {
+		opacity: 0;
+		width: 0;
+
+		@media (min-width: 552px) {
+			flex-basis: 11em;
+		}
+	}
+
+	> *:last-child {
+		flex-grow: 1;
+		flex-basis: 20em;
+		display: flex;
+		flex-direction: row-reverse;
+		max-width: 39.2em;
+		margin-left: auto;
+
+		> * {
+			flex-basis: (100% / 3);
+			flex-grow: 1;
+
+			&:nth-child(2) {
+				text-align: center;
+			}
+
+			&:first-child {
+				text-align: end;
+			}
+			&:last-child {
+				text-align: start;
+			}
+		}
+	}
+}
+
+.q-title {
+	margin-inline-end: 1rem;
+	margin-block-end: 0.5em;
+	margin-block-start: 0.5em;
+
+	&:before {
+		content: counter(question) ". ";
+	}
+}
+
+.vh {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+p {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+fieldset {
+	border: none;
+	margin: 1em;
+	padding: 0;
+
+	legend {
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+}
+
+
+  </style>
+ 
+     <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body ">
+            <span class="btn btn-danger btnback"><i class="fa fa-arrow-left"></i> Back</span>
+          
+            <div class="row" style="margin-top:10px;min-height: 100px;box-shadow:0px 0px 2px #ccc;border-radius:10px;">
+              <div class="col-lg-12 main_header_display">
+                 <h2><strong>{{survey.name|safe}} </strong> </h2>
+                 
+              </div>
+          </div>
+<div class="col-12" style="background:#ccc;min-height: 30px;padding:10px;margin:10px;">
+  <h4><strong>{{questionscategories.name|safe}}</strong></h4>
+</div>
+
+<div class="col-sm-12" style="font-size: 17px !important;color:#000 !important; min-height: 100px;margin-top: 10px; box-shadow: 0 0 3px #ccc;border-radius: 2px;padding: 1.5rem !important;">
+
+        <div class="col-sm-12">
+          <!-- <div class="col-sm-1">
+           <span><i class=" fa fa-arrows-alt fa-2X"></i></span>
+          </div> -->
+          <!--<span>{{i.id}}.)</span>-->
+         <div class="col-sm-12"><span><strong>{{surveyquestion.name|safe}}</strong>
+          </span>
+          </div>
+        </div>
+        <div class="row">
+<div class="col-sm-12" style="padding-left: 4% !important;">
+ 
+  {% if surveyquestion.question_type_id == 1 %}
+<!-- <div class="col-sm-12 col-xs-12">
+                
+                <input class="inputfields{{surveyquestion.question_type_id}} radiobuttons{{i.id}}" type="radio" id="" name="input{{i.id}}" role="{{i.id}}" value='yes'>
+                :YES
+                </p>
+                <p>
+                
+                <input class="inputfields{{surveyquestion.question_type_id}} radiobuttons{{i.id}}" type="radio" id="" name="input{{i.id}}" role="{{i.id}}" value='No'>
+                :NO
+                </p>
+      </div>-->
+        {% elif surveyquestion.question_type_id == 2 %}
+
+       
+          
+            <div class="question" id="q1">
+              <input class="starrate" type="radio" name="needs" id="a1" value="1">
+              <label class="starlabel" for="a1"></label>
+              <input class="starrate" type="radio" name="needs" id="a2" value="2">
+              <label class="starlabel" for="a2"></label>
+              <input class="starrate" type="radio" name="needs" id="a3" value="3">
+              <label class="starlabel" for="a3"></label>
+              <input class="starrate" type="radio" name="needs" id="a4" value="4">
+              <label class="starlabel" for="a4"></label>
+              <input class="starrate" type="radio" name="needs" id="a5" value="5">
+              <label class="starlabel" for="a5"></label>
+            </div>
+          
+          
+
+        {% elif surveyquestion.question_type_id == 3 %}
+
+      
+{% elif surveyquestion.question_type_id == 4 %}
+<select class="col-lg-12 SelectQuestionsOptions" id="questions{{i.id}}" name="{{i.id}}">
+  <option></option>  
+  {% for choice in surveyquestion.choice_set.all %}
+  {% if choice.status == 'active' %}
+<option>{{ choice.name }}</option>  
+{% else %}
+{% endif %}
+        {% endfor %}
+
+</select>
+
+{% elif surveyquestion.question_type_id == 5 %}
+<textarea class="col-lg-12 textareaQuestions" role="{{i.id}}" name="{{i.id}}"
+style="min-height:200px;resize: none;" maxlength="1200" role="{{i.question_type}}">
+</textarea>
+
+
+{% elif surveyquestion.question_type_id == 6 %}
+<!--
+     <div class="chart-scale col-sm-12 col-xs-12">
+        <button class="btn btn-scale btn-scale-asc-1">1</button>
+        <button class="btn btn-scale btn-scale-asc-2">2</button>
+        <button class="btn btn-scale btn-scale-asc-3">3</button>
+        <button class="btn btn-scale btn-scale-asc-4">4</button>
+        <button class="btn btn-scale btn-scale-asc-5">5</button>
+        <button class="btn btn-scale btn-scale-asc-6">6</button>
+        <button class="btn btn-scale btn-scale-asc-7">7</button>
+        <button class="btn btn-scale btn-scale-asc-8">8</button>
+        <button class="btn btn-scale btn-scale-asc-9">9</button>
+        <button class="btn btn-scale btn-scale-asc-10">10</button>
+     
+    </div>
+  -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% elif surveyquestion.question_type_id == 7 %}
+
+<p><span style="float: centre;">{{i.question_type}}</span>
+  
+
+  <div class="col-sm-12 col-xs-12  parentselect" id="questions{{i.id}}" role="{{i.id}}">
+   {% for choice in questionChoices %}
+   {% if choice.status == 'active' %}
+   <div class="col-sm-12 col-xs-12" style="margin-bottom:5px ;">
+  
+     <label style="font-weight: initial !important" class="submit_radiosd">
+  
+       <input type="checkbox" disabled="true"  id="{{choice.id}}" role="{{i.id}}"  value="{{choice.name}}" name="{{questionId}}"  class=" multichoice7 multichoice{{i.id}}" >
+         <span class="checkmarkd"></span>
+         {{ choice.name }}
+          </label>
+   
+        
+  
+  </div>
+   {% else %}
+   {% endif %}
+  {% endfor %}
+  CHANGE GRAPH TYPE:
+  <select id="change_graph">
+     <option>bar</option>
+     <option>line</option>
+     <option>doughnut</option>
+     <option>pie</option>
+     <option>radar</option>
+     <option>scatter</option>
+     <option>bubble</option>
+     <option>polarArea</option>
+  </select>
+  </div>
+  <div class="col-sm-12" id="graphpageholder">
+  
+  </div>
+<script>
+  $(document).ready(function(){
+
+     var csrfmiddlewaretoken= '{{csrf_token}}';
+     var surveyId='{{survey.id}}'
+     var  graphtype='bar'
+     
+     var questionId='{{surveyquestion.id}}';
+    var choices='{{questionChoices|safe}}'
+       
+
+$("#change_graph").change(function(){
+    var graphtype=$(this).val()
+    $.post('/dashboard/surveys/graphpage/',{surveyId:surveyId,questionId:questionId,graphtype:graphtype,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+      $('#graphpageholder').html(data)
+    })
+})
+
+    $.post('/dashboard/surveys/graphpage/',{surveyId:surveyId,questionId:questionId,graphtype:graphtype,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+      $('#graphpageholder').html(data)
+    })
+  })
+  </script>
+
+{% elif surveyquestion.question_type_id == 8 %}
+{{i.userresponce}}
+<p><span style="float: centre;">{{i.question_type}}</span>
+
+<div class="col-sm-12 col-xs-12 " id="questions{{i.id}}">
+
+  {% for choice in surveyquestion.choice_set.all %}
+  {% if choice.status == 'active' %}
+  <div class="col-sm-12 col-xs-12" style="margin-bottom:5px ;">
+
+      <label style="font-weight: initial !important" class="submit_radiosd">
+
+  <input type="checkbox" disabled="true"  id="{{choice.id}}" role="{{i.id}} "  value="{{choice.name}}" name=""  class=" multichoice8" >
+    <span class="checkmarkd"></span>
+    {{ choice.name }}
+     </label>
+    
+  </div>
+  {% else %}
+  {% endif %}
+{% endfor %}
+
+
+</div>
+{% elif surveyquestion.question_type_id == 9 %}
+
+
+
+
+
+
+      {% else %}
+
+      {% endif %}
+    
+</div>
+</div>
+</div>
+ 
+<!--
+ <span class="col-sm-12 col-xs-12 btn btn-success submit_suvery " id="" role="" name="">Submit<b></b></span>-->
+<div class="col-sm-12 col-xs-12" id="errorpage" style="color: red;text-align:center"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-12">
+    <div class="col-6">
+        
+    </div>
+</div>
+<script>
+  $(document).ready(function(){
+
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+    var surveyId='{{survey.id}}'
+    $(".btnback").click(function(){
+    var survey=surveyId
+    $.post('/dashboard/surveys/all_survey_responce_questions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+   
+    $('.content-wrapper').html(data)
+}) 
+  })
+  })
+</script>

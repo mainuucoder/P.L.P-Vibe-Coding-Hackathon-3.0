@@ -1,0 +1,205 @@
+{% load static %}
+{% load bootstrap5 %}
+{% load humanize %}
+<style>
+    .searchUsers {
+background-image: url({% static 'assets/images/searchicon.png' %});
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+#myUL li {
+    border: 1px solid #ddd;
+margin-top: -7px;
+background-color: #f6f6f6;
+padding: 3px;
+text-decoration: none;
+font-size: 14px;
+color: black;
+display: block;
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+}
+#addemailaddres{
+    
+  width: 100%;
+  font-size: 13px;
+  padding: 10px 10px 10px 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+</style>
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+  <div class="col-12 card">
+<div class="card-body col-sm-12 col-xs-12" style="min-height: 200px;max-height:200px;overflow-x: hidden;overflow-y: scroll;">
+ <input type="text" id="searchUsers" onkeyup="filterusers()" placeholder="Search for names.." class="searchUsers col-sm-12 col-xs-12" id="">
+ <ul id="myUL" style="display: none;">
+{% for q in users %}
+{% if q.is_active == 'exists' %}
+ {% else %}
+    <li>
+    <input type="checkbox"  id="{{q.id}}" class="uncheck_user" role="">
+    <a>
+       {{q.first_name}} {{q.middle_name}} {{q.last_name}}
+    </a></li>
+      
+    {% endif %}
+    {% endfor %}
+</ul>
+</div>
+</div>
+<div class="col-sm-12 card">
+    <div class="row card-body">
+        <div class="col-sm-12" style="text-align:center ;">OR</div>
+        <div class="col-sm-12" >
+            <h4><strong>{{Title}}</strong></h4>
+            <hr>
+        </div>
+        <form action="" method="POST" role="{{PageAction}}" class="col-md-12" id="DefaultForm">
+            {% csrf_token %}
+            <!-- {% bootstrap_form form %} -->
+            {{form.media}}
+            <div class="row" style="overflow: auto;">
+                {% for field in form %}
+                <div class="col-md-12">
+                    <label for="{{ field.label }}">{{ field.label_tag }}
+
+                        {% if field.field.required %}<span class="special_class" style="color: red">*</span>
+                        {% endif %}
+                    </label>
+
+                    {% bootstrap_field field show_label=False %}
+
+
+                </div>
+
+                {% endfor %}
+            </div>
+            <input type="text" value="{{survey}}" name="survey" id="id_survey" hidden="true">
+            <input type="text" value="{{audinceId}}" name="audinceId" id="id_audinceId" hidden="true">
+            <button class="btn-primary btn col-md-12"  id="SubmitForum" role="{{PageAction}}">SAVE</button>
+        </form>
+
+    </div>
+</div>
+<div class="row">
+    {% if Audiencecount > 0 %} 
+    <div class="col-sm-4">
+    
+        <input type="checkbox"  id="" checked="true" class="Checkall" role="">
+        <span class="checkmarkd"></span>
+         Check all
+        </div>
+    <div class="col-sm-4"><div class="btn col-sm-12 actionbuttons btn-warning" role="cancel">Cancel All</div></div>
+    <div class="col-sm-4"><div class="btn col-sm-12 actionbuttons btn-success" role="save">ADD ALL</div></div>
+    {% else %}
+    {% endif %}
+</div>
+<script>
+ $(document).ready(function(){
+    var audinceId='{{audinceId}}'
+
+
+    $('.Checkall').change(function(){
+        if($(this).prop('checked')){
+        $(".uncheck_user").prop('checked',true)
+        }else{
+            $(".uncheck_user").prop('checked',false)
+
+        }
+    })
+ var surveyId='{{survey}}'
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+    $(".uncheck_user").change(function(){
+        if($(this).prop('checked')){
+            action='addUserToAudience'
+        }else{
+            action='removeUser'
+        }
+    var userId=$(this).attr('id');
+    
+        
+   
+
+        $.post('/dashboard/surveys/addUserToSurveyAudienceListcustom/',{action:action,userId:userId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+           var survey=surveyId
+            $.post('/dashboard/surveys/load_institution_graduation_year_users/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:survey},function(data){
+  //alert(data)
+$('#list_holder').html(data)
+   })
+           })
+   
+})
+
+$('.actionbuttons').click(function(){
+    var role=$(this).attr('role');
+    
+    if(role=='back'){
+    
+    }else if(role=='cancel'){
+     var action='clearall'
+     $.post('/dashboard/surveys/manageQuestions/',{action:action,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            $.post('/dashboard/surveys/getFinalAudiencelistcustom/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+         $('#list_holder').html(data)
+            })
+           })
+    }else{
+        var action='save'
+        $.post('/dashboard/surveys/manageQuestions/',{action:action,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            $.post('/dashboard/surveys/selectAudience/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+                $('.content-wrapper').html(data)
+            })
+           })
+    }
+})
+
+
+
+ })
+ function filterusers(){
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById("searchUsers");
+    filter = input.value.toUpperCase();
+
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName("li");
+    totalcount=0;
+    if(filter){
+   
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            totalcount=totalcount+1
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+    //alert(totalcount)
+    if(totalcount>0){
+        ul.style.display = "";
+    }else{
+        ul.style.display = "none";
+    }
+}else{
+    ul.style.display = "none"; 
+}
+}
+</script>

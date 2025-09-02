@@ -1,0 +1,163 @@
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+  table{
+font-size: 13px !important;
+text-align: center;
+width: 95%;
+margin: auto;
+text-align: center;
+}
+
+/*Make alternating colors for the table rows*/
+.table tr:nth-child(odd){
+background: #B8CAE4
+}
+
+.table tr:nth-child(even){
+background: #dae5f4
+}
+
+th {
+background-color: #337ab7;
+color: white;
+}
+.display_table{
+border-bottom-right-radius: 20px;
+/*border-bottom-left-radius: 20px;*/
+padding-left: 5px;
+padding-right: 5px;
+padding-bottom: 20px;
+box-shadow: 12px 12px 20px 6px #2e6da4;
+}
+td{
+  padding: 6px;
+line-height: 1.428571429;
+vertical-align: top;
+border-top: 1px solid #dddddd;
+text-align: justify;
+font-size:16px;
+}
+.page_links{
+cursor: pointer;
+
+}
+  
+  .pagination { display: inline-block;}
+  .pagination a { color: black; float: left; padding: 8px 16px; text-decoration: none;}
+  .pagination a.active { background-color: #4CAF50; color: white;}
+  .pagination a:hover:not(.active) {background-color: #ddd;}
+  .actionbtns{
+    cursor: pointer;
+  
+  }
+  .headholder{
+    margin-top: 5px;
+    background-color: #495549 !important;
+    font-weight: bold;
+    color:#fff !important;
+    text-align: center !important;
+    text-transform: uppercase;
+  }
+</style>
+<div class="card">
+    <div class="card-body">
+    <div class="col-12" style="margin-bottom: 5px">
+      <span class="btn btn-danger btnback"><i class="fa fa-arrow-left"></i> Back</span>
+     
+        
+    </div>
+    <table class='table loadtable'  id="">
+      <thead style="font-size: 11px;">
+        <tr  style="font-size: 11px;background: #106eea !important;">
+         
+          <th>NAME</th>
+          <th>EMAIL</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+    {% for p in surveyaudience %}
+    {% if p.status == 'audience' %}
+    <tr style="color:green;background:#495549">
+   <th> 
+        {{p.institution.name}}
+      </th>
+      <th></th>
+      <th></th>
+    </tr>
+   
+    {% for j in graduationyear %}
+    {% if j.status == 'audience' %}
+   
+    <tr style="color:green;background:#495549"><th>
+    Graduation year {{j.name}}
+  </th>
+  <th></th>
+      <th></th>
+    </tr>
+   {% for g in audienceadded %}
+   {% if j == g.graduation_year %}
+   {% if p.institution == g.institution %}
+ <tr><td>
+    {{g.member.first_name}} {{g.member.middle_name}} {{g.member.last_name}}
+   
+    </td>
+  <td>{{g.member.email}}</td>
+  <td></td>
+  </tr>
+     {% else %}
+     {% endif %}
+     {% else %}
+     {% endif %}
+     {% endfor %}
+     {% else %}
+     {% endif %}
+     {% endfor %}
+   
+     {% else %}
+     {% endif %}
+     {% endfor %}
+   
+
+ {% if customeaudiencecount > 0 %}
+<tr style="color:green;background:#495549">
+  <th>
+    Custom Audience List 
+  </th>
+  <th></th>
+      <th><span style="float:right ;">{{customeaudiencecount}}</span></th>
+  </tr>
+    
+       {% for g in customeaudienceadded %}
+      <tr><td>
+        {{g.first_name}} {{g.last_name}}
+       
+         </td> <td>{{g.email}}</td>
+         <td></td>
+         </tr>
+         {% endfor %}
+      
+         {% else %}
+         {% endif %}
+
+</table>
+<script>
+  $(document).ready(function(){
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+  var surveyId='{{survey.id}}'
+    $(".btnback").click(function(){
+    $.post('/dashboard/surveys/viewSurveys/',{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+
+ $('.content-wrapper').html(data)
+    })
+  })
+})
+</script>

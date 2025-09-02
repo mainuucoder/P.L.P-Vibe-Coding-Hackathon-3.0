@@ -1,0 +1,67 @@
+
+        <script>
+           $(document).ready(function() {
+          var class_id = '{{class_room.id }}';
+          var calendar_name = 'calendar' + class_id;
+          $(".table_tab"+class_id).show()
+          var calendar = $('.' + calendar_name).fullCalendar({
+              editable: true,
+              eventStartEditable: true,  // Allow dragging and resizing events
+              header: {
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'month,agendaWeek,agendaDay'
+              },
+
+          editable: true,  // Enable editing
+          eventStartEditable: true,  // Allow dragging and resizing events
+              // events: [
+              //     {% for event in item.list %}
+              //     {   id: '{{ event.id|escapejs }}',  // Escape special characters
+              //         title: '{{ event.title|escapejs }}',  // Escape special characters
+              //         description: '{{ event.description|escapejs }}',  // Escape special characters
+              //         start: '{{ event.start_datetime|date:"Y-m-d\\TH:i:s" }}',
+              //         end: '{{ event.end_datetime|date:"Y-m-d\\TH:i:s" }}'
+              //     },
+              //     {% endfor %}
+              // ],
+              events: [
+          {
+              title: 'Event 1',
+              start: '2024-02-17T10:00:00', // Start time for Event 1
+              end: '2024-02-17T12:00:00'    // End time for Event 1
+          },
+          {
+              title: 'Event 2',
+              start: '2024-02-17T14:00:00', // Start time for Event 2
+              end: '2024-02-17T16:00:00'    // End time for Event 2
+          }
+          // Add more events as needed
+      ],
+      dateClick: function(info) {
+          var title = prompt('Enter event title:');
+          if (title) {
+              calendar.fullCalendar('renderEvent', {
+                  title: title,
+                  start: info.date,
+                  end: moment(info.date).endOf('day') // Set end time to end of the day
+              }, true);
+          }
+      }
+                          //  dateClick: function(info) {
+      //     // alert("this is the page")
+      //     var title = prompt('Enter event title:');
+      //     if (title) {
+      //         calendar.addEvent({
+      //             title: title,
+      //             start: info.dateStr + 'T00:00:00', // Start time for new event (midnight)
+      //             end: info.dateStr + 'T23:59:59'    // End time for new event (end of day)
+      //         });
+      //     }
+      // }
+          });
+
+          });
+           
+          </script> 
+ 

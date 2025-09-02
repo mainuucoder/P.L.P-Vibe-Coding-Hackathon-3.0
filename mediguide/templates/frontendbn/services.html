@@ -1,0 +1,131 @@
+{% extends "frontend/base.html" %} {% load static %} {% load humanize %} 
+{% block content %} {% if messages %} {% for message in messages %}
+ {% if messages %} {% for message in messages %}
+
+<script>
+  notify("{{message.level_tag}}", "{{message}}");
+</script>
+
+{% endfor %} {% endif %} {% endfor %} {% endif %}
+<style>
+  .surveyspanels {
+    min-height: 80px;
+    background: #fff;
+    margin-top: 5px;
+  }
+</style>
+
+<div class="rs-breadcrumbs bg-1">
+  <div class="container">
+    <div class="content-part text-center">
+      <h1 class="breadcrumbs-title white-color mb-0">
+        <h3 style="color: #00a651">Shiriki Services</h3>
+      </h1>
+    </div>
+  </div>
+</div>
+
+<div id="rs-services" class="rs-services style1 modify2 pt-100 pb-84 md-pt-80 md-pb-64">
+  <div class="container">
+    <div class="row gutter-16">
+      <div class="col-lg-6 col-sm-6 mb-16">
+        <div class="service-wrap">
+          <div class="content-part">
+            <h5 class="title"><a href="#">Forums</a></h5>
+            <div class="desc" style="text-align: justify; min-height: 350px;">
+              <p>
+                Our Forums module provides a space where citizens can share
+                their thoughts and opinions on various issues affecting their
+                communities. Users can join existing discussions or start their
+                own threads. Our moderators ensure that the discussions are
+                respectful and constructive. The forum topics are carefully
+                chosen to cover a wide range of topics, including community
+                development, education, healthcare, infrastructure,
+                environmental conservation, and social welfare, among others.
+                <br />
+                We believe that engaging in constructive dialogue is key to
+                finding solutions to complex problems. Our forums are designed
+                to encourage people to share their opinions and ideas, and we
+                welcome all voices, regardless of their political affiliations,
+                social status, or gender.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-sm-6 mb-16">
+        <div class="service-wrap">
+          <div class="content-part">
+            <h5 class="title">
+              <a href="#">Surveys</a>
+            </h5>
+            <div class="desc"style="text-align: justify; min-height: 350px;">
+              <p>
+                We allow subscibed organizations to regularly conduct surveys to
+                gather feedback on various topics. Your input is valuable to
+                different stakeholders, and it can be used to improve services
+                and policies. By participating in the surveys, you can help
+                shape the future of the community. The surveys cover a wide
+                range of topics, including public services, infrastructure,
+                social welfare, environmental conservation, and community
+                development, among others.<br />
+                We use various methods to ensure that our surveys reach as many
+                people as possible, including online surveys, telephone surveys,
+                and face-to-face interviews. We also ensure that our survey
+                results are easily accessible to the public, so that everyone
+                can see the feedback we receive and how we use it to improve our
+                services and policies.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-sm-6 mb-16">
+        <div class="service-wrap">
+          <div class="content-part">
+            <h5 class="title">
+              <a href="#">Bursary and Scholarship Applications:</a>
+            </h5>
+            <div class="desc"style="text-align: justify; min-height: 380px;">
+              Our platform provides opportunities to organizations offering
+              bursaries access to a fully automated bursaries management
+              processes. It makes it easy for students to apply for bursaries
+              and scholarships. We believe in investing in our youth, and we
+              want to support them in achieving their academic goals. You can
+              find information about available bursaries and scholarships on our
+              platform and submit your application online.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-sm-6 mb-16">
+        <div class="service-wrap">
+          <div class="content-part">
+            <h5 class="title">
+              <a href="#">Stay Informed</a>
+            </h5>
+            <div class="desc"style="text-align: justify; min-height: 380px;">
+              <p>
+                Our platform provides the latest news and updates on government
+                initiatives, policies, projects and key publications. You can
+                access this information from our news feed and stay informed
+                about what's happening in our community. We also provide links
+                to other relevant sources of information, including government
+                reports, policy documents, and research papers. We believe that
+                informed citizens are critical to good governance. Our platform
+                is designed to provide citizens with accurate and timely
+                information about government initiatives, policies, and
+                projects. We also encourage citizens to engage with us on our
+                platform and ask questions, provide feedback, and share their
+                views on various issues.<br />
+                We also train and sensitize members of the public on different
+                government initiatives
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

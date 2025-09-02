@@ -1,0 +1,164 @@
+{% load static %}
+{% load bootstrap5 %}
+{% load humanize %}
+<style>
+    .searchUsers {
+background-image: url({% static 'assets/images/searchicon.png' %});
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+#myUL li {
+    border: 1px solid #ddd;
+margin-top: -7px;
+background-color: #f6f6f6;
+padding: 3px;
+text-decoration: none;
+font-size: 14px;
+color: black;
+display: block;
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+}
+.headholder{
+    background-color: #ccc;
+    padding:5px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+#numbercount{
+    float: right;
+}
+</style>
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<div class="card">
+    <div class="card-body table-responsive">
+<div class="col-sm-12 col-xs-12" style="min-height: 200px;max-height:400px;overflow-x: hidden;overflow-y: scroll;">
+    <p class="headholder">{{survey_audience.name}}s <span id="numbercount" style="">{{usercount}}</span></p>
+ <input type="text" id="searchUsers" onkeyup="filterusers()" placeholder="Search for names.." class="searchUsers col-sm-12 col-xs-12" id="">
+ <ul id="myUL">
+{% for q in users %}
+{% if q.is_active == 'exists' %}
+ {% else %}
+    <li>
+    <input type="checkbox"  id="{{q.id}}" class="uncheck_user" role="">
+    <a>
+       {{q.first_name}} {{q.middle_name}} {{q.last_name}}
+    </a></li>
+      
+    {% endif %}
+{% endfor %}
+</ul>
+</div>
+
+<div class="row">
+    {% if usercount > 0 %} 
+    <div class="col-sm-4">
+    
+        <input type="checkbox"  id=""  class="Checkall" role="">
+        <span class="checkmarkd"></span>
+         Check all
+        </div>
+    <div class="col-sm-4"><div class="btn col-sm-12 actionbuttons btn-warning" role="cancel">Cancel All</div></div>
+    <div class="col-sm-4"><div class="btn col-sm-12 actionbuttons btn-success" role="save">ADD ALL</div></div>
+    {% else %}
+    {% endif %}
+</div>
+</div>
+</div>
+<script>
+ $(document).ready(function(){
+
+
+    $('.Checkall').change(function(){
+        if($(this).prop('checked')){
+        $(".uncheck_user").prop('checked',true)
+        }else{
+            $(".uncheck_user").prop('checked',false)
+
+        }
+    })
+ var surveyId='{{survey.id}}'
+ var audienceId='{{audience.id}}'
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+    $(".uncheck_user").change(function(){
+    var userId=$(this).attr('id');
+    if($(this).prop('checked')){
+        action='addUserToAudience'
+    }else{
+        action='removequestion'
+    }
+
+        $.post('/dashboard/surveys/addUserToSurveyAudienceList/',{action:action,userId:userId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId,audienceId:audienceId},function(data){
+            $.post('/dashboard/surveys/getFinalAudiencelist/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            //alert(data)
+         $('#list_holder').html(data)
+            })
+           })
+   
+})
+
+$('.actionbuttons').click(function(){
+    var role=$(this).attr('role');
+    
+    if(role=='back'){
+    
+    }else if(role=='cancel'){
+     var action='clearall'
+     $.post('/dashboard/surveys/manageAudiences/',{audienceId:audienceId,action:action,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            $.post('/dashboard/surveys/getFinalAudiencelist/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+             
+         $('#list_holder').html(data)
+            })
+           })
+    }else{
+        var action='save'
+        $.post('/dashboard/surveys/manageAudiences/',{audienceId:audienceId,action:action,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            $.post('/dashboard/surveys/getFinalAudiencelist/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+                $('#list_holder').html(data)
+            })
+           })
+    }
+})
+
+
+
+ })
+ function filterusers(){
+    var numbercount='{{usercount}}'
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById("searchUsers");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+            //numbercount++
+            $("#numbercount").html(numbercount)
+        } else {
+            li[i].style.display = "none";
+            numbercount--
+            $("#numbercount").html(numbercount)
+           
+        }
+    }
+}
+</script>

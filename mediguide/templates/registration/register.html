@@ -1,0 +1,1549 @@
+{% extends 'dashboard/base3.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+ .ff-el-form-control{
+  background-clip: padding-box;
+  background-image: none;
+  border: 1px solid #dadbdd;
+  border-radius: 7px;
+  color: #606266;
+  display: block;
+  font-family: -apple-system,"system-ui",Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+  line-height: 1;
+  margin-bottom: 0;
+  max-width: 100%;
+  padding: 11px 15px;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  width: 100%;
+    }
+    .ff-el-progress{
+        background-color: #e9ecef;
+border-radius: .25rem;
+font-size: .75rem;
+height: 1.3rem;
+line-height: 1.2rem;
+overflow: hidden;
+    }
+    .ff-el-progress-status {
+  color: var( --e-global-color-e62c288 );
+  font-family: "Source Sans Pro", Sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+.ff-step-header {
+  margin-bottom: 20px;
+}
+.ff-el-progress-bar {
+    width: 33.3333%;
+  background-color: #009640;
+  text-align: right;
+  color: #fff;
+}
+.not_shown{
+    display: none ;
+}
+.content_container{
+    border:1px solid #ccc;
+    border-radius: 10px;
+    padding:10px;
+    min-height: 300px;
+}
+.btn-success{
+    color: #fff !important;
+    background-color: #009640 !important;
+}
+.form-holders{
+    margin-top: 10px;
+}
+</style>
+<!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script> -->
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+<div class="row register_pages" id="page_one">
+
+
+ <div class="col-sm-12">
+<div class="card" style="margin-top:10px;padding-left:10px">
+ <div class="card-body">
+<div class="row">
+<div class="col-sm-12">
+    <div class="ff-step-header"><div class="ff-el-progress-status">Step 1 of 3 - Bio Data</div>
+            <div class="ff-el-progress">
+                <div class="ff-el-progress-bar" style="width: 33.3333%;"><span>33%</span></div>
+            </div>
+            <ul style="display: none" class="ff-el-progress-title">
+                <li style="display: inline;">Bio Data</li><li style="display: none;">Training Details</li><li style="display: none;">Payment Details</li>
+            </ul></div>
+            </div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_names_fisrt_name_" aria-label="First Name">
+Full Name:
+
+</label>
+
+<input type="name" disabled name="name" value="{{user.first_name}} {{user.middle_name}} {{user.last_name}}" readonly class=" col-sm-12 ff-el-form-control">
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_names_gender_" aria-label="Gender">
+Gender:
+
+</label>
+<input type="gender" disabled name="gender" value="{{user.gender}}" readonly class=" col-sm-12 ff-el-form-control">
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_email_" aria-label="Email">
+Email:
+
+</label>
+<input type="email" disabled name="email" value="{{user.email}}" readonly class=" col-sm-12 ff-el-form-control">
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_identification_type_" aria-label="identification_type">
+National Id Number:
+
+</label>
+<input type="text" disabled readonly  maxlength="8"  value="{{user.national_id}}" name="identification" placeholder="Provide your ID number" id="national_id" class=" col-sm-12 ff-el-form-control identities identity1 ">
+
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_phone_" aria-label="Phone">
+Phone:
+
+</label>
+<input type="phone" disabled readonly  name="phone" id="phone"  placeholder="e.g 0712345678 or 254712345678"  maxlength="12" value="{{user.phone_number}}"  class=" col-sm-12 ff-el-form-control">
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_age_" aria-label="Age">
+Date of Birth:
+
+</label>
+<input type="age"  name="age" id="age" placeholder="Input your age. e.g 20 years" value="{{user.birth_date}}"  class=" col-sm-12 ff-el-form-control">
+</div>
+
+<div class="col-sm-4 form-holders">
+<label for="ff_51_county_" aria-label="county">
+County:
+
+</label>
+<input type="text" disabled readonly name="county" value="{{user.county}}" id="county" class=" col-sm-12 ff-el-form-control">
+
+</div>
+<div class="col-sm-4 form-holders">
+<label for="ff_51_constituency_" aria-label="Constituency">
+Sub-county:
+
+</label>
+<input type="text" disabled readonly value="{{user.constituency}}" name="constituency" id="constituency" class=" col-sm-12 ff-el-form-control">
+    
+
+</div>
+
+<div class="col-sm-4 form-holders">
+<label for="ff_51_ward_" aria-label="ward">
+Ward:
+
+</label>
+<input type="text" disabled readonly value="{{user.ward}}" name="ward" id="ward" class=" col-sm-12 ff-el-form-control">
+
+</div>
+
+
+
+
+
+<div class="col-sm-12" style="margin-top:10px">
+    <span class="btn btn-success next_page" style="float:right">Next</span>
+</div>
+<div class="col-sm-12 error_page" style="margin-top:10px;text-align:center;color:red;" id="error_page" ></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+<div class="row not_shown register_pages" id="page_two">
+
+
+ <div class="col-sm-12">
+<div class="card" style="margin-top:10px;padding-left:10px">
+ <div class="card-body">
+<div class="row">
+<div class="col-sm-12">
+<div class="ff-step-header"><div class="ff-el-progress-status">Step 2 of 3 - Training Details</div>
+            <div class="ff-el-progress">
+                <div class="ff-el-progress-bar" style="width: 66.6667%;"><span>66%</span></div>
+            </div>
+           
+        </div>
+            </div>
+<div class="row" style="width: 100% !important;">
+<div class="col-sm-6">
+<div class="col-sm-12 content_container" style="margin: 3px;" >
+    <div class="row">
+        <div class="col-sm-12 valid_codes" style="padding-top: 10px;">
+            <label for="ff_51_names_training_type" aria-label="Training Type">
+            Register as:
+            
+            </label>
+            
+            <select id="main_registration_type" name="main_registration_type"  class=" col-sm-12 ff-el-form-control">
+             
+                {% for item in registration_levels %}
+                  <option value="{{item.id}}" >{{item}}</option>
+                {% endfor %}
+            
+            </select>
+            </div>
+            <div class="col-sm-12" style="padding-top: 10px;">
+                <label for="ff_51_names_training_type" aria-label="Training Type">
+                Registration Code: NB. If you were given a registration code use it here, if not leave it blank:
+                
+                </label>
+                
+                <input type="text" id="reg_code" name="reg_code" placeholder="Input your registration code"  class=" col-sm-12 ff-el-form-control">
+                
+                </div>
+            <!-- <div class="col-sm-12 basic-education not_shown" style="padding-top: 10px;">
+                <label for="ff_51_names_training_type" aria-label="Training Type">
+                School category:
+                
+                </label>
+                
+                <select id="school_category" name="school_category" class=" col-sm-12 ff-el-form-control">
+                    <option value="">-----select----</option>
+                   
+                      <option value="1" >High School</option>
+                      <option value="2" >Primary School</option>
+                
+                </select>
+                </div> -->
+                <div class="col-sm-12 basic-education not_shown" style="padding-top: 10px;">
+                    <label for="ff_51_names_training_type" aria-label="Training Type">
+                    School Type:
+                    
+                    </label>
+                    
+                    <select id="school_type" name="school_type" class=" col-sm-12 ff-el-form-control">
+                        <option value="">-----select----</option>
+                        
+                          <option value="1" >Public School</option>
+                          <option value="2" >Private School</option>
+                        
+                    
+                    </select>
+                    </div>
+            <div class="col-sm-12 public_officer not_shown" style="padding-top: 10px;">
+                <label for="ff_51_names_training_type" aria-label="Training Type">
+                Government:
+                
+                </label>
+                
+                <select id="government" name="government" class=" col-sm-12 ff-el-form-control">
+                    <option value="">-----select----</option>
+                    {% for item in governments %}
+                      <option value="{{item.id}}" >{{item}}</option>
+                    {% endfor %}
+                
+                </select>
+                </div>
+
+                <div class="col-sm-12 primary-school-grade not_shown" style="padding-top: 10px;">
+                    <label for="ff_51_names_training_type" aria-label="Training Type">
+                    Grade:
+                    
+                    </label>
+                    
+                    <select id="primary_grade" name="primary_grade" class=" col-sm-12 ff-el-form-control">
+                        <option value="">-----select----</option>
+                        {% for item in primary_classes %}
+                          <option value="{{item.id}}" >{{item}}</option>
+                        {% endfor %}
+                    
+                    </select>
+                    </div>
+                <div class="col-sm-12 high-school-forms not_shown" style="padding-top: 10px;">
+                    <label for="ff_51_names_training_type" aria-label="Training Type">
+                    Form:
+                    
+                    </label>
+                    
+                    <select id="high_form" name="high_form" class=" col-sm-12 ff-el-form-control">
+                        <option value="">-----select----</option>
+                        {% for item in highschool_classes %}
+                          <option value="{{item.id}}" >{{item}}</option>
+                        {% endfor %}
+                    
+                    </select>
+                    </div>
+                <div class="col-sm-12 public_officer governments national not_shown" style="padding-top: 10px;">
+                    <label for="ff_51_names_training_type" aria-label="Training Type">
+                    Ministry:
+                    
+                    </label>
+                    
+                    <select id="ministry" name="ministry"  class=" col-sm-12 ff-el-form-control">
+                        <option value="">-----select----</option>
+                        {% for item in ministries %}
+                          <option class="not_shown government_list government{{item.government.id}}" value="{{item.id}}" >{{item}}</option>
+                        {% endfor %}
+                    
+                    </select>
+                    </div>
+                    <div class="col-sm-12 public_officer not_shown governments county_government" style="padding-top: 10px;">
+                        <label for="ff_51_names_training_type" aria-label="Training Type">
+                        Counties:
+                        
+                        </label>
+                        
+                        <select id="county_government" name="county_government"  class=" col-sm-12 ff-el-form-control">
+                            <option value="">-----select----</option>
+                            {% for item in counties %}
+                              <option class=" county{{item.id}}" value="{{item.id}}" >{{item}}</option>
+                            {% endfor %}
+                        
+                        </select>
+                        </div>
+                    <div class="col-sm-12 governments national public_officer not_shown" style="padding-top: 10px;">
+                        <label for="ff_51_names_training_type" aria-label="Training Type">
+                        State Departments:
+                        
+                        </label>
+                        
+                        <select id="state_department" name="state_department"  class=" col-sm-12 ff-el-form-control">
+                            <option value="">-----select----</option>
+                            {% for item in state_departments %}
+                              <option class="not_shown ministies_list ministry{{item.ministry.id}}" value="{{item.id}}" >{{item}}</option>
+                            {% endfor %}
+                        
+                        </select>
+                        </div>
+                    
+                       <div class="col-sm-12 governments national public_officer not_shown" style="padding-top: 10px;">
+                        <label for="ff_51_names_training_type" aria-label="Training Type">
+                        Agency:
+                        
+                        </label>
+                        
+                        <select id="agency" name="agency"  class=" col-sm-12 ff-el-form-control">
+                            <option value="">-----select----</option>
+                            {% for item in agancies %}
+                              <option class="not_shown state_departments_list state_department{{item.department.id}}"  value="{{item.id}}" >{{item}}</option>
+                            {% endfor %}
+                        
+                        </select>
+                        </div>
+                        <!-- <div class="col-sm-12 public_officer not_shown" style="padding-top: 10px;">
+                            <label for="ff_51_names_training_type" aria-label="Training Type">
+                            Leadership Role:
+                            
+                            </label>
+                            
+                            <select id="leadership" name="leadership"  class=" col-sm-12 ff-el-form-control">
+                                <option value="">-----select----</option>
+                                {% for item in leadership %}
+                                  <option value="{{item.id}}" >{{item}}</option>
+                                {% endfor %}
+                            
+                            </select>
+                            </div> -->
+                            <div class="col-sm-12 agency_main not_shown" style="padding-top: 10px;">
+                                <label for="ff_51_names_training_type" aria-label="Training Type">
+                                Service:
+                                
+                                </label>
+                                
+                                <select id="service" name="service"  class=" col-sm-12 ff-el-form-control">
+                                    <option value="">-----select----</option>
+                                    {% for item in service %}
+                                      <option value="{{item.id}}" >{{item}}</option>
+                                    {% endfor %}
+                                
+                                </select>
+                                </div>
+                                <div class="col-sm-12 agency_main not_shown" style="padding-top: 10px;">
+                                    <label for="ff_51_names_training_type" aria-label="Training Type">
+                                        Main unit:
+                                    
+                                    </label>
+                                    
+                                    <select id="main_unit" name="main_unit"  class=" col-sm-12 ff-el-form-control">
+                                        <option value="">-----select----</option>
+                                        {% for item in mainunits %}
+                                          <option value="{{item.id}}" >{{item}}</option>
+                                        {% endfor %}
+                                    
+                                    </select>
+                                    </div>
+                                    <div class="col-sm-12 main_units not_shown" style="padding-top: 10px;">
+                                        <label for="ff_51_names_training_type" aria-label="Training Type">
+                                            Unit:
+                                        
+                                        </label>
+                                        
+                                        <select id="unit" name="unit"  class=" col-sm-12 ff-el-form-control">
+                                            <option value="">-----select----</option>
+                                            {% for item in units %}
+                                              <option class=" mainunits unit{{item.main_unit.id}}" value="{{item.id}}" >{{item}}</option>
+                                            {% endfor %}
+                                        
+                                        </select>
+                                        </div>
+
+                                        <div class="col-sm-12 region_list not_shown" style="padding-top: 10px;">
+                                            <label for="ff_51_names_training_type" aria-label="Training Type">
+                                                Regions:
+                                            
+                                            </label>
+                                            
+                                            <select id="region" name="region"  class=" col-sm-12 ff-el-form-control">
+                                                <option value="">-----select----</option>
+                                                {% for item in regions %}
+                                                  <option class=" " value="{{item.id}}" >{{item}}</option>
+                                                {% endfor %}
+                                            
+                                            </select>
+                                            </div>
+                                        
+                                        <div class="col-sm-12 agency_main not_shown" style="padding-top: 10px;">
+                                            <label for="ff_51_names_training_type" aria-label="Training Type">
+                                                Police Rank:
+                                            
+                                            </label>
+                                            
+                                            <select id="police_rank" name="police_rank"  class=" col-sm-12 ff-el-form-control">
+                                                <option value="">-----select----</option>
+                                                {% for item in policeranks %}
+                                                  <option value="{{item.id}}" >{{item}}</option>
+                                                {% endfor %}
+                                            
+                                            </select>
+                                            </div>
+                                        
+                                
+                            
+                        
+        <div class="col-sm-12 valid_codes reg_types" style="padding-top: 10px;">
+            <label for="ff_51_names_training_type" aria-label="Training Type">
+            Registration Type:
+            
+            </label>
+            
+            <select id="registration_type" name="registration_type"  class=" col-sm-12 ff-el-form-control">
+             
+                {% for item in registration_types %}
+                  <option value="{{item.id}}" >{{item}}</option>
+                {% endfor %}
+            
+            </select>
+            </div>
+<div class="col-sm-12 valid_codes" style="padding-top: 10px;">
+<label for="ff_51_names_training_type" aria-label="Training Type">
+Training Category:
+
+</label>
+
+<select id="training_type" name="training_type"  {% if selected or category_selected %} disabled aria-readonly {% endif %} class=" col-sm-12 ff-el-form-control">
+    {% if category_selected %}
+    <option value="{{category_selected.id}}" role="{{category_selected.description}}">{{category_selected}}</option>
+    {% else %}
+    {% if selected %}
+    <option value="{{selected.training_category.id}}" role="{{selected.training_category.description}}">{{selected.training_category}}</option>
+    {% else %}
+    <option value="">-----------</option>
+    
+    {% for item in training_category %}
+      <option value="{{item.id}}" role="{{item.description}}">{{item}}</option>
+    {% endfor %}
+    {% endif %}
+    {% endif %}
+</select>
+</div>
+{% if category_selected.id == 1 or category_selected.id == 2 %}
+
+{% else %}
+<div class="col-sm-12 trainings_holder">
+<label for="ff_51_trainings_" aria-label="Trainings">
+Training:
+
+</label>
+<select type="trainings" name="trainings" id="trainings" {% if selected %} disabled aria-readonly {% endif %} class=" col-sm-12 ff-el-form-control">
+    {% if selected %}
+    <option value="{{selected.id}}" role="{{selected.description}}">{{selected}}</option>
+    {% else %}
+    <option value="">-----------</option>
+    {% for item in trainings %}
+  
+     <option class=" not_shown training_types training_type{{item.training_category.id}}" value="{{item.id}}">{{item}}</option>
+
+      {% endfor %}
+      {% endif %}
+
+</select>
+</div>
+
+{% endif %}
+<div class="col-sm-12 valid_codes" style="padding-top: 10px;">
+<label for="ff_51_training_county_" aria-label="training_county">
+County of Training:
+
+</label>
+<select type="training_county" name="training_county" id="training_county" class=" col-sm-12 ff-el-form-control">
+    <option value="">-----------</option>
+
+ {% for item in counties %}
+     <option value="{{item.id}}">{{item}}</option>
+{% endfor %}
+</select>
+</div>
+<div class="col-sm-12 valid_codes institution-data" style="padding-top: 10px;">
+<label for="ff_51_institutions_" aria-label="Institutions">
+Training Institution:
+
+</label>
+<select type="institutions" name="institutions" id="institutions" class=" col-sm-12 ff-el-form-control">
+    <option value="">-----------</option>
+
+  {% for item in institution_cunties %}
+     <option class="not_shown not_icta icta{{item.institution.id}}-{{item.county.id}} countiesb countyb{{item.county.id}}" value="{{item.id}}" >{{item.institution}}</option>
+      
+{% endfor %}
+</select>
+</div>
+
+<div class="col-sm-12 school-data" style="padding-top: 10px;">
+    <label for="ff_51_institutions_" aria-label="Institutions">
+    School:
+    
+    </label>
+    <select type="schools" name="schools" id="schools" class=" col-sm-12 ff-el-form-control">
+        <option value="">-----------</option>
+    
+      
+    </select>
+    </div>
+
+<div class="col-sm-12 valid_codes" style="padding-top: 10px;">
+<label for="ff_51_training_mode_" aria-label="training_mode">
+Mode of Training:
+
+</label>
+<select type="training_mode" name="training_mode" id="training_mode" class=" col-sm-12 ff-el-form-control">
+    <option value="">-----------</option>
+{% for item in training_modes %}
+{% if item.id == 1 %}
+     <option value="{{item.id}}">{{item}}</option>
+
+{% endif %}      
+{% endfor %}
+</select>
+</div>
+<div class="col-sm-12 valid_codes" style="padding-top: 10px;">
+<label for="ff_51_training_session_" aria-label="training_session">
+Training Session:
+
+</label>
+<!-- <select type="training_session" name="training_session" id="training_session" class=" col-sm-12 ff-el-form-control">
+    <option value="">-----------</option>
+
+   {% for item in institution_sessions %}
+     <option class="not_shown sessions session{{item.institution.id}}_{{item.mode.id}}" role="{{item.session.duration}}"  value="{{item.id}}">{{item}} for {{item.session.duration}} days, {{item.session.start_time}} - {{item.session.end_time}}</option>
+
+      
+{% endfor %}
+</select> -->
+<select type="training_session" name="training_session" id="training_session" class=" col-sm-12 ff-el-form-control">
+    <option value="">-----------</option>
+
+   {% for item in training_sessions %}
+     <option class="not_shown sessions session{{item.mode.id}}" role="{{item.duration}}"  value="{{item.id}}">{{item}} for {{item.duration}} days, {{item.start_time}} - {{item.end_time}}</option>
+
+      
+{% endfor %}
+</select>
+
+
+</div>
+<div class="row valid_codes date_selections" style="padding-right: 0px;padding-top: 10px;">
+<div class="col-sm-6" style="">
+<label for="ff_51_date_" aria-label="date">
+Select Start Date:
+
+</label>
+<input type="text" name="date" id="date" class="datepicker col-sm-12 ff-el-form-control" >
+
+</div>
+
+<div class="col-sm-6 ">
+    <label for="ff_51_date_" aria-label="date">
+    End Date:
+    
+    </label>
+    <input type="text" name="enddate" readonly  id="end_datepicker" class=" col-sm-12 ff-el-form-control">
+    
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-sm-6" >
+    <div class="col-sm-12 valid_codes content_container main_description not_shown" style="margin: 3px;" id="">
+    <div class="col-sm-12" style=" background-color: #01a653 !important;color: #fff !important;">DESCRIPTION</div>
+    <div class="col-sm-12 description_holder" style="text-align: justify;"></div>
+    <div class="col-sm-12 description_basic" style="text-align: justify;">
+    <div class="col-sm-12">
+        {{basic_digital.description}}<br>
+        <hr>TOTAL COST :(Ksh). {{basic_digital.price}}
+    
+    </div>
+    <div class="col-sm-12">
+     <p></p>
+    <p>Basic Digital Skills Trainings</p>
+        <table class="table loadtable">
+            <tr style="background-color:#01a653;color:#fff">
+            <th>CODE</th><th>TRAINING TITLE</th>
+            </tr>
+           {% for item in basic_trainings %}
+
+     
+             <tr>
+            <td>{{item.code}}</td><td>{{item}} </td>
+            </tr>
+    
+{% endfor %}         
+        </table>
+    </div>
+
+</div>
+
+<div class="col-sm-12 foundational_basic" style="text-align: justify;">
+    <div class="col-sm-12">
+        {{foundational_digital.description}}<br>
+        <hr>TOTAL COST :(Ksh). {{foundational_digital.price}}
+   
+    
+    </div>
+    <div class="col-sm-12">
+     <p></p>
+    <p>Foundational Digital Skills Trainings</p>
+        <table class="table loadtable">
+            <tr style="background-color:#01a653;color:#fff">
+            <th>CODE</th><th>TRAINING TITLE</th>
+            </tr>
+           {% for item in foundational %}
+
+     
+             <tr>
+            <td>{{item.code}}</td><td>{{item}} 
+            
+            </td>
+            </tr>
+      
+{% endfor %}         
+        </table>
+    </div>
+
+</div>
+
+
+    </div>
+
+</div>
+</div>
+<div class="col-sm-12 valid_codes" style="margin-top:10px">
+<span class="btn  btn-success back_page_institution" style="">Previous</span>
+    <span class="btn btn-success next_page_institution" style="float:right">Next</span>
+</div>
+<div class="col-sm-12 error_page" style="margin-top:10px;text-align:center;color:red"></div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="row not_shown register_pages last_page_pay" id="page_three">
+
+
+ <div class="col-sm-12">
+<div class="card" style="margin-top:10px;padding-left:10px">
+ <div class="card-body">
+<div class="row">
+<div class="col-sm-12">
+<div class="ff-step-header"><div class="ff-el-progress-status">Step 3 of 3 - Payment Details</div>
+            <div class="ff-el-progress">
+                <div class="ff-el-progress-bar" style="width: 100%;"><span>100%</span></div>
+            </div>
+           
+        </div>
+            </div>
+<div class="col-sm-12 registrarion_details" id="registrarion_details">
+   
+</div>
+<div class="col-sm-12" style="margin-top:10px">
+<span class="btn btn-success back_page_final" style="">Previous</span>
+
+    <!-- <span class="btn btn-success not_shown complete-process-btn complete-process" style="float:right">Complete</span> -->
+    <span class="btn btn-success not_shown final_buttons complete_institution" style="float:right">Complete</span>
+    <span class="btn btn-success not_shown final_buttons complete_institution_group" style="float:right">Complete</span>
+</div>
+<div class="col-sm-12 error_page" style="margin-top:10px;text-align:center;color:red"></div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<input type="text" hidden name="bill_price" id="bill_price" class="bill_price">
+<input type="text" hidden name="bill_ref" id="bill_ref" class="bill_ref">
+<input type="text" hidden name="bill_instance" id="bill_instance" class="bill_instance">
+<input type="text" hidden name="bill_registration" id="bill_registration" class="bill_registration">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script> 
+
+  $.noConflict();
+  jQuery(function($) {
+    // Your code using $ here.
+    $(".datepicker").datepicker({
+      beforeShowDay: function(date) {
+        var day = date.getDay();
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (date < today) {
+          return [false, ''];
+        }
+
+        return [day === 1, ''];
+      }
+    });
+    
+  });
+
+
+  $(document).ready(function() {
+    $("#government").change(function(){
+        var government=$(this).val()
+        // alert(government)
+        
+        if(government==1){
+        $(".governments").hide()
+        $(".national").show()
+        $(".government_list").hide()
+        $(".government"+government).show()
+        }else if(government==2){
+            $(".governments").hide()
+            $(".county_government").show()
+        }else{
+
+        }
+
+    })
+    $("#ministry").change(function(){
+        var ministry=$(this).val()
+        // alert(ministry)
+        $(".ministies_list").hide()
+        $(".ministry"+ministry).show()
+
+    })
+    $("#state_department").change(function(){
+        var state_department=$(this).val()
+        // alert(state_department)
+        $(".state_departments_list").hide()
+        $(".state_department"+state_department).show()
+
+    })
+    $("#main_unit").change(function(){
+        var main_unit=$(this).val()
+        // alert(main_unit)
+        if (main_unit==2){
+            $(".main_units").show()
+            $(".region_list").hide()
+        }else{
+            $(".main_units").hide()
+            $(".region_list").show()
+        }
+       
+        // $(".unit"+main_unit).show()
+
+    })
+
+    
+    $("#agency").change(function(){
+        var agency=$(this).val()
+        // alert(state_department)
+        if(agency==1){
+            $(".agency_main").show()
+
+        }else{
+            $(".agency_main").hide()
+
+        }
+        // $(".agency_main"+state_department).show()
+
+    })
+    // agency
+    // $("#date").datepicker();
+    var loader=$("#loader").html()
+// Add click event to a button (assuming you have a button with an ID of "calculate")
+$("#date").focusout(function(){
+    var selectedDate = $(this).val();
+    var selectedOption = $('#training_session').find("option:selected");
+    var num_days = selectedOption.attr("role");
+    if (selectedDate && num_days) {
+        var dateParts = selectedDate.split('/'); // Assumes the date is in MM/DD/YYYY format
+                  // Extract day, month, and year
+            var day = parseInt(dateParts[1], 10); // Convert day to a number
+            var month = dateParts[0];
+            var year = dateParts[2];
+            day +=  parseInt(num_days);
+            // alert(num_days)
+            var updatedDate = new Date(year, month - 1, day);
+            var updatedDay = updatedDate.getDate();
+            var updatedMonth = updatedDate.getMonth() + 1; 
+            var updatedYear = updatedDate.getFullYear();
+            
+        $("#end_datepicker").val( updatedMonth + "/" + updatedDay + "/" + updatedYear)
+
+    }
+
+});
+$("#end_datepicker").focusin(function(){
+    var selectedDate = $('#date').val();
+    var selectedOption = $('#training_session').find("option:selected");
+    var num_days = selectedOption.attr("role");
+    // alert(num_days)
+    if (selectedDate && num_days) {
+        var dateParts = selectedDate.split('/'); // Assumes the date is in MM/DD/YYYY format
+                  // Extract day, month, and year
+            var day = parseInt(dateParts[1], 10); // Convert day to a number
+            var month = dateParts[0];
+            var year = dateParts[2];
+            day +=  parseInt(num_days);
+
+            var updatedDate = new Date(year, month - 1, day);
+            var updatedDay = updatedDate.getDate();
+            var updatedMonth = updatedDate.getMonth() + 1; 
+            var updatedYear = updatedDate.getFullYear();
+
+            $("#end_datepicker").val( updatedMonth + "/" + updatedDay + "/" + updatedYear)
+    }
+
+});
+
+var csrfmiddlewaretoken= '{{csrf_token}}';
+var register_type=$("#main_registration_type").val()
+var reg_code=$("#reg_code").val()
+if(register_type==1){
+        $(".public_officer").hide()
+        $(".basic-education").hide()
+        $(".high-school-forms").hide()
+        $(".primary-school-grade").hide()
+        $(".school-data").hide()
+         $(".institution-data").show()
+         $(".date_selections").show()
+         if(reg_code){
+            $("#registration_type").prop('disabled',true)
+            $("#registration_type").val(1)
+         }else{
+            $("#registration_type").prop('disabled',false)
+         }
+         
+    }else if(register_type==2){
+        $(".public_officer").show()
+        $(".basic-education").hide()
+        $(".high-school-forms").hide()
+        $(".primary-school-grade").hide()
+        $(".school-data").hide()
+         $(".institution-data").show()
+         $(".date_selections").show()
+         if(reg_code){
+            $("#registration_type").prop('disabled',true)
+            $("#registration_type").val(1)
+         }else{
+            $("#registration_type").prop('disabled',false)
+         }
+    }else if(register_type==3){
+        $(".public_officer").hide()
+        $(".basic-education").show()
+        $(".high-school-forms").show()
+        $(".primary-school-grade").hide()
+        $(".school-data").show()
+         $(".institution-data").hide()
+         $(".date_selections").hide()
+            $("#registration_type").prop('disabled',true)
+            $("#registration_type").val(1)
+         
+    }else if(register_type==4){
+        $(".public_officer").hide()
+        $(".basic-education").show()
+        $(".high-school-forms").hide()
+        $(".primary-school-grade").show()
+        $(".school-data").show()
+         $(".institution-data").hide()
+         $(".date_selections").hide()
+            $("#registration_type").prop('disabled',true)
+            $("#registration_type").val(1)
+         
+    }else{
+        
+    }
+    
+    $("#reg_code").focusout()
+  
+
+if(reg_code){
+    var code=reg_code
+    $.post('/check-code/',{csrfmiddlewaretoken:csrfmiddlewaretoken,code:code},function(data){
+             
+             if($.trim(data)=='ok'){
+
+             $("#reg_code").css('border','1px solid #009640')
+             $("#reg_code").css('color','#009640')
+             
+             $("#registration_type").prop('disabled',true)
+             $("#registration_type").val(1)
+             $(".valid_codes").hide()
+             $(".error_page").html('Processing..please..wait')
+             $.post('/process-data-code/',{csrfmiddlewaretoken:csrfmiddlewaretoken,code:code},function(responce){
+                 $(".error_page").html('')
+             })
+             $(".register_pages").hide()
+                $(".registrarion_details").html(responce)
+                // alert(data)
+                $(".registrarion_details").show()
+                $("#page_three").show()
+                $(".error_page").html('')
+             }else{
+                 $(".valid_codes").show()
+                 $(".error_page").html('')
+                 $("#reg_code").css('border','1px solid red')
+                 $("#reg_code").css('color','red')
+                 $("#reg_code").val('')
+                 $("#reg_code").attr('placeholder','Invalid code, try again')
+                 $("#registration_type").prop('disabled',false)
+             $("#registration_type").val(1) 
+             }
+})
+}
+$("#main_registration_type").change(function(){
+    var register_type=$(this).val()
+    var reg_code=$("#reg_code").val()
+    if(register_type==1){
+        $(".public_officer").hide()
+        $(".basic-education").hide()
+        $(".high-school-forms").hide()
+        $(".primary-school-grade").hide()
+        $(".school-data").hide()
+         $(".institution-data").show()
+         $(".date_selections").show()
+         if(reg_code){
+            $("#registration_type").prop('disabled',true)
+            $("#registration_type").val(1)
+         }else{
+            $("#registration_type").prop('disabled',false)
+         }
+    }else if(register_type==2){
+        $(".public_officer").show()
+        $(".basic-education").hide()
+        $(".high-school-forms").hide()
+        $(".primary-school-grade").hide()
+        $(".school-data").hide()
+         $(".institution-data").show()
+         $(".date_selections").show()
+         if(reg_code){
+            $("#registration_type").prop('disabled',true)
+            $("#registration_type").val(1)
+         }else{
+            $("#registration_type").prop('disabled',false)
+         }
+    }else if(register_type==3){
+        $(".public_officer").hide()
+        $(".basic-education").show()
+        $(".high-school-forms").show()
+        $(".primary-school-grade").hide()
+        $(".school-data").show()
+         $(".institution-data").hide()
+         $(".date_selections").hide()
+     
+            $("#registration_type").prop('disabled',true)
+            $("#registration_type").val(1)
+         
+    }else if(register_type==4){
+        $(".public_officer").hide()
+        $(".basic-education").show()
+        $(".high-school-forms").hide()
+        $(".primary-school-grade").show()
+        $(".school-data").show()
+         $(".institution-data").hide()
+         $(".date_selections").hide()
+            $("#registration_type").prop('disabled',true)
+            $("#registration_type").val(1)
+         
+    }else{
+        
+    }
+   
+            var county=$("#training_county").val()
+            if(county){
+            if(register_type>2){
+                // var school_category=$("#school_category").val()
+                var school_type=$('#school_type').val()
+                // alert('register_type='+register_type+'; school_category='+school_category+'; school_type='+school_type)
+                if (register_type==3 && school_type == 1){
+                    var level_type='public-secondary-school'
+                }else if (register_type==4 && school_type == 1){
+                    var level_type='public-primary-school'
+                }else if (register_type==3 && school_type == 2){
+                    var level_type='private-secondary-school'
+                }else if (register_type==4 && school_type == 2){
+                    var level_type='private-primary-school'
+                }else{
+                    level_type=''
+                }
+                $.post('/get-county-institutions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,level_type:level_type,county:county},function(data){
+                $("#schools").html(data).show()
+                // alert(data)
+                $(".school-data").show()
+                $(".institution-data").hide()
+                $("#institutions").hide()
+            })
+            }else{
+                level_type='tertiary'
+                $.post('/get-county-institutions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,level_type:level_type,county:county},function(data){
+                    // alert(data)
+                $("#institutions").html(data).show()
+                $("#schools").hide()
+                $(".school-data").hide()
+                $(".institution-data").show()
+            })
+            }
+          
+            var training_type=$("#training_type").val()
+            if (training_type==1){
+                icta='78'
+            var county=$(this).val()
+            $(".not_icta").hide()
+            $(".icta"+icta+"-"+county).show()
+            $('#institutions').val('')
+            }else{
+
+          
+            var county=$(this).val()
+            $(".countiesb").hide()
+            $(".countyb"+county).show()
+            $('#institutions').val('')
+        }
+    }
+})
+
+$("#school_type").change(function(){
+
+    var register_type=$("#main_registration_type").val()
+    var county=$("#training_county").val()
+    if(county){
+            if(register_type>2){
+                // var school_category=$("#school_category").val()
+                var school_type=$(this).val()
+                // alert('register_type='+register_type+'; school_category='+school_category+'; school_type='+school_type)
+                if (register_type==3 && school_type == 1){
+                    var level_type='public-secondary-school'
+                }else if (register_type==4 && school_type == 1){
+                    var level_type='public-primary-school'
+                }else if (register_type==3 && school_type == 2){
+                    var level_type='private-secondary-school'
+                }else if (register_type==4 && school_type == 2){
+                    var level_type='private-primary-school'
+                }else{
+                    level_type=''
+                }
+                $.post('/get-county-institutions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,level_type:level_type,county:county},function(data){
+                $("#schools").html(data).show()
+                // alert(data)
+                $(".school-data").show()
+                $(".institution-data").hide()
+                $("#institutions").hide()
+            })
+            }else{
+                level_type='tertiary'
+                $.post('/get-county-institutions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,level_type:level_type,county:county},function(data){
+                $("#institutions").html(data).show()
+                $("#schools").hide()
+                $(".school-data").hide()
+                $(".institution-data").show()
+            })
+            }
+        
+            var training_type=$("#training_type").val()
+            if (training_type==1){
+                icta='78'
+            var county=$(this).val()
+            $(".not_icta").hide()
+            $(".icta"+icta+"-"+county).show()
+            $('#institutions').val('')
+            }else{
+
+          
+            var county=$(this).val()
+            $(".countiesb").hide()
+            $(".countyb"+county).show()
+            $('#institutions').val('')
+        }
+    }
+
+
+})
+$('.complete_institution_group').click(function(){
+    var total_price=parseInt($("#bill_price").val())
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+    var billRefNumber=$("#bill_ref").val()
+    var instance= $("#bill_instance").val()
+    var registration=$("#bill_registration").val()
+    // alert(total_price)
+    var loader=$("#loader").html()
+    $(".error_page").html(loader)
+    var bill=btoa(billRefNumber)
+    if(total_price>0){
+           
+           var billRefNumber=$("#bill_ref").val()
+           var instance= $("#bill_instance").val()
+           var registration=$("#bill_registration").val()
+        //    alert(billRefNumber)
+           var bill=btoa(billRefNumber)
+          window.location='/payment/'+bill
+
+               }else{
+                var loader=$("#loader").html()
+            $(".error_page").html(loader)
+     $.post('/complete-registration-group/',{registration:registration,instance:instance,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+    //   $("#modal-staff").modal("show");    
+    window.location='/account/'
+    $(".error_page").html('')
+        //$('.content-wrapper').html(data)
+ })
+                }
+                
+               })
+
+
+
+
+
+
+
+
+    var training_type=$("#training_type").val()
+    // alert(training_type)
+        // var training_type=$(this).val()
+        var train='{{selected}}'
+            // alert(train)
+            // if(training_type){
+
+                if(training_type==2){
+                $(".trainings_holder").hide()
+                $(".main_description").show()
+                $("#trainings").val('').attr('disabled',true).attr('readonly',true)
+                $(".description_holder").html('').hide()
+                $(".description_basic").show()
+                $(".foundational_basic").hide()
+                
+                }else if(training_type==1){
+                $(".trainings_holder").hide()
+                $(".main_description").show()
+                $("#trainings").val('').attr('disabled',true).attr('readonly',true)
+                $(".description_holder").html('').hide()
+                $(".description_basic").hide()
+                $(".foundational_basic").show()
+            }else{
+            var description=$('option:selected', '#training_type').attr('role')
+            // alert(description)
+            $(".main_description").show()
+            $(".description_holder").html(description).show()
+            
+            $(".description_basic").hide()
+            $(".foundational_basic").hide()
+            
+            // alert(training_type)
+            $(".trainings_holder").show()
+            if (train){
+          
+                // $('#trainings').val('').attr('disabled',false).attr('readonly',false)
+            }else{
+                $(".training_types").hide()
+                $(".training_type"+training_type).show()
+                $('#trainings').val('').attr('disabled',false).attr('readonly',false)
+            }
+            }
+        // }else{
+
+        // }
+        $("#county").change(function(){
+            var county=$(this).val()
+            $(".counties").hide()
+            $(".county"+county).show()
+            $('#ward').val('')
+            $('#constituency').val('')
+        })
+       
+        
+        // $("#identification_type").change(function(){
+        //     var identity=$(this).val()
+        //     $(".identities").hide()
+        //     $("#national_id").val('')
+        //     $("#nemis").val('')
+        //     $("#birth_certificate").val('')
+        //     $(".identity"+identity).show()
+        //     $("#identity_holder").show()
+        //     if(identity==1){
+        //         $("#for_identification_lbl").html('ID Number')
+        //     }else if(identity==2){
+        //         $("#for_identification_lbl").html('NEMIS Details')
+        //     }else{
+        //         $("#for_identification_lbl").html('Birth Certificate Number')
+        //     }
+        // })
+        
+        $("#constituency").change(function(){
+            var constituency=$(this).val()
+            $(".constituencies").hide()
+            $(".constituency"+constituency).show()
+            $('#ward').val('')
+        })
+        $(".next_page").click(function(){
+       
+                $(".register_pages").hide()
+                $("#page_two").show()
+                $(".error_page").html('')
+       
+
+
+        })
+
+        // $("#school_category").change(function(){
+        // var school_category=$("#school_category").val()
+        // if (school_category==1){
+        //    $(".high-school-forms").show()
+        //    $(".primary-school-grade").hide()
+        // }else{
+        //     $(".high-school-forms").hide()
+        //    $(".primary-school-grade").show()
+        // }
+        // })
+        $("#training_county").change(function(){
+        var register_type=$("#main_registration_type").val()
+            var county=$(this).val()
+            if(register_type>2){
+                // var school_category=$("#school_category").val()
+                var school_type=$('#school_type').val()
+                // alert('register_type='+register_type+'; school_category='+school_category+'; school_type='+school_type)
+                if (register_type==3 && school_type == 1){
+                    var level_type='public-secondary-school'
+                }else if (register_type==4 && school_type == 1){
+                    var level_type='public-primary-school'
+                }else if (register_type==3 && school_type == 2){
+                    var level_type='private-secondary-school'
+                }else if (register_type==4 && school_type == 2){
+                    var level_type='private-primary-school'
+                }else{
+                    level_type=''
+                }
+                $.post('/get-county-institutions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,level_type:level_type,county:county},function(data){
+                $("#schools").html(data).show()
+                // alert(data)
+                $(".school-data").show()
+                $(".institution-data").hide()
+                $("#institutions").hide()
+            })
+            }else{
+                level_type='tertiary'
+                $.post('/get-county-institutions/',{csrfmiddlewaretoken:csrfmiddlewaretoken,level_type:level_type,county:county},function(data){
+                $("#institutions").html(data).show()
+                // alert(data)
+                $("#schools").hide()
+                $(".school-data").hide()
+                $(".institution-data").show()
+            })
+            }
+          
+            var training_type=$("#training_type").val()
+            // alert(training_type)
+            if (training_type==1){
+                icta='78'
+            var county=$(this).val()
+            $(".not_icta").hide()
+            $(".icta"+icta+"-"+county).show()
+            $('#institutions').val('')
+            // alert()
+            }else{
+
+          
+            var county=$(this).val()
+            // alert(data)
+            $(".countiesb").hide()
+            $(".countyb"+county).show()
+            $('#institutions').val('')
+        }
+        })
+        $("#reg_code").focusout(function(){
+            var code= $("#reg_code").val()
+            if (code){
+                $.post('/check-code/',{csrfmiddlewaretoken:csrfmiddlewaretoken,code:code},function(data){
+             
+                if($.trim(data)=='ok'){
+
+                $("#reg_code").css('border','1px solid #009640')
+                $("#reg_code").css('color','#009640')
+                
+                $("#registration_type").prop('disabled',true)
+                $("#registration_type").val(1)
+                $(".valid_codes").hide()
+                $(".error_page").html('Processing..please..wait')
+                $.post('/process-data-code/',{csrfmiddlewaretoken:csrfmiddlewaretoken,code:code},function(responce){
+                    $(".register_pages").hide()
+                $(".registrarion_details").html(responce)
+                // alert(data)
+                $(".registrarion_details").show()
+                $("#page_three").show()
+                $(".error_page").html('')
+                    // $(".error_page").html('')
+                })
+
+                }else{
+                    $(".valid_codes").show()
+                    $(".error_page").html('')
+                    $("#reg_code").css('border','1px solid red')
+                    $("#reg_code").css('color','red')
+                    $("#reg_code").val('')
+                    $("#reg_code").attr('placeholder','Invalid code, try again')
+                    $("#registration_type").prop('disabled',false)
+                $("#registration_type").val(1) 
+                }
+            })
+            }else{
+                $("#registration_type").prop('disabled',false)
+            }
+        })
+        $("#training_type").change(function(){
+            var training_type=$(this).val()
+            $("#training_county").val('')
+            // alert(training_type)
+            if(training_type==2){
+                $(".trainings_holder").hide()
+                $(".main_description").show()
+                $("#trainings").val('').attr('disabled',true).attr('readonly',true)
+                $(".description_holder").html('').hide()
+                $(".description_basic").show()
+                $(".foundational_basic").hide()
+            }else if(training_type==1){
+                $(".trainings_holder").hide()
+                $(".main_description").show()
+                $("#trainings").val('').attr('disabled',true).attr('readonly',true)
+                $(".description_holder").html('').hide()
+                $(".description_basic").hide()
+                $(".foundational_basic").show()
+
+
+            }else{
+            var description=$('option:selected', this).attr('role')
+            // alert(description)
+            $(".main_description").show()
+            $(".description_holder").html(description).show()
+            $(".training_types").hide()
+            $(".description_basic").hide()
+            $(".foundational_basic").hide()
+            $(".trainings_holder").show()
+            // alert(training_type)
+            $(".training_type"+training_type).show()
+            $('#trainings').val('').attr('disabled',false).attr('readonly',false)
+            }
+        })
+
+            
+
+        $("#training_mode").change(function(){
+            var training_mode=$(this).val()
+            var institutions=$('#institutions').val()
+            $(".sessions").hide()
+            $(".session"+training_mode).show()
+            // $('#training_session').val('')
+        })
+        $("#institutions").change(function(){
+            var institutions=$(this).val()
+            var training_mode=$('#training_mode').val()
+            $(".sessions").hide()
+            $(".session"+training_mode).show()
+            // $('#training_session').val('')
+        })
+       
+
+        $("#training_session").change(function(){
+            $("#date").focusout()
+  })
+
+        // $("#training_county").change(function(){
+        //     var training_mode=$('#training_mode').val()
+        //     var county=$(this).val()
+        //     $(".countiesb").hide()
+        //     $(".countyb"+county+'_'+train_{{mode}}ing_mode).show()
+        //     $('#institutions').val('')
+        // })
+   
+        // $("#training_type").change(function(){
+        //     var training_type=$(this).val()
+        //     $(".training_types").hide()
+        //     // alert(training_type)
+        //     $(".training_type"+training_type).show()
+        //     $('#trainings').val('')
+        // })
+
+        $(".next_page_institution").click(function(){
+           var my_id=$("#user_email").val();
+           var selectedDate = $('#date').val();
+    var selectedOption = $('#training_session').find("option:selected");
+    var num_days = selectedOption.attr("role");
+    if (selectedDate && num_days) {
+        var dateParts = selectedDate.split('/'); // Assumes the date is in MM/DD/YYYY format
+                  // Extract day, month, and year
+            var day = parseInt(dateParts[1], 10); // Convert day to a number
+            var month = dateParts[0];
+            var year = dateParts[2];
+            day +=  parseInt(num_days);
+            // alert(num_days)
+            var updatedDate = new Date(year, month - 1, day);
+            var updatedDay = updatedDate.getDate();
+            var updatedMonth = updatedDate.getMonth() + 1; 
+            var updatedYear = updatedDate.getFullYear();
+            
+        $("#end_datepicker").val( updatedMonth + "/" + updatedDay + "/" + updatedYear)
+        var end_date=btoa( updatedMonth + "/" + updatedDay + "/" + updatedYear)
+    }
+           var training_type=btoa($("#training_type").val())
+           var trainings=btoa($("#trainings").val())
+           var institutions=btoa($("#institutions").val())
+           var training_county=btoa($("#training_county").val())
+           var training_mode=btoa($("#training_mode").val())
+           var training_session=btoa($("#training_session").val())
+           var date=btoa($("#date").val())
+           var government=btoa($("#government").val())
+           var ministry=btoa($("#ministry").val())
+           var state_department=btoa($("#state_department").val())
+           var county_government=btoa($("#county_government").val())
+           var agency=btoa($("#agency").val())
+           var service=btoa($("#service").val())
+           var main_unit=btoa($("#main_unit").val())
+           var unit=btoa($("#unit").val())
+           
+           var region=btoa($("#region").val())
+           var police_rank=btoa($("#police_rank").val())
+
+           
+           var school_type=btoa($("#school_type").val())
+           var high_form=btoa($("#high_form").val())
+           var primary_grade=btoa($("#primary_grade").val())
+           var schools=btoa($("#schools").val())
+
+           
+           
+           
+        //    var end_date=btoa( updatedMonth + "/" + updatedDay + "/" + updatedYear)
+           var training_check=$("#training_type").val()
+        //    alert(training_check)
+            if(training_check==2){
+             var trainings=btoa('basic');
+            }else if(training_check==1){
+             var trainings=btoa('foundation');
+           }else{
+
+           }
+           var registration_type=btoa($("#registration_type").val())
+           var csrfmiddlewaretoken= '{{csrf_token}}';
+           if(training_session  && trainings && training_mode && training_type && training_county){
+
+            var school_type=btoa($("#school_type").val())
+           var high_form=btoa($("#high_form").val())
+           var primary_grade=btoa($("#primary_grade").val())
+           var schools=btoa($("#schools").val())
+           var reg_code=btoa($("#reg_code").val())
+            var loader=$("#loader").html()
+            // $(".error_page").html('submitting...kindly..wait..')
+            $(".error_page").html(loader)
+            $.post('/save-institution-details/',{reg_code:reg_code,school_type:school_type,high_form:high_form,primary_grade:primary_grade,schools:schools,government:government,ministry:ministry,state_department:state_department,county_government:county_government,agency:agency,service:service,main_unit:main_unit,unit:unit,region:region,police_rank:police_rank,csrfmiddlewaretoken:csrfmiddlewaretoken,registration_type:registration_type,end_date:end_date,date:date,training_mode:training_mode,training_county:training_county,training_session:training_session,training_type:training_type,institutions:institutions,trainings:trainings,my_id:my_id}, function (data) {
+            // if($.trim(data)=="success"){
+                // $.get('/payment-details/', function (data) {
+                $(".register_pages").hide()
+                $(".registrarion_details").html(data)
+                // alert(data)
+                $(".registrarion_details").show()
+                $("#page_three").show()
+                $(".error_page").html('')
+                // })
+            //  }else{
+            // $(".error_page").html('sorry..an error occured, kindly try again..')
+            // }
+            })
+
+
+           }else{
+            $(".error_page").html('All fields required! ')
+           }
+    
+
+        })
+
+
+        $(".back_page_institution").click(function(){
+            // var my_id=$("#user_email").val();
+            //  alert(my_id)
+            $(".register_pages").hide()
+            $("#page_one").show()
+            $(".error_page").html('')
+ 
+
+        })
+        $(".back_page_final").click(function(){
+            // var my_id=$("#user_email").val();
+            //  alert(my_id)
+            $(".register_pages").hide()
+            $("#page_two").show()
+            $(".error_page").html('')
+ 
+
+        })
+        $(".complete_institution").click(function(){
+            var csrfmiddlewaretoken= '{{csrf_token}}';
+            // var my_id=$("#user_email").val();
+            var loader=$("#loader").html()
+            $(".error_page").html(loader)
+            // $(".error_page").html('proccessing registration..')
+            $.get('/complete-training-registration/', function(data) {
+            if($.trim(data)=="success"){
+                window.location='/dashboard/'
+                
+            }else{
+                $(".error_page").html('sorry..we could not complete the process..kindly try again')
+            }
+        })
+        })
+        
+    })
+</script>
+
+{% endblock %}

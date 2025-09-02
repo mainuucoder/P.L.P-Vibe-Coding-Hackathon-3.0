@@ -1,0 +1,22 @@
+<!-- meeting.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Meeting</title>
+</head>
+<body>
+    <h1>Video Meeting</h1>
+    <video id="localVideo" autoplay></video>
+    <video id="screenShareVideo" autoplay></video>
+    <div id="remoteVideos"></div>
+    <button id="startButton">Start</button>
+    <button id="callButton">Call</button>
+    <button id="hangupButton">Hang Up</button>
+    <button id="screenShareButton">Share Screen</button>
+    <button id="recordButton">Record</button>
+    <button id="stopRecordButton">Stop Recording</button>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="{% static 'meetings/js/meeting.js' %}"></script>
+</body>
+</html>

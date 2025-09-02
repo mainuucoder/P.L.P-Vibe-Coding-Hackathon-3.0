@@ -1,0 +1,23 @@
+{% load humanize %}
+<a class="wallet_create " role="wallet"  ><i class='fa fa-money'></i> <span>Wallet:Bal, KES:{{wallet.amount_available|intcomma}}</span></a>
+<!-- <a class="dropdown-item wallet_create " role="wallet"  ><i class='bx bx-dollar-circle'></i><span>Wallet USD:{{wallet.amount_available_usd|intcomma}}</span></a> -->
+
+<script>
+    $(document).ready(function() {
+        var csrfmiddlewaretoken= '{{csrf_token}}';
+        
+        $(".wallet_create").click(function(){
+        var level='wallet-top-up'
+        var level_name='Get'
+        
+        $.post('/create-constants/',{level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+                                
+                                $(".modal-content").html(data)
+                                    //$('.content-wrapper').html(data)
+                                    $("#modal-staff").modal("show");
+                                    $("#error_page").html('')
+                            })
+        
+        })
+    })
+    </script>

@@ -1,0 +1,86 @@
+{% load static %}
+{% block content %}
+<div class="row">
+                    <div class="col-xl-3 col-xs-12">
+                        
+                        <div class="card custom-card" style="max-height: 500px;overflow: auto;">
+                            <form action="" method="POST" role="{{PageAction}}" name="{{success_url}}" title="{{not_success_url}}" class="col-md-12" id="NormalForm">
+				
+                                    {% csrf_token %}
+                                
+                                    {{form.media}}
+                                  
+                                <div class="row">
+                                <div class="col-sm-3"></div>
+                                <input type="text" hidden value="{{level}}" name="level" id="level_name">
+                                <input type="text" hidden value="{{level_name}}" name="level_name" id="level_name">
+                                <input type="text" hidden value="{{instance.id}}" name="instance" id="instance">
+                                <input type="text" hidden value="{{success_url}}" name="success_url" id="success_url">
+                                
+                                
+                                
+                            </div>
+                           
+
+
+
+                            <div class="col-sm-12" style="margin-top: 5px; padding-left: 10px;font-weight: bold;">
+                                INDICATORS
+                            </div>
+                            <div class="card-body table-responsive">
+                              
+                           {% for item in list %}
+
+                           <div class="col-sm-12" style="text-transform: uppercase;font-weight: bold;border-bottom: 1px solid #ccc;margin-bottom: 5px;">
+                           {{item.type}}
+                           </div>
+                           <div class="col-sm-12" style="min-height: 50px; margin-bottom: 5px;">
+                            <select class="select-items form-control" name="indicator{{item.type.id}}" id="indicator{{item.type.id}}" role="{{item.type.id}}">
+                                <option value="">-------</option> 
+                            {% for instance in item.list %}
+                            <option value="{{instance.id}}">{{instance}}</option> 
+                             
+                            {% endfor %}
+                        </select>
+                            </div>
+                           {% endfor %}
+
+                            </div>
+                            <div class="col-sm-12">
+                                <button class="btn-success btn advancedbtn "  style=" float: right;display: none;" id="SubmitQuery" role="{{PageAction}}">SAVE</button>
+                               <div id="error_page" class="col-sm-12 error_page" style="text-align:center ;color:red"></div>
+                
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-xl-9 col-xs-12">
+                        <div class="card custom-card">
+                            
+                            <div class="card-body table-responsive home">
+                              
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="modal fade" id="modal-staff">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                        </div>
+                    </div>
+                  </div>
+                  <script>
+                    $(document).ready(function(){
+                    // var csrfmiddlewaretoken= '{{csrf_token}}';
+                    // var level = '{{level}}'
+                    // alert(level)
+                  
+                    $(".select-items").change(function(){
+                        $(".advancedbtn").click()
+                
+                    })
+                })
+
+                </script>
+
+                  {% endblock %}

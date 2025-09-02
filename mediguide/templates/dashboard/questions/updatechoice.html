@@ -1,0 +1,120 @@
+
+{% load static %}
+{% load bootstrap5 %}
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+<div class="inner" style="">
+<span class="btn btn-danger" style="margin-top:5px;margin-left:5px;" id="back-to-view"><i class="fa fa-arrow-left"></i> Back</span>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h4> {{Title}} </h4>
+        </div>
+    </div>
+      <hr />
+     <!--BLOCK SECTION -->
+     <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+            <div class="card-body">
+            <div class="col-lg-12" style="text-transform:uppercase;margin-bottom:5px;border-bottom:2px solid #ccc"><strong>Question :</strong> {{Question|safe}}</div>
+            
+
+
+           
+             <div class="col-sm-12 col-xs-12" id="questions{{questionId}}">
+
+                {% for p in Choices %}
+                {% if p.status == 'active' %}
+                <div class="col-sm-12 col-xs-12" style="margin-bottom:5px ;">
+    
+                    <label style="font-weight: initial !important" class="submit_radiosd">
+    
+                <input type="checkbox"  id="{{p.id}}"  value="{{p.name}}" name="{{p.name}}"  class="innovations_radio" role="{{p.id}}">
+                  <span class="checkmarkd"></span>
+                   {{p.name}}
+                   </label>
+                   <span style="text-align: center;">
+                   <span class="remove_option btn btn-warning" name="RemoveMutipleChoice/" role="{{p.id}}"><i class="fa fa-minus"></i></span>
+                   <span  class="btn btn-info remove_option" name="UpdateMutipleChoice/" role="{{p.id}}"><i class="fa fa-edit"></i></span>
+                </span>
+                </div>
+                {% else %}
+                {% endif %}
+            {% endfor %}
+
+            </div>
+          
+
+         
+
+
+            <form action="" method="POST" role="{{PageAction}}" class="col-md-12" id="DefaultForm">
+				{% csrf_token %}
+				<!-- {% bootstrap_form form %} -->
+                {{form.media}}
+				{% for field in form %}
+					{% bootstrap_field field %}
+					<hr>
+				{% endfor %}
+                <input type="text" value="{{optionid}}" name="optionid" id="id_optionid" hidden="true">
+                <input type="text" value="{{questionId}}" name="questionid" id="id_question" hidden="true">
+				
+				<button class="btn-primary btn col-md-12"  id="SubmitForum" role="{{PageAction}}">SAVE</button>
+			</form>
+
+        </div>
+
+    </div>
+      <!--END BLOCK SECTION -->
+  
+     <!--TABLE, PANEL, ACCORDION AND MODAL  -->
+
+</div>
+</div>
+<script>
+    $(document).ready(function(){
+        $("#back-to-view").click(function(){
+   
+   // var csrfmiddlewaretoken= '{{csrf_token}}';
+   // $.get('/dashboard/questions/viewQuestions/',function(data){
+       
+      // $('.content-wrapper').html(data)
+       $("#modal-staff").modal("hide");  
+//})
+
+
+})
+
+
+
+
+        $(".remove_option").click(function(){
+            var optionid=$(this).attr('role');
+            var actionpage=$(this).attr('name')
+            var csrfmiddlewaretoken= '{{csrf_token}}';
+           $.post('/dashboard/questions/'+actionpage+optionid,{csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+            $("#modal-staff").modal("show"); 
+            $(".modal-content").html(data) 
+                         })
+
+              })
+
+
+
+        })
+</script>

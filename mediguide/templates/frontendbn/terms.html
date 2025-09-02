@@ -1,0 +1,83 @@
+{% extends "frontend/base.html" %} {% load static %} {% load humanize %} 
+{% block content %} {% if messages %} {% for message in messages %}
+ {% if messages %} {% for message in messages %}
+
+<script>
+  notify("{{message.level_tag}}", "{{message}}");
+</script>
+
+{% endfor %} {% endif %} {% endfor %} {% endif %}
+<style>
+  .surveyspanels {
+    min-height: 80px;
+    background: #fff;
+    margin-top: 5px;
+  }
+</style>
+
+<div class="rs-breadcrumbs bg-1">
+  <div class="container">
+    <div class="content-part text-center">
+      <h1 class="breadcrumbs-title white-color mb-0">
+        <h3 style="color: #00a651">Shiriki Terms of Use</h3>
+      </h1>
+    </div>
+  </div>
+</div>
+
+<div
+  id="rs-services"
+  class="rs-services style1 modify2 pt-100 pb-84 md-pt-80 md-pb-64"
+>
+  <div class="container">
+    <div class="row gutter-16">
+      <div class="col-lg-12 col-sm-12 mb-16">
+        <div class="service-wrap">
+          <div class="content-part">
+            <h5 class="title"><a href="#">Our Terms of Use</a></h5>
+            <div class="desc" style="text-align: justify; min-height: 350px;">
+              <p>
+                Welcome to our Shiriki Public Participation Platform! These Terms of Use (“Terms”) are a legal agreement between you and the Shiriki entity responsible for this platform (referred to as “we,” “us,” or “our” in these Terms). Please read these Terms carefully before using our platform. By accessing or using our platform, you agree to be bound by these Terms.
+</p>
+<p><strong>Use of the Platform</strong><br/>
+You agree to use our platform only for lawful purposes and in a manner that does not infringe on the rights of, restrict, or inhibit anyone else’s use and enjoyment of the platform. You may not use our platform in any way that could damage, disable, overburden, or impair our servers or networks, or interfere with any other party’s use and enjoyment of the platform.
+</p>
+<p><strong>User Conduct</strong><br/>
+You agree to use our platform in a respectful and constructive manner. You may not use our platform to post, transmit, or otherwise distribute any content that is unlawful, threatening, abusive, harassing, defamatory, obscene, vulgar, or otherwise objectionable. You may not use our platform to impersonate any person or entity, or to misrepresent your affiliation with any person or entity. You may not use our platform to promote any commercial or political activities.
+</p>
+<p><strong>Intellectual Property<br />
+All content on our platform, including text, graphics, logos, images, and software, is protected by copyright, trademark, and other intellectual property laws. You may not copy, modify, distribute, or otherwise use any content on our platform without our prior written consent.
+</strong>
+<p><strong>Privacy</strong><br/>
+We respect your privacy and are committed to protecting your personal information. Our platform collects and processes personal information in accordance with our Privacy Policy, which is incorporated into these Terms by reference. By using our platform, you agree to our collection and processing of your personal information in accordance with our Privacy Policy.
+</p>
+<p><strong>User Generated Content</strong><br/>
+Our platform may allow you to submit user-generated content, such as forum posts or survey responses. By submitting user-generated content, you represent and warrant that you own or have the necessary rights and permissions to use and authorize us to use the content in the manner contemplated by our platform. You also grant us a non-exclusive, royalty-free, perpetual, irrevocable, and fully sublicensable right to use, reproduce, modify, adapt, publish, translate, create derivative works from, distribute, perform, and display the user-generated content in connection with our platform.
+</p>
+<p><strong>Disclaimers and Limitations of Liability</strong><br />
+Our platform is provided on an “as is” and “as available” basis. We make no representations or warranties of any kind, express or implied, regarding the operation or availability of our platform, or the information, content, materials, or products included on our platform. To the fullest extent permitted by law, we disclaim all warranties, express or implied, including but not limited to implied warranties of merchantability and fitness for a particular purpose.
+<br />
+We are not liable for any damages arising from your use of our platform, including but not limited to direct, indirect, incidental, punitive, and consequential damages. We are not liable for any errors, omissions, or inaccuracies in the information, content, materials, or products included on our platform.
+</p>
+<p><strong>Indemnification</strong><br />
+You agree to indemnify, defend, and hold harmless us, our officers, directors, employees, agents, and affiliates from and against any claims, liabilities, damages, losses, and expenses, including reasonable attorneys’ fees and costs, arising out of your use of our platform or your breach of these Terms.
+</p>
+<p><strong>Governing Law and Jurisdiction</strong><br>
+These Terms are governed by and construed in accordance with the laws of the Kenya .
+</p>
+<p><strong>How can you contact us about this policy?</strong> <br/>
+          <p>If you have questions or comments about these terms, you may email us at<br>
+            info@shiriki.org<br>
+            
+            Phone: +254113281424<br>
+            </p>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+</div>
+{% endblock %}

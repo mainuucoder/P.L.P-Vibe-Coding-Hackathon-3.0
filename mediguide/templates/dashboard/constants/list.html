@@ -1,0 +1,1326 @@
+{% extends 'dashboard/base3.html' %}
+{% load custom_filters %}
+{% load static %}
+{% block content %}
+{% load humanize %}
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<style>
+.not_shown{
+      display: none;
+    }
+    
+.active-row-data{
+  background-color: #02953e !important;
+  color: #fff !important;
+  /* background:url('/downloads/images/image.png'); */
+
+}
+.dropbtn {
+      color: #000;
+      padding: 1px;
+      font-size: 1px;
+      border: none;
+      cursor: pointer;
+    }
+    .action-mark{
+width: 20px;
+height: 20px;
+    }
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 200px;
+      left:-144px;
+      height: 300px !important;
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 9;
+    }
+    
+    /* Links inside the dropdown */
+    .dropdown-content a {
+      color: black;
+      /* padding: 12px 16px; */
+      text-decoration: none;
+      display: block;
+    }
+    .btn-app-dropdown:hover{
+      background-color: #ccc;
+    }
+    .btn-app-dropdown{
+      Border-bottom:1px solid #ccc
+    }
+    /* Change color of dropdown links on hover */
+    /* .dropdown-content a:hover {background-color: #f1f1f1} */
+    
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    
+    /* Change the background color of the dropdown button when the dropdown content is shown */
+    .dropdown:hover .dropbtn {
+      
+    }
+    .actionbtns{
+      text-align: left;
+    }
+
+    .button-register{
+        cursor:pointer;
+    }
+    .dt-button,.btn-success{
+      background-color: #02953e !important;
+    }
+    .btn-primary{
+    background:#111c43 !important
+
+}
+
+td{
+  text-transform: uppercase !important;
+}
+</style>
+<div class="row">
+  <div class="col-xl-12">
+      <div class="card custom-card">
+          <div class="card-header">
+            <div class="col-sm-12" style="text-align: right;">
+              {% if user.is_coordinator %}
+              {% else %}
+              {% if level == 'institution-county' and user.is_coordinator or level == 'public-registration'  %}
+              {% if level == 'public-registration' %}
+              <div class="btn btn-success " style="" id="Downloadcsvusers"><i class="fa fa-download" aria-hidden="true"></i> Sample csv</div>
+              {% if level == 'public-registration' %}
+              <span class="btn btn-success" style="" id="upload_users"><i class="fa fa-upload" aria-hidden="true"></i> Upload</span>
+              {% else %}
+              <span class="btn btn-success" style="" id="Addusers"><i class="fa fa-upload" aria-hidden="true"></i> Upload Data</span>
+              {% endif %}
+              {% endif %}
+              {% else %}
+              {% if level == 'external-trainee' %}
+              <!-- <span class="btn btn-success change-institution" role="" style="" id="change-training-category"><i class="fa fa-plus" aria-hidden="true"></i> Change Training Category</span> -->
+
+              <span class="btn btn-success change-institution" style="" id="change-institution"><i class="fa fa-plus" aria-hidden="true"></i> Change Trainee institution</span>
+
+              {% elif level == 'special-external-trainee' %}
+              
+              {% else %}
+              <span class="btn btn-success" style="" id="Addusersingle"><i class="fa fa-plus" aria-hidden="true"></i> Add New</span>
+              {% endif %}
+              {% if level == 'institution'  %}
+            
+          <span class="btn btn-success " style="" id="Downloadcsv"><i class="fa fa-download" aria-hidden="true"></i> Sample csv</span>
+    
+      <span class="btn btn-success" style="" id="Addusers"><i class="fa fa-upload" aria-hidden="true"></i> Upload Data</span>
+     
+              {% endif %}
+              {% endif %}
+              {% endif %}
+            </div>
+              <div class="card-title">
+                {{Title}}
+                
+              </div>
+          </div>
+          <div class="card-body table-responsive">
+              
+            <table id="file-export " class="table  export-table table-striped  text-nowrap w-100 text-nowrap w-100">
+              <thead style="font-size: 11px;background: #07aa91;color:#fff">
+                <tr>
+                  <th>#</th>
+                 
+
+                  {% if level == 'institution' %}
+                  <th>LOGO</th>
+                  {% elif level == 'building' %}
+                  <th>IMAGE</th>
+                  {% endif %}
+                  
+                  {% if level == 'regional-county' or level == 'test-mail' or level == 'document' %}
+                  
+                  {% else %}
+                  <th>NAME</th>
+                  {% endif %}
+                   {% for itemb in title_list %}
+                  <th style="text-transform: uppercase;">{{itemb}}</th>
+
+                  {% endfor %}
+
+                  {% if level == 'maintenance' %}
+                  <th>START DATE</th>
+                  <th>END DATE</th>
+                  <th>START TIME</th>
+                  <th>END TIME</th>
+                  <th>DESCRIPTION</th>
+                  {% elif level == 'tax-category' or level == 'commission-category' %}
+                  <th>PAYMENTS-RECEIVED</th>
+                  <th>TAX-CHARGED</th>
+                  <th>DESCRIPTION</th>
+                  {% elif level == 'tax-rate' or level == 'commission'  %}
+
+                  
+                  <th>VALUE</th>
+                  <th>PAYMENTS-RECEIVED</th>
+                  {% elif level == 'agent'  %}
+                  <th>LANDLORD</th>
+                  <th>ADDRESS</th>
+                  <th>PHONE</th>
+                  <th>HOUSES</th>
+                  {% elif level == 'caretaker'  %}
+                  <th>LANDLORD</th>
+                  <th>EMAIL</th>
+                  <th>PHONE</th>
+                  <th>HOUSES</th>
+                  {% elif level == 'landlord'  %}
+                  <th>EMAIL</th>
+                  <th>PHONE</th>
+                  <th>HOUSES</th>
+                  {% elif level == 'payments'  %}
+                  <th class="primary_backgroud thick_header">GENDER</th>
+                  <th class="primary_backgroud thick_header">EMAIL</th>
+                  <th class="primary_backgroud thick_header">CATEGORY</th>
+                  <th class="primary_backgroud thick_header">TRAINING</th>
+                  <th class="primary_backgroud thick_header">INSTITUTION</th>
+                  <th class="primary_backgroud thick_header">EXTERNAL TRAINING</th>
+                  <th class="primary_backgroud thick_header">BRANCH</th>
+                  <th class="primary_backgroud thick_header">PHONE</th>
+                  <th class="primary_backgroud thick_header">INVOICED AMT</th>
+                  <th class="primary_backgroud thick_header"> BILL REF</th>
+                  <th class="primary_backgroud thick_header">INVOICE NO</th>
+
+                  <th class="primary_backgroud thick_header">PAYMENT REF</th>
+                  <th class="primary_backgroud thick_header">CHANNEL</th>
+
+                  <th class="primary_backgroud thick_header">CURRENCY</th>
+                  <th class="primary_backgroud thick_header">AMOUNT PAID</th>
+                  <th class="primary_backgroud thick_header">DATE</th>
+                  <th class="primary_backgroud thick_header">STATUS</th>
+                  
+                 {% if level == 'tax-rate' %} 
+                 <th>TAX-CHARGED</th>
+                 {% elif level == 'commission' %}
+                  <th>COMMISSION-CHARGED</th>
+                  {% endif %}
+                  {% if level == 'payments' %}
+                  {% else %}
+                  <th>DESCRIPTION</th>
+                  {% endif %}
+                  {% elif level == 'currency-payment' %}
+
+                  <th>PAYMENTS-RECEIVED</th>
+                  <th>COMMISSION-CHARGED</th>
+                  <th>TAX-CHARGED</th>
+                  <th>WITHDRAWALS</th>
+                  <th>BALANCE</th>
+                  {% elif level == 'currency-withdrawal' %}
+                  <th>CURRENCY</th>
+                  <th>AMOUNT</th>
+                  <th>DESCRIPTION</th>
+                  <th>BALANCE</th>
+                  <th>DATE</th>
+                  <th>WITHDRAWN BY</th>
+                  {% elif level == 'payment-status-check' %}
+
+                  <th>INVOICE</th>
+                  <th>BILL REFERENCE</th>
+                  <th>PAYMENT REFERENCE</th>
+                  <th>AMOUNT</th>
+                  <th>BILLS</th>
+                  <!-- <th>STATUS</th> -->
+                 
+                  {% elif level == 'query-indicator' %}
+
+
+                  <th>TYPE</th>
+                  {% elif level == 'public-registration' %}
+                  <th>GENDER</th>
+                  <th>EMAIL</th>
+                  <th>PHONE</th>
+                  <th>GOVERNMENT</th>
+                  <th>MINISTRY</th>
+                  <th>STATE DEPERTMENT</th>
+                  <th>AGENCY</th>
+                  <th>TRAINING PARTNER</th>
+                  <th>SERVICE</th>
+                  <th>UNIT TYPE</th>
+                  <th>UNIT/REGION</th>
+                  <th>RANK</th>
+                  <th>TRAINING TIME</th>
+                  <!-- <th>DESCRIPTION</th> -->
+                  {% elif level == 'training-category' %}
+                  <th>CODE</th>
+                  <th>REGISTRATION MODE</th>
+                  <th>CITIZENS PRICE</th>
+                  <th>PUBLIC SECTOR PRICE</th>
+                  <th>ASSESSMENT PRICE</th>
+                  <th>DESCRIPTION</th>
+                  {% elif level == 'registration-level' %}
+                  <th>DESCRIPTION</th>
+
+
+                  
+                  {% elif level == 'county-government' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'primary-school' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'high-school' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'registration-type' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  <th>DESCRIPTION</th>
+                  {% elif level == 'public-sector-cohort' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'training-partner' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'public-sector-training' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'public-sector-training-category' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'building-images' %}
+                  <th>IMAGE</th>
+              <td><img src="{{MEDIA}}{{instance.image.url}}" height="60" width="60"></td>
+                  {% elif level == 'agency' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'state-department' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'ministry' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'government-type' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'training-mode' %}
+                  
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  {% elif level == 'training-session' %}
+                  <th>TRAINING MODE</th>
+                  <th>DURATION</th>
+                  <th>TRAINEES REGISTERED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  <th>DESCRIPTION</th>
+                  <th>STARTING</th>
+                  <th>ENDING</th>
+                  {% elif level == 'institution-training-session' %}
+                  
+                <th>INSTITUTION COUNTY</th>
+                <th>SESSION</th>
+                {% elif level == 'region' %}
+                <th>COORDINATOR</th>
+                <th>COUNTIES</th>
+                <th>CAPACITY</th>
+                <th>TRAINERS</th>
+                <th>TRAINEES ASSIGNED</th>
+                <th>TRAINEES TRAINED</th>
+                <th>TRAINEES CERTIFIED</th>
+                <th>DESCRIPTION</th>
+                {% elif level == 'regional-county' %}
+                <th>REGION</th>
+                <th>COUNTY</th>
+                <th>CAPACITY</th>
+                <th>TRAINERS</th>
+                <th>TRAINEES ASSIGNED</th>
+                <th>TRAINEES TRAINED</th>
+                <th>TRAINEES CERTIFIED</th>
+
+                  {% elif level == 'institution-county' %}
+                <th>COUNTY</th>
+                <th>CAPACITY</th>
+                <th>TRAINERS</th>
+                <th>TRAINEES ASSIGNED</th>
+                <th>TRAINEES TRAINED</th>
+                <th>TRAINEES CERTIFIED</th>
+
+                  {% elif level == 'training' %}
+                  <th>CATEGORY</th>
+                  <th>STRUCTURE</th>
+                  <th>DURATION</th>
+                  <th>COST</th>
+                  <th>CODE</th>
+                  {% elif level == 'special-external-training' %}
+                  <th class="">INSTITUTION</th>
+                  <th class="">VENUE</th>
+                  <!-- <th class="">PRICE</th> -->
+                  <!-- <th class="">VERIFICATION CODE</th> -->
+                  <th class="">CONTACT PERSON</th>
+                  <th class="">CONTACT EMAIL</th>
+                  <th class="">CONTACT PHONE</th>
+                 
+                  <th class="">DATE FROM</th>
+                  <th class="">DATE TO</th>
+                  <th class="">DESCRIPTION</th>
+                  <th>IMPORTED</th>
+                  <!-- <th>USED CODE</th>
+                  <th>PAID ASSESSMENT</th> -->
+                  <th>TRAINED</th>
+                  <th>ASSESSED</th>
+                  <!-- <th class="">TRAINEES REGISTERED</th>
+                  <th class="">TRAINEES TRAINED</th> -->
+                  <th class="">CERTIFIED</th>
+                {% elif level == 'external-training' %}
+                <th class="">INSTITUTION</th>
+                <th class="">VENUE</th>
+                <th class="">PRICE</th>
+                <th class="">VERIFICATION CODE</th>
+                <th class="">CONTACT PERSON</th>
+                <th class="">CONTACT EMAIL</th>
+                <th class="">CONTACT PHONE</th>
+               
+                <th class="">DATE FROM</th>
+                <th class="">DATE TO</th>
+                <th class="">DESCRIPTION</th>
+                <th>IMPORTED</th>
+                <th>USED CODE</th>
+                <th>PAID ASSESSMENT</th>
+                <th>TRAINED</th>
+                <th>ASSESSED</th>
+                <!-- <th class="">TRAINEES REGISTERED</th>
+                <th class="">TRAINEES TRAINED</th> -->
+                <th class="">CERTIFIED</th>
+
+                  {% elif level == 'cohort' %}
+                  <th class="">DATE FROM</th>
+                  <th class="">DATE TO</th>
+                  <th class="">DESCRIPTION</th>
+                  <th class="">TRAINEES REGISTERED</th>
+                  <th class="">TRAINEES TRAINED</th>
+                  <th class="">TRAINEES CERTIFIED</th>
+                  {% elif level == 'special-external-trainee' %}
+                  <th>EMAIL</th>
+                 
+                  <th>GENDER</th>
+                  <th>PHONE NUMBER</th>
+                  <th class="">ORGANIZATION</th>
+                  <th class="">COUNTY</th>
+                  <!-- <th class="">USED CODE</th>
+                  <th class="">PAID</th> -->
+                  <th class="">TRAINED</th>
+                  <!-- <th class="">ASSESSED</th> -->
+                  <!-- <th class="">ISSUED CERTIFICATE</th> -->
+
+                  {% elif level == 'external-trainee' %}
+                  <th>EMAIL</th>
+                 
+                  <th>GENDER</th>
+                  <th>PHONE NUMBER</th>
+                  <th class="">UPLOADED</th>
+                  <th class="">REGISTERED</th>
+                  <th class="">USED CODE</th>
+                  <th class="">PAID</th>
+                  <th class="">TRAINED</th>
+                  <th class="">ASSESSED</th>
+                  <th class="">ISSUED CERTIFICATE</th>
+                  {% elif level == 'test-mail' %}
+                  <th>EMAIL</th>
+                  <th>SUBJECT</th>
+                  <th>MESSAGE</th>
+                  <th>SENT</th>
+                  
+                  {% elif level == 'priority' %}
+                  <th>REGISTERED</th>
+                  <th>INPROGRESS</th>
+                  <th>SOLVED</th>
+                  <th>UNSOLVED</th>
+
+
+                  {% elif level == 'main-task' %}
+                  <th>PRIORITY</th>
+                  <th>TIMELINE</th>
+                  <th>DESCRIPTION</th>
+                  <th>COMMENT</th>
+                  <th>RESPONSE</th>
+                  <th>DELIVERY REPORT</th>
+                  <th>CONFIRMATION REPORT</th>
+                  <th>USER</th>
+                  <th>RESPONSIBLE</th>
+                  <th>INPROGRESS</th>
+                  <th>SOLVED</th>
+                  <th>DELIVERED</th>
+                  <th>CONFIRMED</th>
+                 
+
+                  {% elif level == 'institution' %}
+                  <th>CATEGORY</th>
+                  <th>TYPE</th>
+                 
+                  <th>OWNERSHIP</th>
+                  <th>CODE</th>
+                  <th>COUNTIES</th>
+                  <th>CAPACITY</th>
+                  <th>TRAINERS</th>
+                  <th>TRAINEES ASSIGNED</th>
+                  <th>TRAINEES TRAINED</th>
+                  <th>TRAINEES CERTIFIED</th>
+                  <th>LOGIN EMAIL</th>
+                  {% endif %}
+                  {% if level == 'institution-county' and user.is_coordinator or level == 'public-registration' %}
+                  {% else %}
+                  {% if user.is_coordinator  or level == 'special-external-trainee' %}
+                  {% else %}
+                  <th>ACTIONS {% if level == 'external-trainee' %} {T,A,C} {% endif %}</th>
+                  {% endif %}
+                  {% endif %}
+                </tr>
+              </thead>
+              {% for instance in list %}
+              <tr class="">
+               
+                <td  class="{% if level == 'maintenance' %}{% if instance.is_activated %} active-row-data {% endif %}{% endif %}">{{forloop.counter}}</td>
+                {% if level == 'institution' %}
+                <td>
+                  {% if instance.logo %}
+                  <img src="{{ media }}{{ instance.logo.url }}" alt="Logo" height="50" width="80">
+                  {% else %}
+                  <!-- <i class='fa fa-graduation-cap' style='font-size:48px;'></i> -->
+
+
+                  {% endif %}
+                   {% elif level == 'building' %}
+                <td>
+                  {% if instance.image %}
+                  <img src="{{ media }}{{ instance.image.url }}" alt="Logo" height="50" width="80">
+                  {% else %}
+                  <!-- <i class='fa fa-graduation-cap' style='font-size:48px;'></i> -->
+
+
+                  {% endif %}
+                </td>
+                {% endif %}
+
+
+
+
+
+                {% if level == 'regional-county' or level == 'test-mail' %}
+                {% else %}
+                <td  class="{% if level == 'maintenance' %}{% if instance.is_activated %} active-row-data {% endif %}{% endif %}">
+                  
+                  {% if level == 'institution-training-session' %}
+                  {{instance.institution}}
+
+                  {% elif level == 'public-registration' or level == 'room-booking' or level == 'landlord' or level == 'caretaker' or level == 'external-trainee' or level == 'special-external-trainee' or level == 'payments' %}
+
+
+                  {{instance.user.first_name}} {{instance.user.last_name}}
+                  {% elif level == 'payment-status-check' %}
+                  {{instance.trainee.first_name}} {{instance.trainee.last_name}}
+                  {% elif level == 'training-partner' %}
+
+                  
+                  {{instance.institution}}
+                  {% else %}
+                  {{instance.name}}
+                  {% endif %}
+                  
+                </td>
+                {% endif %}
+                {% for itemb in fields_list %}
+                 {% if itemb == 'image' %}
+                 {% if instance|get_attribute:itemb %}
+                  <img src="{{MEDIA}}{{ instance|get_attribute:itemb }}" alt="Logo" height="50" width="80">
+                  {% else %}
+                  {% endif %}
+                 {% else %}
+                  <td>{{instance|get_attribute:itemb}}</td>
+                  {% endif %}
+                  {% endfor %}
+
+
+
+
+
+                {% if level == 'training-category' %}
+                <td>{{instance.code}}</td>
+                <td>{{instance.mode}}</td>
+                <td>{{instance.price}}</td>
+                <td>{{instance.public_sector_fee}}</td>
+                <td>{{instance.assessment_fee}}</td>
+                <td>{{instance.description|safe}}</td>
+                 {% elif level == 'agent'  %}
+                 <td>{{instance.landlord.user.first_name}} {{instance.landlord.user.last_name}}</td>
+                 <td>{{instance.address}}</td>
+                 <td>{{instance.contact}}/{{instance.user.phone_number}}</td>
+                <td>{{instance.houses|intcomma}}</td>
+                {% elif level == 'caretaker'  %}
+                <td>{{instance.landlord.user.first_name}} {{instance.landlord.user.last_name}}</td>
+                 <td>{{instance.user.email}}</td>
+                 <td>{{instance.user.phone_number}}</td>
+                <td>{{instance.houses|intcomma}}</td>
+                
+                 {% elif level == 'landlord'  %}
+                 <td>{{instance.user.email}}</td>
+                 <td>{{instance.user.phone_number}}</td>
+                <td>{{instance.houses|intcomma}}</td>
+                {% elif level == 'currency-withdrawal' %}
+                <td>{{instance.currenct_payment.name}}</td>
+                <td>{{instance.symbol}}{{instance.amount|intcomma}}</td>
+                <td>{{instance.description}}</td>
+                <td>{{instance.currenct_payment.balance}}</td>
+                <td>{{instance.date_created|date}}</td>
+                <td>{{instance.user.first_name}} {{instance.user.last_name}}</td>
+
+                {% elif level == 'currency-payment' %}
+                <td>{{instance.sales}}</td>
+                <td>{{instance.commission}}</td>
+                <td>{{instance.tax}}</td>
+                <td>{{instance.withdrawal}}</td>
+                <td>{{instance.balance}}</td>
+                {% elif level == 'payments'  %}
+               
+
+              <td style="">{{instance.user.gender}}</td>
+                <td style="">
+               {{instance.user.email}}
+              </td>
+              <td style="">{{instance.category}} </td>
+                <td style="">
+                  {% if instance.category.name == 'Foundational Digital Skills' %}
+                  Foundational Digital Skills
+                  {% elif instance.category.name == 'Basic Digital Skills' %}
+                  Basic Digital Skills
+                  
+
+                  {% else %}
+                  {{instance.training}}
+                  {% endif %}
+                                </td>
+                  <td>{{instance.institution}}</td>
+                  <td>{% if instance.external_training %}{{instance.external_training}}{% endif %}</td>
+                  <td>{{instance.institution_county.county}}</td>
+                  <td>{{instance.phone}}</td>
+
+                  <td>{{instance.invoice_amount}}</td>
+
+                  <td>{{instance.bill_reference}}</td>
+                  <td>{{instance.invoice_number}}</td>
+                  <td>{{instance.payment_reference}}</td>
+                  
+                  <td>{{instance.payment_channel}}</td>
+                  <td>{{instance.currency}}</td>
+                  <td>{{instance.amount}}</td>
+                  <td>{{instance.inserted_at}}</td>
+  
+                <!-- <td style="display:none;">
+              </td>
+              
+                <td>
+                
+                </td> -->
+                <td>
+               {% if item.is_complete %}
+               Complete
+               {% else %}
+                
+               Incomplete
+               <!-- <a href="{% url 'register-trainings' %}"><span class="btn btn-success primary_backgroud">Complete</span></a> -->
+               {% endif %}
+                
+                </td>
+
+                {% elif level == 'tax-rate' or level == 'commission' %}
+                <td>{{instance.value}}</td>
+                <td>{{instance.sales}}</td>
+                <td>{{instance.tax_collected_kes}}</td>
+                <td>{{instance.description}}</td>
+                {% elif level == 'tax-category' or level == 'commission-category' %}
+                <td>{{instance.sales}}</td>
+                <td>{{instance.tax_collected_kes}}</td>
+                <td>{{instance.description}}</td>
+                {% elif level == 'payment-status-check' %}
+
+
+                <td>{{instance.invoice}}</td>
+                <td>{{instance.bill_reference}}</td>
+                <td>{{instance.payment_reference}}</td>
+                
+                <td>{{instance.amount}}</td>
+                <td>{{instance.bill|safe}}</td>
+
+
+
+
+               
+                {% elif level == 'main-task' %}
+                
+                <td>{{instance.priority}}</td>
+                <td>{{instance.timeline|safe}}</td>
+                <td>{{instance.description|safe}}</td>
+                <td>{{instance.comment|safe}}</td>
+                <td>{{instance.response|safe}}</td>
+                <td>{{instance.delivery_report|safe}}</td>
+                <td>{{instance.confirm_report}}</td>
+                <td>{{instance.user.first_name}} {{instance.user.last_name}}</td>
+                <td>{{instance.responsible.first_name}} {{instance.responsible.last_name}}</td>
+                <td>{% if instance.is_inprogress %} <i class="fa fa-check"></i> {% else %}<i class="fa fa-times" aria-hidden="true"></i>{% endif %}</td>
+                <td>{% if instance.is_solved %} <i class="fa fa-check"></i> {% else %}<i class="fa fa-times" aria-hidden="true"></i>{% endif %}</td>
+                <td>{% if instance.is_delivered %} <i class="fa fa-check"></i> {% else %}<i class="fa fa-times" aria-hidden="true"></i>{% endif %}</td>
+                <td>{% if instance.is_confirmation %} <i class="fa fa-check"></i> {% else %}<i class="fa fa-times" aria-hidden="true"></i>{% endif %}</td>
+
+                {% elif level == 'registration-level' %}
+                <td>{{instance.description}}</td>
+                {% elif level == 'query-indicator' %}
+                <td>{{instance.indicator_type}}</td>
+                {% elif level == 'public-registration' %}
+                  <td>{{instance.user.gender}}</td>
+                  <td>{{instance.user.email}}</td>
+                  <td>{{instance.user.phone_number}}</td>
+                  <td>{{instance.government}}</td>
+                  <td> {% if instance.ministry %} {{instance.ministry}}{% elif instance.service %} {{instance.service.department.ministry}}{% endif %}</td>
+                  <td>{% if instance.department %} {{instance.department}}{% elif instance.service %} {{instance.service.department}}{% endif %}</td>
+                  <td>{%if instance.agency %}{{instance.agency}}{% endif %}</td>
+                  <td>{{instance.institution}}</td>
+                  <td>{{instance.service}}</td>
+                  <td>{{instance.main_unit}}</td>
+                  <td>{% if instance.main.name == 'Unit' %} {{instance.unit}}{% else %} {{instance.region_name}}{% endif %}</td>
+                  <td>{{instance.designation}}</td>
+                  <td>{{instance.training_time}}</td>
+                {% elif level == 'maintenance' %}
+                <td class="{% if instance.is_activated %} active-row-data {% endif %}">{{instance.start_date}}</td>
+                <td  class="{% if instance.is_activated %} active-row-data {% endif %}">{{instance.end_date}}</td>
+                <td  class="{% if instance.is_activated %} active-row-data {% endif %}">{{instance.start_time}}</td>
+                <td class="{% if instance.is_activated %} active-row-data {% endif %}">{{instance.end_time}}</td>
+                <td  class="{% if instance.is_activated %} active-row-data {% endif %}">{{instance.description|safe}}</td>
+
+                {% elif level == 'special-external-training' %}
+                <td>{{instance.institution}}</td>
+                <td>{{instance.venue}}</td>
+                <!-- <td>{{instance.price}}</td>
+                <td>{{instance.code}}</td> -->
+
+                <td>{% if instance.contact_person %}{{instance.contact_person}}{% else %}{{instance.institution.contact_person}}{% endif %}</td>
+                <td>{% if instance.contact_email %}{{instance.contact_email}}{% else %}{{instance.institution.contact_email}}{% endif %}</td>
+                <td>{% if instance.contact_phone %}{{instance.contact_phone}}{% else %}{{instance.institution.phone_number}}{% endif %}</td>
+                
+                <td>{{instance.start_date}}</td>
+                <td>{{instance.end_date}}</td>
+                <td>{{instance.description}}</td>
+                <td>{{instance.imported}}</td>
+                <!-- <td>{{instance.used_code}}</td>
+                <td>{{instance.paid}}</td> -->
+                <td>{{instance.trainees_trained}}</td> 
+                <td>{{instance.assessed}}</td>
+                <!-- <td>{{instance.trainees_registered}}</td>
+                <td>{{instance.trainees_trained}}</td> -->
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'external-training' %}
+                <td>{{instance.institution}}</td>
+                <td>{{instance.venue}}</td>
+                <td>{{instance.price}}</td>
+                <td>{{instance.code}}</td>
+
+                <td>{% if instance.contact_person %}{{instance.contact_person}}{% else %}{{instance.institution.contact_person}}{% endif %}</td>
+                <td>{% if instance.contact_email %}{{instance.contact_email}}{% else %}{{instance.institution.contact_email}}{% endif %}</td>
+                <td>{% if instance.contact_phone %}{{instance.contact_phone}}{% else %}{{instance.institution.phone_number}}{% endif %}</td>
+                
+                <td>{{instance.start_date}}</td>
+                <td>{{instance.end_date}}</td>
+                <td>{{instance.description}}</td>
+                <td>{{instance.imported}}</td>
+                <td>{{instance.used_code}}</td>
+                <td>{{instance.paid}}</td>
+                <td>{{instance.trainees_trained}}</td> 
+                <td>{{instance.assessed}}</td>
+                <!-- <td>{{instance.trainees_registered}}</td>
+                <td>{{instance.trainees_trained}}</td> -->
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'special-external-trainee' %}
+                <td>{{instance.user.email}}</td>
+                <td>{{instance.user.gender}}</td>
+                <td>{{instance.user.phone_number}}</td>
+                <td>{% if instance.user.organization %}{{instance.user.organization}}{% endif %}</td>
+                <td>{% if instance.user.county %}{{instance.user.county}}{% endif %}</td>
+                <!-- <td> {% if instance.is_uploaded %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td>
+                <td>{% if instance.is_registered %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td>
+                <td>{% if instance.is_code_used %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td>
+                <td>{% if instance.is_paid %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td> -->
+                <td><i class="fa fa-check" aria-hidden="true"></i> </td>
+                <!-- <td>{% if instance.is_assessed %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td>
+                <td>{% if instance.is_certified %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td> -->
+                 
+                
+                
+                {% elif level == 'external-trainee' %}
+                <td>{{instance.user.email}}</td>
+                <td>{{instance.user.gender}}</td>
+                <td>{{instance.user.phone_number}}</td>
+                <td> {% if instance.is_uploaded %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td>
+                <td>{% if instance.is_registered %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td>
+                <td>{% if instance.is_code_used %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td>
+                <td>{% if instance.is_paid %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td>
+                <td>{% if instance.is_trained %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td>
+                <td>{% if instance.is_assessed %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td>
+                <td>{% if instance.is_certified %} <i class="fa fa-check" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i> {% endif %} </td>
+                  
+                
+                {% elif level == 'training-mode' %}
+                <td>{{instance.trainees_registered}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+
+                
+                {% elif level == 'test-mail' %}
+                <td>{{instance.email}}</td>
+                <td>{{instance.subject}}</td>
+                <td>{{instance.message}}</td>
+                <td>{% if instance.is_sent %} <i class="fa fa-check"></i> {% else %}<i class="fa fa-times" aria-hidden="true"></i>{% endif %}</td>
+                {% elif level == 'county-government' %}
+                <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'primary-school' %}
+                <td>{{instance.trainees_registered}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'high-school' %}
+                <td>{{instance.trainees_registered}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'registration-type' %}
+                <td>{{instance.trainees_registered}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                <td>{{instance.description}}</td>
+                {% elif level == 'public-sector-cohort' %}
+                  
+               <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'training-partner' %}
+                
+               <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'public-sector-training' %}
+                
+               <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'public-sector-training-category' %}
+                
+               <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'agency' %}
+                
+               <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'state-department' %}
+                
+               <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'ministry' %}
+                
+                <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'government-type' %}
+                <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'training-session' %}
+                <td>{{instance.mode}}</td>
+                <td>{{instance.duration}}</td>
+                <td>{{instance.trainees_registered}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                <td>{{instance.description}}</td>
+                <td>{{instance.start_time}}</td>
+                <td>{{instance.end_time}}</td>
+                {% elif level == 'institution-training-session' %}
+                <td>{{instance.institution.name}}</td>
+                <td>{{instance.session}}</td>
+                {% elif level == 'priority' %}
+               
+
+                <td>{{instance.registered}}</td>
+                <td>{{instance.inprogress}}</td>
+                <td>{{instance.solved}}</td>
+                <td>{{instance.unsolved}}</td>
+
+                
+                {% elif level == 'institution-county' %}
+                
+                <td>{{instance.county}}</td>
+                <td>{{instance.capacity}}</td>
+                <td>{{instance.trainers}}</td>
+                <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'regional-county' %}
+                <td>{{instance.region}}</td>
+                <td>{{instance.county}}</td>
+                <td>{{instance.capacity}}</td>
+                <td>{{instance.trainers}}</td>
+                <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+
+                {% elif level == 'cohort' %}
+                <td>{{instance.start_date}}</td>
+                <td>{{instance.end_date}}</td>
+                <td>{{instance.description}}</td>
+                <td>{{instance.trainees_registered}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                {% elif level == 'region' %}
+                <td> {% if instance.coordinator %}{{instance.coordinator.first_name}} {{instance.coordinator.last_name}}{% endif %}</td>
+                <td>{{instance.counties}}</td>
+                <td>{{instance.capacity}}</td>
+                <td>{{instance.trainers}}</td>
+                <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                <td>{{instance.description}}</td>
+                {% elif level == 'training' %}
+                <td>{{instance.training_category}}</td>
+                <td>{{instance.structure}}</td>
+                <td>{{instance.duration}}</td>
+                <td>{{instance.price}}</td>
+                <td>{{instance.code}}</td>
+                {% elif level == 'building-images' %}
+              <td><img src="{{MEDIA}}{{instance.image.url}}" height="60" width="60"></td>
+                {% elif level == 'institution' %}
+
+
+                <td>{{instance.categorization}}</td>
+                <td>{{instance.type}}</td>
+               
+                <td>{{instance.owner_ship}}</td>
+                <td>{{instance.code}}</td>
+                <td>{{instance.counties}}</td>
+                <td>{{instance.capacity}}</td>
+                <td>{{instance.trainers}}</td>
+                <td>{{instance.trainees_assigned}}</td>
+                <td>{{instance.trainees_trained}}</td>
+                <td>{{instance.trainees_certified}}</td>
+                <td>{{instance.email}}</td>
+                {% endif %}
+                {% if level == 'payment-status-check' %}
+                <td>
+                  <!-- <span role="{{instance.id}}" class="btn btn-success check-status-btn">Check</span> -->
+                </td>
+                {% endif %}
+                {% if user.is_coordinator or level == 'public-registration' or level == 'payment-status-check' or level == 'special-external-trainee' %}
+             
+                {% elif user.is_special_user and level == 'special-external-training' %}
+                <td>
+                <span class="btn view-special-external-trainee" role="{{instance.id}}" title="View trainees"><i class="fa fa-list"></i></span>
+                <span class="btn upload-special-external-trainees" role="{{instance.id}}" title="upload trainees"><i class="fa fa-upload"></i></span>
+                <span class="btn sample-special-external-trainees" role="{{instance.id}}" title="sample upload csv"><i class="fa fa-download"></i></span>
+                </td>
+                {% else %}
+                <td  class="{% if level == 'maintenance' %}{% if instance.is_activated %} active-row-data {% endif %}{% endif %}">
+
+  {% if level == 'institution-county' and user.is_coordinator or user.is_institution or level == 'public-registration' %}
+  {% else %}
+  {% if level == 'external-trainee' and  instance.is_registered or level == 'special-external-trainee' and  instance.is_registered %} 
+
+  <input type="checkbox" class="btn action-mark" {% if  instance.is_trained %} checked {% endif %} name="trained" role="{{instance.id}}" title="Mark as Trained">
+  <input type="checkbox" class="btn action-mark" {% if  instance.is_assessed %} checked {% endif %}  name="assessed" role="{{instance.id}}" title="Mark as assessed">
+  <input type="checkbox" class="btn action-mark" {% if  instance.is_certified %} checked {% endif %}  name="certified" role="{{instance.id}}" title="Mark as certified">
+  {% endif %}
+  {% if level == 'external-trainee' or level == 'special-external-trainee' %}
+  {% else %}
+{% if level == 'building' or level == 'room' %}
+   <span class="btn list-details" role="{{instance.id}}"><a href="{% url 'management-data' pk='room-images' role=instance.id %}"><i class="fa fa-list"></i></a></span>
+
+ {% elif level == 'building'  %}
+    <span class="btn list-details" role="{{instance.id}}"><a href="{% url 'management-data' pk='building-images' role=instance.id %}"><i class="fa fa-list"></i></a></span>
+
+   {% endif %}
+  <span class="btn update-constants" role="{{instance.id}}"><i class="fa fa-edit"></i></span>
+  <!-- building -->
+  {% endif %}
+  {% if level == 'institution' %}
+  <span class="btn add-institution-counties-constants" role="{{instance.id}}"><i class="fa fa-list"></i></span>
+  {% endif %}
+  {% if level == 'external-training' %}
+  <span class="btn view-external-trainee" role="{{instance.id}}" title="View trainees"><i class="fa fa-list"></i></span>
+  <span class="btn upload-external-trainees" role="{{instance.id}}" title="upload trainees"><i class="fa fa-upload"></i></span>
+  <span class="btn sample-external-trainees" role="{{instance.id}}" title="sample upload csv"><i class="fa fa-download"></i></span>
+  <span class="btn  change-training-category" role="{{instance.id}}" style=""><i class="fa fa-exchange" aria-hidden="true"></i> </span>
+
+  {% endif %}
+  {% if level == 'special-external-training' or level == 'special-external-training'  and user.is_special_user %}
+  <span class="btn view-special-external-trainee" role="{{instance.id}}" title="View trainees"><i class="fa fa-list"></i></span>
+  <span class="btn upload-special-external-trainees" role="{{instance.id}}" title="upload trainees"><i class="fa fa-upload"></i></span>
+  <span class="btn sample-special-external-trainees" role="{{instance.id}}" title="sample upload csv"><i class="fa fa-download"></i></span>
+  <!-- <span class="btn  change-training-category" role="{{instance.id}}" style=""><i class="fa fa-exchange" aria-hidden="true"></i> </span> -->
+
+  {% endif %}
+  {% if level == 'main-task' %}
+  <span class="btn update-comments" role="{{instance.id}}"><i class="fa fa-comment" aria-hidden="true"></i>  </span>
+  <span class="btn stop-working {% if instance.is_inprogress %} {% else %} not_shown {% endif %} deactivate-mains{{instance.id}}" title="activate" role="{{instance.id}}"><i class="fa fa-stop"></i></span>
+  
+  <span class="btn start-working  {% if instance.is_inprogress %} not_shown {% else %} {% endif %} activate-mains{{instance.id}}" role="{{instance.id}}"><i class="fa fa-play"></i></span>
+
+  {% endif %}
+  
+  {% if level == 'maintenance' %}
+  <span class="btn stop-maintenance {% if instance.is_activated %} {% else %} not_shown {% endif %} deactivate-mains{{instance.id}}" title="activate" role="{{instance.id}}"><i class="fa fa-stop"></i></span>
+  
+  <span class="btn activate-maintenance  {% if instance.is_activated %} not_shown {% else %} {% endif %} activate-mains{{instance.id}}" role="{{instance.id}}"><i class="fa fa-play"></i></span>
+
+  {% endif %}
+  {% if level == 'external-trainee' or level == 'special-external-trainee' %}
+  {% else %}
+  <span class="btn delete-constants" title="deactivate" role="{{instance.id}}"><i class="fa fa-trash"></i></span>
+  {% endif %}
+ {% endif %}
+                </td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="modal fade" id="modal-staff">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      </div>
+  </div>
+</div>
+<div class="col-sm-12 error_page" style="text-align: center;color: red;">
+
+</div>
+
+
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<script>
+  $(document).ready(function(){
+    var csrfmiddlewaretoken= '{{csrf_token}}';
+    var level = '{{level}}'
+    // alert(level)
+    var level_name='GET'
+    var urlb='create-constants'
+   
+
+ $("#Downloadcsv").click(function() {
+
+var csrfmiddlewaretoken= '{{csrf_token}}';
+var url='/download-data-csv/';
+window.open(url, '_blank');
+});
+
+$(".sample-external-trainees").click(function() {
+
+var csrfmiddlewaretoken= '{{csrf_token}}';
+var url='/download-sample-users-csv/';
+window.open(url, '_blank');
+});
+$(".sample-special-external-trainees").click(function() {
+
+var csrfmiddlewaretoken= '{{csrf_token}}';
+var url='/download-sample-users-csv-external/';
+window.open(url, '_blank');
+});
+
+$(".view-external-trainee").click(function(){
+     var instance=$(this).attr('role')
+     window.location="/view-external-trainee/"+instance
+    
+    })
+    $(".view-special-external-trainee").click(function(){
+     var instance=$(this).attr('role')
+     window.location="/view-special-external-trainee/"+instance
+    
+    })
+    
+ $("#Addusersingle").click(function(){
+     
+  $.post('/create-constants/',{level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+                          
+                          $(".modal-content").html(data)
+                            //$('.content-wrapper').html(data)
+                            $("#modal-staff").modal("show");
+                     })
+                    
+      
+     
+
+ 
+ })
+
+ $(".upload-external-trainees").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/upload-external-trainees/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+                             
+                             $(".modal-content").html(data)
+                               //$('.content-wrapper').html(data)
+                               $("#modal-staff").modal("show");
+                        })
+                       
+         
+        
+   
+    
+    })
+    $(".upload-special-external-trainees").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/upload-special-external-trainees/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+                             
+                             $(".modal-content").html(data)
+                               //$('.content-wrapper').html(data)
+                               $("#modal-staff").modal("show");
+                        })
+                       
+         
+        
+   
+    
+    })
+    
+ $("#upload_users").click(function(){
+     
+     $.post('/upload-public-members/',{level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+                             
+                             $(".modal-content").html(data)
+                               //$('.content-wrapper').html(data)
+                               $("#modal-staff").modal("show");
+                        })
+                       
+         
+        
+   
+    
+    })
+ 
+
+
+ $("#Addusers").click(function(){
+    var institution=1
+     $.post('/create-data-upload-csv/',{institution:institution,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+        //$('.content-wrapper').html(data)
+ })
+})
+ $(".update-constants").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/update-constants/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       
+ })
+ 
+ })
+//  $(".list-details").click(function(){
+//      var instance=$(this).attr('role')
+//      $.get('/management-data/'+level+'/'+instance,function(data){
+//       // $("#modal-staff").modal("show");                         
+//       // $(".modal-content").html(data)
+       
+//  })
+ 
+//  })
+
+ 
+ $("#change-institution").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/change-institution/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       
+ })
+ 
+ })
+
+ $(".change-training-category").click(function(){
+     var instance=$(this).attr('role')
+    //  alert(instance)
+     $.post('/change-training-category/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+    //  window.location='/view-external-trainee/1'
+    window.location='/management/external-training'
+       
+ })
+ 
+ })
+
+ 
+ $(".update-comments").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/update-comments/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       
+ })
+ 
+ })
+ 
+ $(".start-working").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/start-working/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      // $("#modal-staff").modal("show");                         
+      // $(".modal-content").html(data)
+      window.location='/management/main-task'
+       
+ })
+ 
+ })
+ $(".check-status-btn").click(function(){
+     var instance=$(this).attr('role')
+    //  alert(instance)
+     $(".error_page").html("Checking status... for "+instance)
+     $.post('/check-status-payment/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+     if ($.trim(data)=='4' || $.trim(data)=='1'){
+      window.location='/management/payment-status-check'
+
+     }else if($.trim(data)=='2'){
+      $(".error_page").html("payment Still Pending")
+      
+     }else{
+      $(".error_page").html(data)
+     }
+      // $("#modal-staff").modal("show");                         
+      // $(".modal-content").html(data)
+      // window.location='/management/main-task'
+       
+ })
+ 
+ })
+
+ 
+ $(".stop-working").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/stop-working/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      // $("#modal-staff").modal("show");                         
+      // $(".modal-content").html(data)
+      window.location='/management/main-task'
+       
+ })
+ 
+ })
+ $(".stop-maintenance").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/stop-maintenance/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      // $("#modal-staff").modal("show");                         
+      // $(".modal-content").html(data)
+      window.location='/management/maintenance'
+       
+ })
+ 
+ })
+ $(".activate-maintenance").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/activate-maintenance/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      // $("#modal-staff").modal("show");                         
+      // $(".modal-content").html(data)
+      window.location='/management/maintenance'
+
+       
+ })
+ 
+ })
+ 
+ $(".add-institution-counties-constants").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/add-institution-counties/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       
+ })
+ 
+ })
+ $(".add-institution-counties-constants").click(function(){
+     var instance=$(this).attr('role')
+     $.post('/add-institution-counties/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       
+ })
+ 
+ })
+ $(".action-mark").change(function(){
+     var instance=$(this).attr('role')
+     var option=$(this).attr('name')
+     if($(this).prop('checked')){
+ var action='add'
+     }else{
+ var action='remove'
+     }
+     $.post('/action-mark-data/',{instance:instance,action:action,option:option,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+      // $("#modal-staff").modal("show");                         
+      // $(".modal-content").html(data)
+       
+ })
+ 
+ })
+
+
+
+ $(".delete-constants").click(function(){
+     var instance=$(this).attr('role')
+     var r = confirm("Do you wish to delete item?");
+  if (r == true) {
+     $.post('/delete-constants/',{instance:instance,level:level,csrfmiddlewaretoken:csrfmiddlewaretoken,level_name:level_name},function(data){
+     window.location='/management/'+level
+       
+ })
+}else{
+
+}
+ })
+ 
+})
+ 
+</script>
+{% endblock %}

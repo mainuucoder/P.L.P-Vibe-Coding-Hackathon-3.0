@@ -1,0 +1,103 @@
+{% extends "frontend/base.html" %} {% load static %} {% load humanize %} 
+{% block content %} {% if messages %} {% for message in messages %}
+ {% if messages %} {% for message in messages %}
+
+<script>
+  notify("{{message.level_tag}}", "{{message}}");
+</script>
+
+{% endfor %} {% endif %} {% endfor %} {% endif %}
+<style>
+  .surveyspanels {
+    min-height: 80px;
+    background: #fff;
+    margin-top: 5px;
+  }
+</style>
+
+<div class="rs-breadcrumbs bg-1">
+  <div class="container">
+    <div class="content-part text-center">
+      <h1 class="breadcrumbs-title white-color mb-0">
+        <h3 style="color: #00a651">Shiriki Privacy Policy</h3>
+      </h1>
+    </div>
+  </div>
+</div>
+
+<div
+  id="rs-services"
+  class="rs-services style1 modify2 pt-100 pb-84 md-pt-80 md-pb-64"
+>
+  <div class="container">
+    <div class="row gutter-16">
+      <div class="col-lg-12 col-sm-12 mb-16">
+        <div class="service-wrap">
+          <div class="content-part">
+            <h5 class="title"><a href="#">Our Privacy Policy</a></h5>
+            <div class="desc" style="text-align: justify; min-height: 350px;">
+              <p>
+                This Privacy Policy explains how we collect, use, disclose, and protect your personal information when you use our Shiriki Public Participation Platform (“platform”). By using our platform, you consent to our collection and processing of your personal information as described in this Privacy Policy.
+
+</p>
+<p><strong>Information we collect</strong><br/>
+  We may collect the following types of personal information when you use our platform:
+  <ul>
+  <li>Contact information, such as your name and email address,gender,age bracket, residential addresses etc when you sign up for an account or contact us.
+  </li>
+  <li>User-generated content, such as forum posts or survey responses, that you submit to our platform.
+  </li>
+  <li>Usage data, such as your IP address and browser type, when you use our platform.</li>
+  </ul>
+</p>
+<p><strong>How we use your information</strong><br/>
+  We may use your personal information for the following purposes:
+  <ol>
+    <li>To analyse contributions and form insightful recommendations </li>
+    <li>To provide and improve our platform.</li>
+    <li>To communicate with you about your account and our platform.</li>
+    <li>To respond to your inquiries and requests.</li>
+    <li>To personalize your experience on our platform.
+    </li>
+    <li>To enforce our Terms of Use and other policies.
+    </li>
+    
+  </ol>
+</p>
+<p><strong>How we share your information</strong>
+  <br />
+  We may share your personal information with the following types of third parties:
+  <ol>
+    <li>Organizations/entities responsible for the administration of their respective forums surveys or published bursaries
+      </li>
+      <li>Law enforcement authorities or other government officials, when required by law or in response to legal process.
+      </li>
+    </ol>
+
+</strong>
+<p><strong>How we protect your information</strong><br/>
+  We take reasonable measures to protect your personal information from unauthorized access, disclosure, and use. </p>
+<p><strong>Retention of your information</strong><br/>
+  We retain your personal information for as long as necessary to fulfill the purposes for which it was collected, unless a longer retention period is required or permitted by law.</p>
+<p><strong>Your rights and choices</strong><br />
+  You may have certain rights and choices regarding your personal information, such as the right to access, correct, or delete your personal information. Please contact us using the information below if you would like to exercise your rights or choices.<br />
+</p>
+<p><strong>Changes to this Privacy Policy</strong><br />
+  We may update this Privacy Policy from time to time. We will notify you of any material changes to this Privacy Policy by posting a notice on our platform or by sending you an email</p>
+
+<p><strong>How can you contact us about this policy?</strong> <br/>
+          <p>If you have questions or comments about these terms, you may email us at<br>
+            info@shiriki.org<br>
+            
+            Phone: +254113281424<br>
+            </p>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+</div>
+{% endblock %}

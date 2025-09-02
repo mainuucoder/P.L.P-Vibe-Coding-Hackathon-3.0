@@ -1,0 +1,263 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}{{ item.name }} - My Site{% endblock %}
+
+{% block meta %}
+<meta property="og:title" content="{{ item.name }}">
+<meta property="og:description" content="Category: {{ item.category }} | Price: KES {{ item.price|intcomma }}">
+<meta property="og:image" content="{{ request.build_absolute_uri }}{{ item.image.url }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="product">
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+{% if messages %}
+{% for message in messages %}
+
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+
+
+<style>
+
+
+  
+     .masonry {
+      column-count: 3;
+      column-gap: 1rem;
+    }
+     .masonry-item {
+      margin-bottom: 5px !important;
+      break-inside: avoid;
+      margin-bottom: 1rem;
+    }
+      .default-img, .hover-img {
+      width: 100% !important;
+      object-fit: cover;
+    }
+
+    /*.masonry-item {
+      break-inside: avoid;
+      margin-bottom: 1rem;
+    }*/
+  </style>
+
+<div class="container py-4">
+  <div class="masonry" id="masonry-grid">
+    {% for item in list %}
+    <div class="masonry-item " style="width: 24% !important;">
+      <div class="wow animate__animated animate__fadeInUp">
+        <div class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn" data-wow-delay=".1s">
+          <div class="product-img-action-wrap">
+            <div class="product-img product-img-zoom">
+              <a class="details-btn" role="{{ item.id }}">
+                <img class="default-img"
+                     {% if forloop.counter|divisibleby:"2" %}style="height: 300px;"{% else %}style="height: 200px;"{% endif %}
+                     src="{{ MEDIA }}{{ item.image.url }}" alt="" />
+                <img class="hover-img"
+                     {% if forloop.counter|divisibleby:"2" %}style="height: 300px;"{% else %}style="height: 200px;"{% endif %}
+                     src="{{ MEDIA }}{{ item.room_image.url }}" alt="" />
+              </a>
+            </div>
+            <div class="product-action-1">
+              <a aria-label="Add To Wishlist" role="{{ item.id }}" class="action-btn wishlistbtn">
+                <i class="fi-rs-heart"></i>
+              </a>
+              <a aria-label="Compare" role="{{ item.id }}" class="compare-btn action-btn">
+                <i class="fi-rs-shuffle"></i>
+              </a>
+              <a aria-label="Quick view" role="{{ item.id }}" class="details-btn action-btn">
+                <i class="fi-rs-eye"></i>
+              </a>
+            </div>
+          </div>
+          <div class="product-content-wrap">
+            <div class="product-category">
+              <a class="details-btn" role="{{ item.id }}">{{ item.category.name }}</a>
+            </div>
+            <h2>
+              <a class="details-btn" role="{{ item.id }}">{{ item.name }}</a>
+            </h2>
+            <div class="product-rate-cover">
+              <div class="product-rate d-inline-block">
+                <div class="product-rating" style="width: 90%"></div>
+              </div>
+              <span class="font-small ml-5 text-muted">(4.0)</span>
+            </div>
+            <div class="product-card-bottom">
+              <div class="product-price">
+                <span>Kes {{ item.price|intcomma }}</span>
+                <span class="old-price">Kes {{ item.old_price|intcomma }}</span>
+              </div>
+              <div class="add-cart">
+                <a class="add" href="shop-cart.html"><i class="fi-rs-shopping-cart mr-5"></i>Book</a>
+              </div>
+            </div>
+            <div class="mobile-social-icon mb-50" style="display: inline;">
+              <i title="Share" class="fa-2x fa fa-share-alt"></i>
+              <a onclick="shareProduct('{{ item.id }}', 'facebook')" title="Share on Facebook">
+                <img src="{% static 'rental/assets/imgs/theme/icons/icon-facebook-white.svg' %}" alt="Facebook">
+              </a>
+              <a onclick="shareProduct('{{ item.id }}', 'whatsapp')" title="Share on WhatsApp">
+                <img src="{% static 'rental/assets/imgs/theme/icons/whatsapp.svg' %}" alt="WhatsApp">
+              </a>
+              <a onclick="shareProduct('{{ item.id }}', 'twitter')" title="Share on X">
+                <img src="{% static 'rental/assets/imgs/theme/icons/icon-twitter-white.svg' %}" alt="X (Twitter)">
+              </a>
+              <a onclick="shareProduct('{{ item.id }}', 'linkedin')" title="Share on LinkedIn">
+                <img src="{% static 'rental/assets/imgs/theme/icons/linkedin.svg' %}" alt="LinkedIn">
+              </a>
+              <a onclick="shareProduct('{{ item.id }}', 'instagram')" title="Instagram copy link">
+                <img src="{% static 'rental/assets/imgs/theme/icons/icon-instagram-white.svg' %}" alt="Instagram">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+       {% for item in list %}
+    <div class="masonry-item " style="width: 24% !important;">
+      <div class="wow animate__animated animate__fadeInUp">
+        <div class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn" data-wow-delay=".1s">
+          <div class="product-img-action-wrap">
+            <div class="product-img product-img-zoom">
+              <a class="details-btn" role="{{ item.id }}">
+                <img class="default-img"
+                     {% if forloop.counter|divisibleby:"2" %}style="height: 300px;"{% else %}style="height: 200px;"{% endif %}
+                     src="{{ MEDIA }}{{ item.image.url }}" alt="" />
+                <img class="hover-img"
+                     {% if forloop.counter|divisibleby:"2" %}style="height: 300px;"{% else %}style="height: 200px;"{% endif %}
+                     src="{{ MEDIA }}{{ item.room_image.url }}" alt="" />
+              </a>
+            </div>
+            <div class="product-action-1">
+              <a aria-label="Add To Wishlist" role="{{ item.id }}" class="action-btn wishlistbtn">
+                <i class="fi-rs-heart"></i>
+              </a>
+              <a aria-label="Compare" role="{{ item.id }}" class="compare-btn action-btn">
+                <i class="fi-rs-shuffle"></i>
+              </a>
+              <a aria-label="Quick view" role="{{ item.id }}" class="details-btn action-btn">
+                <i class="fi-rs-eye"></i>
+              </a>
+            </div>
+          </div>
+          <div class="product-content-wrap">
+            <div class="product-category">
+              <a class="details-btn" role="{{ item.id }}">{{ item.category.name }}</a>
+            </div>
+            <h2>
+              <a class="details-btn" role="{{ item.id }}">{{ item.name }}</a>
+            </h2>
+            <div class="product-rate-cover">
+              <div class="product-rate d-inline-block">
+                <div class="product-rating" style="width: 90%"></div>
+              </div>
+              <span class="font-small ml-5 text-muted">(4.0)</span>
+            </div>
+            <div class="product-card-bottom">
+              <div class="product-price">
+                <span>Kes {{ item.price|intcomma }}</span>
+                <span class="old-price">Kes {{ item.old_price|intcomma }}</span>
+              </div>
+              <div class="add-cart">
+                <a class="add" href="shop-cart.html"><i class="fi-rs-shopping-cart mr-5"></i>Book</a>
+              </div>
+            </div>
+            <div class="mobile-social-icon mb-50" style="display: inline;">
+              <i title="Share" class="fa-2x fa fa-share-alt"></i>
+              <a onclick="shareProduct('{{ item.id }}', 'facebook')" title="Share on Facebook">
+                <img src="{% static 'rental/assets/imgs/theme/icons/icon-facebook-white.svg' %}" alt="Facebook">
+              </a>
+              <a onclick="shareProduct('{{ item.id }}', 'whatsapp')" title="Share on WhatsApp">
+                <img src="{% static 'rental/assets/imgs/theme/icons/whatsapp.svg' %}" alt="WhatsApp">
+              </a>
+              <a onclick="shareProduct('{{ item.id }}', 'twitter')" title="Share on X">
+                <img src="{% static 'rental/assets/imgs/theme/icons/icon-twitter-white.svg' %}" alt="X (Twitter)">
+              </a>
+              <a onclick="shareProduct('{{ item.id }}', 'linkedin')" title="Share on LinkedIn">
+                <img src="{% static 'rental/assets/imgs/theme/icons/linkedin.svg' %}" alt="LinkedIn">
+              </a>
+              <a onclick="shareProduct('{{ item.id }}', 'instagram')" title="Instagram copy link">
+                <img src="{% static 'rental/assets/imgs/theme/icons/icon-instagram-white.svg' %}" alt="Instagram">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+  	
+<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const grid = document.querySelector('#masonry-grid');
+    imagesLoaded(grid, function () {
+      new Masonry(grid, {
+        itemSelector: '.masonry-item',
+        columnWidth: '.masonry-item',
+        gutter: 15,
+        percentPosition: true
+      });
+    });
+  });
+  function shareProduct(itemId, platform = 'facebook') {
+    const shareUrl = window.location.origin + '/item/' + itemId;
+    const shareText = 'Check out this item!';
+
+    if (navigator.share && platform === 'native') {
+        navigator.share({
+            title: shareText,
+            text: shareText,
+            url: shareUrl
+        }).catch((err) => console.error('Share failed:', err));
+        return;
+    }
+
+    let url = '';
+
+    switch (platform) {
+        case 'facebook':
+            url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl);
+            break;
+        case 'whatsapp':
+            url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(shareText + ' ' + shareUrl);
+            break;
+        case 'twitter': // now X
+            url = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl);
+            break;
+        case 'linkedin':
+            url = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareUrl);
+            break;
+        case 'instagram':
+            alert("Instagram doesn't support direct web sharing. Please copy the link: " + shareUrl);
+            return;
+        default:
+            console.warn('Unsupported platform:', platform);
+            return;
+    }
+
+    window.open(url, '_blank');
+}
+</script>
+
+
+{% endblock %}

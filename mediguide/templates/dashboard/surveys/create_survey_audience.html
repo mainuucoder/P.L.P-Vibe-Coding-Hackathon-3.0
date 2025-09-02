@@ -1,0 +1,191 @@
+{% load static %}
+{% load bootstrap5 %}
+{% load humanize %}
+<style>
+    .formContainers{
+        border:1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        min-height: 500px;
+    }
+</style>
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+<div class="card">
+    <div class="card-body table-responsive">
+<div class="row">
+    <div class="headers">Add Audience to Undertake the task <span class="btn btn-primary menu_btn" id="addSurvey" style="float:right;margin-top: -10px;" role="addForum">+ Add Survey</span></div>
+    <hr>
+</div>
+<div class="inner" style="min-height: 700px;">
+    <div class="row">
+        <div class="col-lg-12">
+            <span class="min-headers main_header_display"> {{survey.name|safe}}</span>
+          
+        </div>
+    </div>
+      <hr />
+     <!--BLOCK SECTION -->
+     <div class="row">
+       <div class="col-sm-3 col-xs-12 " id="form_holder">
+        <div class="col-sm-12 col-xs-12 formContainers">
+        <div class="col-sm-12 col-xs-12">
+            <div class="col-sm-12 col-xs-12 headers" style="background-color:#ccc ;">
+                STEP 1
+            </div>
+           <label class="form_label">SELECT AUDIENCE:</label> 
+           <div class="col-sm-12 col-xs-12">
+                {% for i in audience %}
+                
+                <div class="col-sm-12 col-xs-12 " >
+                    <p class="">
+                        
+                    <input type="checkbox"  id="{{i.id}}" name="{{i.name}}"  class="Audiences_select" role="{{i.name}}">
+                      <span class="checkmarkd"></span>
+                       {{i.name}}
+                       </label>
+                        </p>
+                        
+                </div>
+                 {% endfor %}
+           
+                </div>
+        </div>
+      
+     
+</div>
+       </div>
+
+       <div class="col-sm-4 col-xs-12 formContainers" id="form_holder">
+        <div class="col-sm-12 col-xs-12 headers" style="background-color:#ccc ;">
+            STEP 2
+        </div>
+        <div class="col-sm-12 col-xs-12 " id="audienceLobby">
+           
+     
+     
+</div>
+       </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       <div class="col-sm-5 col-xs-12 " ">
+        <div class="col-sm-12 col-xs-12 formContainers">
+            <div class="col-sm-12 col-xs-12 headers" style="background-color:#ccc ;">
+                STEP 3
+            </div>
+            <label class="form_label">SELECT USERS:</label> 
+            <div class="col-sm-12 col-xs-12 " id="list_holder">
+                
+            </div>
+        </div>
+       </div>
+
+    </div>
+
+</div>
+</div>
+</div>
+
+<script>
+    $(document).ready(function(){
+ var surveyId='{{survey.id}}'
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+/* $.post('/dashboard/surveys/getFinalAudiencelist/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+$('#list_holder').html(data)
+   })
+
+*/
+$("#Question_category").change(function(){
+    var category=$(this).val()
+    
+    if(category){
+   
+    $('.categories').hide()
+    $('.categories').filter('.category'+category).show()
+    $('#category_damp').show()
+    }else{
+        $('#category_damp').hide()
+    }
+    
+
+})
+
+
+
+        $("#addSurvey").click(function(){
+     
+     $.get('/dashboard/surveys/create_survey/',function(data){
+         
+        $('.content-wrapper').html(data)
+ })
+ 
+ }) 
+ 
+
+
+
+$(".Audiences_select").change(function(){
+    var audienceName=$(this).attr('name')
+    var loadAudience='load'+audienceName
+    var audinceId=$(this).attr('id');
+    var group=$(this).attr('role')
+    if(group=='Custom'){
+        if($(this).prop('checked')){
+        action='addAudience'
+        $.post('/dashboard/surveys/addAudience/',{action:action,audinceId:audinceId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            $.post('/dashboard/surveys/'+loadAudience+'/',{audinceId:audinceId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+         $('#audienceLobby').html(data)
+            })
+           })
+        }else{
+        action='removeAudience'
+        $.post('/dashboard/surveys/addAudience/',{action:action,audinceId:audinceId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+          
+         $('#audienceLobby').html('')
+            
+           })
+    }
+
+    }else{
+    if($(this).prop('checked')){
+        action='addAudience'
+        $.post('/dashboard/surveys/addAudience/',{action:action,audinceId:audinceId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+            $.post('/dashboard/surveys/'+loadAudience+'/',{audinceId:audinceId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+         $('#audienceLobby').html(data)
+            })
+           })
+    }else{
+        action='removeAudience'
+        $.post('/dashboard/surveys/addAudience/',{action:action,audinceId:audinceId,csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+          
+         $('#audienceLobby').html('')
+            
+           })
+    }
+
+        }
+})
+    })
+</script>

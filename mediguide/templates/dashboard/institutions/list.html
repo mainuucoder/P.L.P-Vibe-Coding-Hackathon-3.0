@@ -1,0 +1,46 @@
+{% load static %}
+{% load bootstrap5 %}
+{% block title %} Publications {% endblock %}
+
+{% block content %}
+<style>
+    tr {
+        line-height: 15px !important;
+        min-height: 15px !important;
+        height: 15px !important;
+    }
+</style>
+<div class="card">
+    <div class="card-body table-responsive">
+        <table id="staff-table" class="table table-striped export-table table-striped  text-nowrap w-100 example3">
+            <a href="#" class="button btn btn-primary btn-sm js-create-staff"
+                data-url="{% url 'institutions_create' %}">Add
+                Institution</a>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Ownership</th>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% include 'dashboard/institutions/partial_list.html' %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="modal-staff">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'extrajs/publications.js' %}" target="_blank"></script>
+{% endblock %}

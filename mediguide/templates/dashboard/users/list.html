@@ -1,0 +1,357 @@
+{% load static %}
+{% load bootstrap5 %}
+{% load humanize %}
+<style>
+  table{
+font-size: 13px !important;
+width: 95%;
+margin: auto;
+text-align: center;
+}
+
+/*Make alternating colors for the table rows*/
+/* .table tr:nth-child(odd){
+background: #B8CAE4
+}
+
+.table tr:nth-child(even){
+background: #dae5f4
+} */
+
+thead {
+background-color: #34c38f;
+color: white;
+}
+.display_table{
+border-bottom-right-radius: 20px;
+/*border-bottom-left-radius: 20px;*/
+padding-left: 5px;
+padding-right: 5px;
+padding-bottom: 20px;
+box-shadow: 12px 12px 20px 6px #2e6da4;
+}
+td{
+  padding: 6px;
+line-height: 1.428571429;
+vertical-align: top;
+border-top: 1px solid #dddddd;
+text-align: justify;
+font-size:16px;
+}
+.page_links{
+cursor: pointer;
+
+}
+  
+  .pagination { display: inline-block;}
+  .pagination a { color: black; float: left; padding: 8px 16px; text-decoration: none;}
+  .pagination a.active { background-color: #4CAF50; color: white;}
+  .pagination a:hover:not(.active) {background-color: #ddd;}
+  .actionbtns{
+    cursor: pointer;
+  
+  }
+
+.dropbtn {
+  color: #000;
+  padding: 1px;
+  font-size: 1px;
+  border: none;
+  cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 200px;
+  left:-144px;
+  height: 300px !important;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 9;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  /* padding: 12px 16px; */
+  text-decoration: none;
+  display: block;
+}
+.btn-app-dropdown:hover{
+  background-color: #ccc;
+}
+.btn-app-dropdown{
+  Border-bottom:1px solid #ccc
+}
+/* Change color of dropdown links on hover */
+/* .dropdown-content a:hover {background-color: #f1f1f1} */
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  
+}
+
+
+
+
+
+.btn-primary{
+    background:#111c43 !important
+
+}
+
+
+
+th{
+  text-transform: uppercase;
+}
+
+
+
+.btn-app-dropdown{
+  text-align: left;
+}
+</style>
+{% if messages %}
+{% for message in messages %}
+<script>
+notify('{{message.level_tag}}', "{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+
+<div class="inner" style="">
+  
+    <div class="row">
+        <div class="col-lg-12">
+            <h4> Users</h4>
+          
+        </div>
+    </div>
+      <hr />
+     <!--BLOCK SECTION -->
+     <div class="row">
+      
+       <div class="card">
+            <div class="card-body ">
+        <form class="col-lg-12" id="ToEditForm">
+            
+              <table class='table table-responsive'  id="loadtable">
+                <thead style="font-size: 11px;">
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>county</th>
+                        <th>Constituency</th>
+                        <th>Ward</th>
+                        <th>ACTIONS <span class="btn btn-success" id="export_users"><i class="fa fa-download"></i></span></th>
+                      </tr>
+                </thead>
+                <tbody>
+                {% for instance in users %}
+                <tr class="col-sm-12 " style="display:none" id="userdataupaddated{{instance.id}}">
+                      <td>{{instance.first_name|safe}} {{instance.last_name|safe}}</td>
+                    <td>{{instance.phone_number}}</td>
+                   
+                    <td>{{instance.email|safe}}</td>
+                    {% for i in instance.applicantscurrentresidentialdata_set.all %}
+                    {% if i.user == instance %}
+                    <script>
+                      $(document).ready(function(){
+                      
+                      var page='{{instance.id}}'
+                      
+                    $("#userdataupaddated"+page).show()
+                      })
+                      </script>
+                    {% if i.application_type.id == 1 %}
+                    <td>{{i.county|safe}}</td>
+                    <td>{{i.constituency|safe}}</td>
+                    <td>{{i.ward|safe}}</td>
+                    {% else %}
+                 
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                   <td></td>
+                  </tr>
+              {% endfor %}
+              {% for instance in users %}
+                  <tr class="col-sm-12 " style="" id="user{{instance.id}}">
+                  
+                    <td>{{instance.first_name|safe}} {{instance.last_name|safe}}</td>
+                    <td>{{instance.phone_number}}</td>
+                   
+                    <td>{{instance.email|safe}}</td>
+                    {% for i in instance.applicantscurrentresidentialdata_set.all %}
+                    {% if i.user == instance %}
+                    <script>
+                        $(document).ready(function(){
+                        
+                        var page='{{instance.id}}'
+                        
+                      $("#user"+page).hide()
+                        })
+                        </script>
+                    {% else %}
+                   
+                    {% endif %}
+                    {% endfor %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                   <td>
+                      
+                      </td>
+                  </tr>
+              {% endfor %}
+            </tbody>
+            </table>
+
+
+          </form>
+</div>
+</div>
+    </div>
+
+</div>
+<div class="modal fade" id="modal-staff">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      </div>
+  </div>
+</div>
+
+
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<script>
+    $(document).ready(function(){
+      //  alert()
+        $("#add_conference").click(function(){
+     
+     $.get('/conferencing/AddConference/',function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+        //$('.content-wrapper').html(data)
+ })
+ 
+ }) 
+ 
+ $(".update_items").click(function(){
+var my_role=$(this).attr('role');
+ $.get('/conferencing/Update_conference/'+my_role,function(data){
+  $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       // $('.content-wrapper').html(data)
+})
+})
+  $(".viewSubmissions").click(function(){
+
+var my_role=$(this).attr('role');
+
+
+var my_role=$(this).attr('role');
+ $.get('/dashboard/surveys/viewSubmissions/'+my_role,function(data){
+
+        $('.content-wrapper').html(data)
+})
+})
+
+$("#AddForum_btn").click(function(){
+
+    $.get('/dashboard/surveys/addSurvey',function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+       // $('.content-wrapper').html(data)
+})
+
+})
+
+$(".AddAudience").click(function(){
+var surveyId=$(this).attr('role');
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+ $.post('/dashboard/surveys/selectAudience/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+$('.content-wrapper').html(data)
+})
+})
+$('.ListSurveyAudience').click(function(){
+  var surveyId=$(this).attr('role');
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+ $.post('/dashboard/surveys/list_selectAudience/',{csrfmiddlewaretoken:csrfmiddlewaretoken,surveyId:surveyId},function(data){
+
+$('.content-wrapper').html(data)
+})
+})
+
+
+
+$(".AddQuestions").click(function(){
+var survey=$(this).attr('role');
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+  $.post('questions/create_question/',{survey:survey,csrfmiddlewaretoken:csrfmiddlewaretoken},function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+                        })
+})
+$(".open_event").click(function(){
+  var conference=$(this).attr('role');
+  $.get('/conferencing/open_conference/'+conference,function(data){
+    $('.content-wrapper').html(data)
+                  
+})
+})
+$("#Addusers").click(function(){
+     
+     $.get('/Create_data_upload_csv/',function(data){
+      $("#modal-staff").modal("show");                         
+      $(".modal-content").html(data)
+        //$('.content-wrapper').html(data)
+ })
+$(".questions").click(function(){
+ var survey=$(this).attr('role');
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+ $.get('/dashboard/surveys/listViewQuestions/'+survey,function(data){
+
+$('.content-wrapper').html(data)
+})
+})
+$(".ListSurveyResponcesRecieved").click(function(){
+ var survey=$(this).attr('role');
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+ $.post('/dashboard/surveys/ListSurveyResponcesRecieved/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:survey},function(data){
+
+$('.content-wrapper').html(data)
+})
+})
+$("#export_users").click(function(){
+ 
+ var csrfmiddlewaretoken= '{{csrf_token}}';
+ var url='/bursary/export_users/'
+ window.open(url, '_blank');
+//  $.post('/dashboard/surveys/export_survey_responce/',{csrfmiddlewaretoken:csrfmiddlewaretoken,survey:survey},function(data){
+
+// $('.content-wrapper').html(data)
+// })
+})
+
+
+    })
+</script>

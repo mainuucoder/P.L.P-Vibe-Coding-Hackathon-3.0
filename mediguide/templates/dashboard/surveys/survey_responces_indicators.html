@@ -1,0 +1,204 @@
+<div class="col-sm-6" style="margin-top:20px">
+    <div class="col-xs-12 main_canvases">
+      <div id="canvas_headone" >{{questionone|safe}}</div>
+      <figure class="highcharts-figure">
+        <div id="indicator_divone"></div>
+       
+      
+        <table id="datatable_indicatorone" style="display:none" >
+          <thead>
+            <tr>
+              <th>NAME</th>
+              <th>VARIABLES</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for data in questiononechoices %}
+            <tr>
+              <td>{{data.name}}</td>
+              <td>{{data.value}}</td>
+              
+           
+            </tr>
+            {% endfor %}
+             
+          </tbody>
+        </table>
+      </figure>
+    </div>
+</div>
+<div class="col-sm-6" style="margin-top:20px">
+  <figure class="highcharts-figure">
+    <div id="canvas_headtwo" >{{questiontwo.name|safe}}</div>
+    <div id="indicator_divtwo"></div>
+   
+    <table id="datatable_indicatortwo" style="display:none" >
+      <thead>
+        <tr>
+          <th>NAME</th>
+          <th>VARIABLES</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        {% for data in questiontwochoices %}
+        <tr>
+          <td>{{data.name}}</td>
+          <td>{{data.value}}</td>
+          
+       
+        </tr>
+        {% endfor %}
+         
+      </tbody>
+    </table>
+  </figure>
+</div>
+<div class="col-sm-12" style="margin-top:20px">
+    <div class="col-xs-12 main_canvases">
+        
+<figure class="highcharts-figure">
+  <div id="container_combinded"></div>
+  <div id="accordion" class="accordion">
+    <div class="card">
+          <div class="card-header" >
+              <a class="collapsed card-link" data-bs-toggle="collapse" data-bs-target=".collapseOne" href="#" aria-expanded="false" style="padding-bottom:0px">Table</a>
+             
+            </div>
+          <div id="collapseOne" class="collapseOne collapse" data-bs-parent="#accordion">
+              <div class="card-body">
+               
+              
+  <table id="datatable" class="col-sm-12 table-responsive" >
+    <thead style="background-color: #ccc;">
+      <tr>
+        <th>NAME</th>
+        <th>VARIABLES</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for data in alllist %}
+      <tr style="font-size: 12px;text-transform: uppercase;border-bottom: 1px solid #ccc;min-height: 40px;">
+        <td>{{data.name}}</td>
+        <td>{{data.value}}</td>
+        
+     
+      </tr>
+      {% endfor %}
+       
+    </tbody>
+  </table>
+  </div>
+  </div>
+  </div>
+  </div>
+</figure>
+    
+      </div>
+</div>
+</div>
+</div>
+<script>
+    $(document).ready(function(){
+
+var indicatorone=$('#canvas_headone').html().replaceAll(/<\/?[^>]+(>|$)/gi, "");
+var indicatortwo=$('#canvas_headtwo').html().replaceAll(/<\/?[^>]+(>|$)/gi, "");
+
+var relationship_title=indicatorone+" VS "+indicatortwo
+
+Highcharts.chart('indicator_divtwo', {
+  data: {
+    table: 'datatable_indicatortwo'
+  },
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: indicatortwo
+  },
+  subtitle: {
+    text:
+      'Source: GTS-'+indicatortwo
+  },
+  xAxis: {
+    type: 'category'
+  },
+  yAxis: {
+    allowDecimals: false,
+    title: {
+      text: 'Respondents'
+    }
+  },
+  tooltip: {
+    formatter: function () {
+      return '<b>' + this.series.name + '</b><br/>' +
+        this.point.y + ' ' + this.point.name.toLowerCase();
+    }
+  }
+});
+
+
+Highcharts.chart('indicator_divone', {
+  data: {
+    table: 'datatable_indicatorone'
+  },
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: indicatorone
+  },
+  subtitle: {
+    text:
+      'Source: GTS-'+indicatorone
+  },
+  xAxis: {
+    type: 'category'
+  },
+  yAxis: {
+    allowDecimals: false,
+    title: {
+      text: 'Respondents'
+    }
+  },
+  tooltip: {
+    formatter: function () {
+      return '<b>' + this.series.name + '</b><br/>' +
+        this.point.y + ' ' + this.point.name.toLowerCase();
+    }
+  }
+});
+
+Highcharts.chart('container_combinded', {
+  data: {
+    table: 'datatable'
+  },
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: relationship_title
+  },
+  subtitle: {
+    text:
+      'Source: GTS-'+relationship_title
+  },
+  xAxis: {
+    type: 'category'
+  },
+  yAxis: {
+    allowDecimals: false,
+    title: {
+      text: 'Respondents'
+    }
+  },
+  tooltip: {
+    formatter: function () {
+      return '<b>' + this.series.name + '</b><br/>' +
+        this.point.y + ' ' + this.point.name.toLowerCase();
+    }
+  }
+});
+})
+</script>
