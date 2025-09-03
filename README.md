@@ -33,8 +33,10 @@ Here’s our in-depth pitch deck for a fuller vision insight:
 * **Python**
 * **Django**
 * **HTML**
-* **Java**
+* **Java script**
 * **Node.js**
+* **css**
+* **scss**
 
 ## 💡 Key Features
 
